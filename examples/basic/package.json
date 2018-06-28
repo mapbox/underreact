@@ -1,0 +1,12 @@
+{
+  "private": true,
+  "scripts": {
+    "chunk-light": "node ../../bin/chunk-light"
+  },
+  "dependencies": {
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0",
+    "react-router-dom": "^4.2.2"
+  },
+  "repository": "https://github.com/mapbox/basic.git"
+}

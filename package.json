@@ -1,0 +1,70 @@
+{
+  "name": "@mapbox/tbd",
+  "version": "0.1.0",
+  "description": "Minimal, extensible React app build system that you won't need to eject",
+  "main": "index.js",
+  "scripts": {
+    "precommit": "lint-staged",
+    "format": "prettier --write '**/*.js'",
+    "lint": "eslint .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint",
+      "prettier --write",
+      "git add"
+    ]
+  },
+  "prettier": {
+    "singleQuote": true
+  },
+  "author": "Mapbox",
+  "license": "BSD-2-Clause",
+  "engines": {
+    "node": ">=6"
+  },
+  "peerDependencies": {
+    "react": "^16.4.1",
+    "react-dom": "^16.4.1"
+  },
+  "dependencies": {
+    "address": "^1.0.3",
+    "assets-webpack-plugin": "^3.8.4",
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.4",
+    "babel-plugin-syntax-dynamic-import": "^6.18.0",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-plugin-transform-react-jsx-self": "^6.22.0",
+    "babel-plugin-transform-react-jsx-source": "^6.22.0",
+    "babel-plugin-transform-react-remove-prop-types": "^0.4.13",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-react": "^6.24.1",
+    "chalk": "^2.4.1",
+    "chokidar": "^2.0.4",
+    "connect-history-api-fallback": "^1.5.0",
+    "cpy": "^7.0.1",
+    "del": "^3.0.0",
+    "findup-sync": "^2.0.0",
+    "get-port": "^3.2.0",
+    "live-server": "^1.2.0",
+    "resolve-from": "^4.0.0",
+    "time-stamp": "^2.0.0",
+    "uglify-js": "^3.4.2",
+    "webpack": "^4.12.2",
+    "webpack-format-messages": "^2.0.1",
+    "yargs": "^11.0.0"
+  },
+  "devDependencies": {
+    "@mapbox/eslint-config-mapbox": "^1.2.1",
+    "eslint": "^5.0.1",
+    "eslint-config-prettier": "^2.9.0",
+    "eslint-plugin-node": "^6.0.1",
+    "husky": "^0.14.3",
+    "lint-staged": "^7.2.0",
+    "prettier": "^1.13.6",
+    "react": "^16.4.1",
+    "react-dom": "^16.4.1"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "presets": [
+    [
+      "./../../node_modules/babel-preset-env/lib/index.js",
+      {
+        "useBuiltIns": true,
+        "targets": {
+          "node": "current"
+        }
+      }
+    ],
+    "./../../node_modules/babel-preset-react/lib/index.js"
+  ],
+  "plugins": [
+    "./../../node_modules/babel-plugin-syntax-dynamic-import/lib/index.js",
+    "./../../node_modules/babel-plugin-transform-class-properties/lib/index.js",
+    "./../../node_modules/babel-plugin-transform-object-rest-spread/lib/index.js"
+  ]
+}
