@@ -55,7 +55,6 @@
     "postcss": "^6.0.23",
     "postcss-csso": "^3.0.0",
     "postcss-url": "^7.3.2",
-    "resolve-pkg": "^1.0.0",
     "rev-hash": "^2.0.0",
     "time-stamp": "^2.0.0",
     "uglify-js": "^3.4.2",
