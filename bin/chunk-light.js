@@ -162,9 +162,6 @@ function getConfigDetails(command, argv) {
       typeof configModule === 'function'
         ? configModule(configModuleContext)
         : configModule;
-    console.log(configPath);
-    console.log(configModule);
-    console.log(config);
   } catch (error) {
     if (!configIsNotSpecified) {
       logger.log(
