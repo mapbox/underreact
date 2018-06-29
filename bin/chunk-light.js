@@ -4,6 +4,7 @@
 const yargs = require('yargs');
 const path = require('path');
 const chalk = require('chalk');
+const webpack = require('webpack');
 const start = require('../commands/start');
 const build = require('../commands/build');
 const serveStatic = require('../commands/serve-static');
@@ -49,11 +50,18 @@ function defineStart(y) {
       alias: 'r',
       type: 'boolean'
     })
+    .option('stats', {
+      description:
+        'Directory where Webpack stats should be written, for bundle analysis',
+      alias: 's',
+      type: 'string',
+      normalize: true
+    })
     .help();
 }
 
 function runStart(argv) {
-  const { config, configDir } = getConfigDetails(argv);
+  const { config, configDir } = getConfigDetails('start', argv);
   try {
     start(config, configDir);
   } catch (error) {
@@ -74,11 +82,18 @@ function defineBuild(y) {
       alias: 'd',
       type: 'boolean'
     })
+    .option('stats', {
+      description:
+        'Directory where Webpack stats should be written, for bundle analysis',
+      alias: 's',
+      type: 'string',
+      normalize: true
+    })
     .help();
 }
 
 function runBuild(argv) {
-  const { config, configDir } = getConfigDetails(argv);
+  const { config, configDir } = getConfigDetails('build', argv);
   try {
     build(config, configDir).catch(handleError);
   } catch (error) {
@@ -104,14 +119,15 @@ function defineServeStatic(y) {
 }
 
 function runServeStatic(argv) {
-  const { config, configDir } = getConfigDetails(argv);
+  const { config, configDir } = getConfigDetails('serve-static', argv);
   try {
     serveStatic(config, configDir);
   } catch (error) {
     handleError(error);
   }
 }
-function getConfigDetails(argv) {
+
+function getConfigDetails(command, argv) {
   const configIsNotSpecified = argv.config === undefined;
   let configPath;
   if (configIsNotSpecified) {
@@ -122,15 +138,34 @@ function getConfigDetails(argv) {
       : path.join(process.cwd(), argv.config);
   }
 
+  let production = true;
+  if (command === 'build') {
+    production = !argv.debug;
+  } else if (command === 'start') {
+    production = argv.production;
+  }
+
+  // This object is passed as the argument to the config module, if it's a
+  // function.
+  const configModuleContext = {
+    webpack,
+    command,
+    production,
+    argv
+  };
+
   let config = {};
   // If the user didn't use --config, it's fine if the default does not exist.
   // But if they did specify a path, tell them if it doesn't work.
   try {
     const configModule = require(configPath);
-    config = typeof configModule === 'function' ? configModule() : configModule;
+    config =
+      typeof configModule === 'function'
+        ? configModule(configModuleContext)
+        : configModule;
   } catch (error) {
     if (!configIsNotSpecified) {
-      console.log(
+      logger.log(
         `Failed to load configuration module from ${chalk.underline(
           configPath
         )}`
@@ -138,14 +173,13 @@ function getConfigDetails(argv) {
     }
   }
 
-  if (argv.production === true) {
-    config.production = true;
-  }
-  if (argv.debug === true) {
-    config.production = false;
-  }
-
-  return { config, configDir: path.dirname(configPath) };
+  return {
+    config: Object.assign({}, config, {
+      production,
+      stats: argv.stats
+    }),
+    configDir: path.dirname(configPath)
+  };
 }
 
 function handleError(error) {

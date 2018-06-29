@@ -1,0 +1,17 @@
+{
+  "private": true,
+  "scripts": {
+    "chunk-light": "ENV_VAR=8765 node ../../bin/chunk-light"
+  },
+  "dependencies": {
+    "babel-plugin-lodash": "^3.3.4",
+    "css-loader": "^0.28.11",
+    "less": "^3.0.4",
+    "less-loader": "^4.1.0",
+    "lodash": "^4.17.10",
+    "mini-css-extract-plugin": "^0.4.0",
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0"
+  },
+  "repository": "https://github.com/mapbox/basic.git"
+}

@@ -16,9 +16,6 @@ function start(rawConfig, configDir) {
   logger.log(`Starting chunk-light. ${chalk.yellow('Wait ...')}`);
 
   const cl = validateConfig(rawConfig, configDir);
-  if (cl.production === undefined) {
-    cl.production = false;
-  }
 
   const webpackConfig = createWebpackConfig(cl);
 
@@ -45,7 +42,7 @@ function start(rawConfig, configDir) {
       hasCompiled = true;
       onFirstCompilation();
     } else {
-      logger.log('Finished compiling.');
+      logger.log('Compiled JS.');
     }
 
     if (compilationError) {
@@ -59,10 +56,8 @@ function start(rawConfig, configDir) {
       return;
     }
 
-    try {
-      writeWebpackStats(cl.outputDirectory, stats);
-    } catch (writeError) {
-      handleError(writeError);
+    if (cl.stats) {
+      writeWebpackStats(cl.stats, stats);
     }
   };
 
