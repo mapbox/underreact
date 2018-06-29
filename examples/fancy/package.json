@@ -12,6 +12,5 @@
     "mini-css-extract-plugin": "^0.4.0",
     "react": "^16.0.0",
     "react-dom": "^16.0.0"
-  },
-  "repository": "https://github.com/mapbox/basic.git"
+  }
 }

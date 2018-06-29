@@ -9,6 +9,7 @@ const renderWebpackErrors = require('../lib/render-webpack-errors');
 const startServer = require('../lib/start-server');
 const publicFiles = require('../lib/public-files');
 const htmlCreator = require('../lib/html-creator');
+const cssCreator = require('../lib/css-creator');
 const writeWebpackStats = require('../lib/write-webpack-stats');
 const logger = require('../lib/chunk-light-logger');
 
@@ -22,6 +23,8 @@ function start(rawConfig, configDir) {
   const onFirstCompilation = () => {
     htmlCreator.write(cl);
     htmlCreator.watch(cl);
+    cssCreator.write(cl).catch(handleError);
+    cssCreator.watch(cl);
     startServer(cl);
   };
 

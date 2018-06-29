@@ -1,0 +1,17 @@
+@font-face {
+  font-family: 'Open Sans';
+  font-weight: bold;
+  src: url('https://api.mapbox.com/mapbox-assembly/fonts/opensans-regular.v1.woff2') format('woff2'),
+    url('https://api.mapbox.com/mapbox-assembly/fonts/opensans-regular.v1.woff') format('woff');
+}
+
+body {
+  background-color: pink;
+  font-family: 'Open Sans';
+}
+
+.snowflake {
+  background-image: url(./images/snowflake.jpg);
+  background-size: contain;
+  background-repeat: no-repeat;
+}

@@ -10,6 +10,7 @@ const renderWebpackErrors = require('../lib/render-webpack-errors');
 const logger = require('../lib/chunk-light-logger');
 const publicFiles = require('../lib/public-files');
 const htmlCreator = require('../lib/html-creator');
+const cssCreator = require('../lib/css-creator');
 const writeWebpackStats = require('../lib/write-webpack-stats');
 
 function build(rawConfig, configDir) {
@@ -45,10 +46,12 @@ function build(rawConfig, configDir) {
   };
 
   return runWebpack()
-    .then(() => htmlCreator.write(cl))
+    .then(() => cssCreator.write(cl))
+    .then(cssFilename => htmlCreator.write(cl, cssFilename))
     .then(() => publicFiles.copy(cl))
     .then(() => {
-      del.sync(path.join(cl.outputDirectory, '?(m-)assets.json'));
+      // Clean up files you won't need to deploy.
+      del.sync(path.join(cl.outputDirectory, 'assets.json'));
     })
     .then(() => {
       logger.log(chalk.green.bold('Finished building your site.'));

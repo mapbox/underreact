@@ -18,6 +18,14 @@ export default class App extends React.Component {
         <p>
           Value of the env variable ENV_VAR: {process.env.ENV_VAR}
         </p>
+        <p>
+          Background image snowflake:
+          <div className="snowflake" style={{ height: 300, width: 300 }}/>
+        </p>
+        <p>
+          Real image snowflake:
+          <img src="images/snowflake.jpg" />
+        </p>
       </div>
     );
   }
