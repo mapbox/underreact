@@ -1,6 +1,6 @@
 import React from 'react';
 import _ from 'lodash';
-import pFinally from 'p-finally';
+import pFinally from './vendor/p-finally';
 import './styles.less';
 
 export default class App extends React.Component {

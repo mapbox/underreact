@@ -1,10 +1,8 @@
 'use strict';
 
-const validateConfig = require('../lib/validate-config');
 const startServer = require('../lib/start-server');
 
-function serveStatic(rawConfig, configDir) {
-  const cl = validateConfig(rawConfig, configDir);
+function serveStatic(cl) {
   startServer(cl);
 }
 

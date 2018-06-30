@@ -4,7 +4,6 @@ const webpack = require('webpack');
 const del = require('del');
 const chalk = require('chalk');
 const createWebpackConfig = require('../lib/create-webpack-config');
-const validateConfig = require('../lib/validate-config');
 const renderWebpackErrors = require('../lib/render-webpack-errors');
 const startServer = require('../lib/start-server');
 const publicFiles = require('../lib/public-files');
@@ -13,10 +12,8 @@ const cssCreator = require('../lib/css-creator');
 const writeWebpackStats = require('../lib/write-webpack-stats');
 const logger = require('../lib/chunk-light-logger');
 
-function start(rawConfig, configDir) {
+function start(cl) {
   logger.log(`Starting chunk-light. ${chalk.yellow('Wait ...')}`);
-
-  const cl = validateConfig(rawConfig, configDir);
 
   const webpackConfig = createWebpackConfig(cl);
 
