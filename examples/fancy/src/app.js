@@ -1,8 +1,17 @@
 import React from 'react';
 import _ from 'lodash';
+import pFinally from 'p-finally';
 import './styles.less';
 
 export default class App extends React.Component {
+  componentDidMount() {
+    pFinally(Promise.resolve(), () => {
+      console.log('resolved!');
+    });
+    pFinally(Promise.reject().catch(() => {}), () => {
+      console.log('rejected!');
+    });
+  }
   render() {
     return (
       <div>
@@ -20,12 +29,12 @@ export default class App extends React.Component {
         </p>
         <p>
           Background image snowflake:
-          <div className="snowflake" style={{ height: 300, width: 300 }}/>
         </p>
+        <div className="snowflake" style={{ height: 300, width: 300 }}/>
         <p>
           Real image snowflake:
-          <img src="images/snowflake.jpg" />
         </p>
+        <img src="images/snowflake.jpg" />
       </div>
     );
   }

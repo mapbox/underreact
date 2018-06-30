@@ -5,6 +5,8 @@ const path = require('path');
 
 module.exports = ({ webpack, production }) => {
   return {
+    siteBasePath: 'fancy',
+    publicAssetsPath: 'cacheable-things',
     stylesheets: [
       path.join(__dirname, './src/bg.css'),
     ],
@@ -12,6 +14,7 @@ module.exports = ({ webpack, production }) => {
     babelPlugins: [
       require.resolve('babel-plugin-lodash')
     ],
+    babelInclude: ['p-finally'],
     webpackLoaders: [
       {
         test: /\.less$/,
@@ -35,7 +38,8 @@ module.exports = ({ webpack, production }) => {
       'ENV_VAR'
     ],
     browserslist: [
-      "last 2 chrome version"
+      "last 2 chrome version",
+      "ie 11"
     ]
   };
 };

@@ -175,7 +175,8 @@ function getConfigDetails(command, argv) {
   return {
     config: Object.assign({}, config, {
       production,
-      stats: argv.stats
+      stats: argv.stats,
+      port: argv.port
     }),
     configDir: path.dirname(configPath)
   };
