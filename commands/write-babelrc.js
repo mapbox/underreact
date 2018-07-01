@@ -3,6 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 const createBabelConfig = require('../lib/create-babel-config');
+const logger = require('../lib/chunk-light-logger');
 
 function writeBabelrc(cl, dir, env) {
   const babelConfig = createBabelConfig({
@@ -11,10 +12,15 @@ function writeBabelrc(cl, dir, env) {
     customPlugins: cl.babelPlugins,
     devBrowserslist: cl.devBrowserslist
   });
-  fs.writeFileSync(
-    path.join(dir, '.babelrc'),
-    JSON.stringify(babelConfig, null, 2)
-  );
+
+  try {
+    fs.writeFileSync(
+      path.join(dir, '.babelrc'),
+      JSON.stringify(babelConfig, null, 2)
+    );
+  } catch (error) {
+    logger.error(error);
+  }
 }
 
 module.exports = writeBabelrc;

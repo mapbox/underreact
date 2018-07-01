@@ -5,9 +5,9 @@ const del = require('del');
 const chalk = require('chalk');
 const createWebpackConfig = require('../lib/create-webpack-config');
 const logger = require('../lib/chunk-light-logger');
-const publicFiles = require('../lib/public-files');
-const htmlCreator = require('../lib/html-creator');
-const cssCreator = require('../lib/css-creator');
+const publicFilesCopier = require('../lib/public-files-copier');
+const htmlCompiler = require('../lib/html-compiler');
+const cssCompiler = require('../lib/css-compiler');
 const writeWebpackStats = require('../lib/write-webpack-stats');
 const webpackPromise = require('../lib/webpack-promise');
 
@@ -24,16 +24,17 @@ function build(cl) {
         writeWebpackStats(cl.stats, stats);
       }
     })
-    .then(() => cssCreator.write(cl))
-    .then(cssFilename => htmlCreator.write(cl, cssFilename))
-    .then(() => publicFiles.copy(cl))
+    .then(() => cssCompiler.write(cl))
+    .then(cssFilename => htmlCompiler.write(cl, cssFilename))
+    .then(() => publicFilesCopier.copy(cl))
     .then(() => {
       // Clean up files you won't need to deploy.
       del.sync(path.join(cl.outputDirectory, 'assets.json'));
     })
     .then(() => {
       logger.log(chalk.green.bold('Finished building your site.'));
-    });
+    })
+    .catch(logger.error);
 }
 
 module.exports = build;

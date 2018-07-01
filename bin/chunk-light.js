@@ -91,11 +91,7 @@ function defineStart(y) {
 }
 
 function runStart(argv) {
-  try {
-    start(getConfig('start', argv));
-  } catch (error) {
-    handleError(error);
-  }
+  start(getConfig('start', argv));
 }
 
 function defineBuild(y) {
@@ -111,11 +107,7 @@ function defineBuild(y) {
 }
 
 function runBuild(argv) {
-  try {
-    build(getConfig('build', argv)).catch(handleError);
-  } catch (error) {
-    handleError(error);
-  }
+  build(getConfig('build', argv));
 }
 
 function defineServeStatic(y) {
@@ -126,11 +118,7 @@ function defineServeStatic(y) {
 }
 
 function runServeStatic(argv) {
-  try {
-    serveStatic(getConfig('serve-static', argv));
-  } catch (error) {
-    handleError(error);
-  }
+  serveStatic(getConfig('serve-static', argv));
 }
 
 function defineWriteBabelrc(y) {
@@ -153,11 +141,7 @@ function defineWriteBabelrc(y) {
 }
 
 function runWriteBabelrc(argv) {
-  try {
-    writeBabelrc(getConfig('write-babelrc', argv), argv.output, argv.env);
-  } catch (error) {
-    handleError(error);
-  }
+  writeBabelrc(getConfig('write-babelrc', argv), argv.output, argv.env);
 }
 
 function defineVendor(y) {
@@ -178,7 +162,7 @@ function defineVendor(y) {
 }
 
 function runVendor(argv) {
-  vendor(argv.output, argv.pkg).catch(handleError);
+  vendor(argv.output, argv.pkg);
 }
 
 function getConfig(command, argv) {
@@ -235,8 +219,4 @@ function getConfig(command, argv) {
   });
 
   return normalizeConfig(configWithArgs, path.dirname(configPath));
-}
-
-function handleError(error) {
-  logger.error(error.stack ? error.stack : error);
 }

@@ -6,9 +6,9 @@ const chalk = require('chalk');
 const createWebpackConfig = require('../lib/create-webpack-config');
 const renderWebpackErrors = require('../lib/render-webpack-errors');
 const startServer = require('../lib/start-server');
-const publicFiles = require('../lib/public-files');
-const htmlCreator = require('../lib/html-creator');
-const cssCreator = require('../lib/css-creator');
+const publicFilesCopier = require('../lib/public-files-copier');
+const htmlCompiler = require('../lib/html-compiler');
+const cssCompiler = require('../lib/css-compiler');
 const writeWebpackStats = require('../lib/write-webpack-stats');
 const logger = require('../lib/chunk-light-logger');
 
@@ -18,16 +18,14 @@ function start(cl) {
   const webpackConfig = createWebpackConfig(cl);
 
   const onFirstCompilation = () => {
-    htmlCreator.write(cl);
-    htmlCreator.watch(cl);
-    cssCreator.write(cl).catch(handleError);
-    cssCreator.watch(cl);
+    htmlCompiler.watch(cl);
+    cssCompiler.watch(cl);
     startServer(cl);
   };
 
   del.sync(cl.outputDirectory);
 
-  publicFiles.watch(cl, handleError);
+  publicFilesCopier.watch(cl, logger.error);
 
   const compiler = webpack(webpackConfig);
   let hasCompiled = false;
@@ -46,7 +44,7 @@ function start(cl) {
     }
 
     if (compilationError) {
-      handleError(compilationError);
+      logger.error(compilationError);
       return;
     }
 
@@ -62,10 +60,6 @@ function start(cl) {
   };
 
   compiler.watch({ ignored: [/node_modules/] }, onCompilation);
-}
-
-function handleError(error) {
-  logger.error(error);
 }
 
 module.exports = start;

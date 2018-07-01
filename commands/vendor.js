@@ -3,6 +3,7 @@
 const path = require('path');
 const resolvePkg = require('resolve-pkg');
 const webpackPromise = require('../lib/webpack-promise');
+const logger = require('../lib/chunk-light-logger');
 
 function vendor(output, packageNames) {
   const entry = packageNames.reduce((memo, packageName) => {
@@ -23,7 +24,7 @@ function vendor(output, packageNames) {
     }
   };
 
-  return webpackPromise(webpackConfig);
+  return webpackPromise(webpackConfig).catch(logger.error);
 }
 
 module.exports = vendor;
