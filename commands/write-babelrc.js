@@ -9,8 +9,7 @@ function writeBabelrc(urc, dir, env) {
   const babelConfig = createBabelConfig({
     env,
     customPresets: urc.babelPresets,
-    customPlugins: urc.babelPlugins,
-    devBrowserslist: urc.devBrowserslist
+    customPlugins: urc.babelPlugins
   });
 
   try {

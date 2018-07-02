@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = () => {
-  return `
+  const html = `
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,4 +15,6 @@ module.exports = () => {
   <div id="app"></div>
 </body>
 </html>`;
+
+  return Promise.resolve(html);
 };

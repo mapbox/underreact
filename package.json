@@ -7,12 +7,17 @@
     "precommit": "lint-staged",
     "format": "prettier --write '**/*.js'",
     "lint": "eslint .",
+    "lint-md": "remark-preset-davidtheclark",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "lint-staged": {
     "*.js": [
       "eslint",
       "prettier --write",
+      "git add"
+    ],
+    "*.md": [
+      "remark-preset-davidtheclark",
       "git add"
     ]
   },
@@ -25,8 +30,8 @@
     "node": ">=6"
   },
   "peerDependencies": {
-    "react": "^16.4.1",
-    "react-dom": "^16.4.1"
+    "react": "^15.0.0",
+    "react-dom": "^15.0.0"
   },
   "dependencies": {
     "@mapbox/fusspot": "^0.1.0",
@@ -62,6 +67,7 @@
     "postcss-csso": "^3.0.0",
     "postcss-url": "^7.3.2",
     "promise": "^8.0.1",
+    "remark-preset-davidtheclark": "^0.8.1",
     "resolve-pkg": "^1.0.0",
     "rev-hash": "^2.0.0",
     "time-stamp": "^2.0.0",
