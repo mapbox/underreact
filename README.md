@@ -1,10 +1,10 @@
 # @mapbox/underreact
 
-🚨🚨**WORK IN PROGRESS!**🚨🚨
+🚨🚨 **WORK IN PROGRESS!** 🚨🚨
 
 Minimal, extensible React app build system that you won't need to eject when things get weird.
 
-It's a pretty thin wrapper around Babel, Webpack, and PostCSS, and will never accumulate an ecosystem of its own. And it aims to be just as useful for complex production applications with idiosyncratic demands as for simple prototypes.
+It's a pretty thin wrapper around Babel, Webpack, and PostCSS, and will never accumulate an ecosystem of its own. And it aims to be just as useful for production applications with idiosyncratic demands as for simple prototypes.
 
 ## Table of contents
 
