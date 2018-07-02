@@ -10,10 +10,10 @@ const publicFilesCopier = require('../lib/public-files-copier');
 const htmlCompiler = require('../lib/html-compiler');
 const cssCompiler = require('../lib/css-compiler');
 const writeWebpackStats = require('../lib/write-webpack-stats');
-const logger = require('../lib/chunk-light-logger');
+const logger = require('../lib/logger');
 
 function start(cl) {
-  logger.log(`Starting chunk-light. ${chalk.yellow('Wait ...')}`);
+  logger.log(`Starting underreact. ${chalk.yellow('Wait ...')}`);
 
   const webpackConfig = createWebpackConfig(cl);
 

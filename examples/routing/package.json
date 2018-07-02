@@ -1,7 +1,7 @@
 {
   "private": true,
   "scripts": {
-    "chunk-light": "node ../../bin/chunk-light --config ./clc.js"
+    "underreact": "node ../../bin/underreact --config ./clc.js"
   },
   "dependencies": {
     "react": "^16.0.0",

@@ -1,7 +1,7 @@
 {
   "private": true,
   "scripts": {
-    "chunk-light": "node ../../bin/chunk-light"
+    "underreact": "node ../../bin/underreact"
   },
   "dependencies": {
     "react": "^16.0.0",

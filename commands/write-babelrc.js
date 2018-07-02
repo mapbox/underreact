@@ -3,7 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 const createBabelConfig = require('../lib/create-babel-config');
-const logger = require('../lib/chunk-light-logger');
+const logger = require('../lib/logger');
 
 function writeBabelrc(cl, dir, env) {
   const babelConfig = createBabelConfig({

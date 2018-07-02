@@ -1,5 +1,5 @@
 {
-  "name": "@mapbox/tbd",
+  "name": "@mapbox/underreact",
   "version": "0.1.0",
   "description": "Minimal, extensible React app build system that you won't need to eject",
   "main": "index.js",
@@ -82,5 +82,22 @@
     "prettier": "^1.13.6",
     "react": "^16.4.1",
     "react-dom": "^16.4.1"
-  }
+  },
+  "bin": {
+    "underreact": "bin/underreact.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mapbox/underreact.git"
+  },
+  "keywords": [
+    "react",
+    "spa",
+    "app",
+    "build"
+  ],
+  "bugs": {
+    "url": "https://github.com/mapbox/underreact/issues"
+  },
+  "homepage": "https://github.com/mapbox/underreact#readme"
 }

@@ -9,7 +9,7 @@ const start = require('../commands/start');
 const build = require('../commands/build');
 const serveStatic = require('../commands/serve-static');
 const writeBabelrc = require('../commands/write-babelrc');
-const logger = require('../lib/chunk-light-logger');
+const logger = require('../lib/logger');
 const normalizeConfig = require('../lib/normalize-config');
 
 const configOption = [
@@ -65,9 +65,9 @@ yargs
     runWriteBabelrc
   )
   .demand(1, 'You must specify a command')
-  .example('chunk-light start')
-  .example('chunk-light build -c conf/clf.js')
-  .example('chunk-light serve-static --port 3000')
+  .example('underreact start')
+  .example('underreact build -c conf/clf.js')
+  .example('underreact serve-static --port 3000')
   .help().argv;
 
 function defineStart(y) {
@@ -141,7 +141,7 @@ function getConfig(command, argv) {
   const configIsNotSpecified = argv.config === undefined;
   let configPath;
   if (configIsNotSpecified) {
-    configPath = path.join(process.cwd(), 'chunk-light.config.js');
+    configPath = path.join(process.cwd(), 'underreact.config.js');
   } else {
     configPath = path.isAbsolute(argv.config)
       ? argv.config

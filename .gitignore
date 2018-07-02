@@ -1,5 +1,5 @@
 node_modules
 examples/**/package-lock.json
-_chunk-light*
+_underreact*
 examples/**/.babelrc
 examples/**/vendor
