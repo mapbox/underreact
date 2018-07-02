@@ -1,6 +1,6 @@
 # Configuration
 
-**No configuration is necessary to get started.**
+**No configuration is necessary to get started.** On most production projects you'll want to set at least a few of the "Basic configuration" options. "Advanced configuration" options shouldn't be necessary in *most* cases ... but you never know.
 
 ## Table of contents
 
@@ -17,7 +17,6 @@
   - [postcssPlugins](#postcssplugins)
   - [babelPlugins](#babelplugins)
   - [babelPresets](#babelpresets)
-  - [babelPlugins](#babelplugins-1)
   - [webpackLoaders](#webpackloaders)
   - [webpackPlugins](#webpackplugins)
   - [webpackConfigTransform](#webpackconfigtransform)
@@ -70,7 +69,7 @@ By default, the vendor bundle includes `react` and `react-dom`.
 
 ### environmentVariables
 
-Type: `Array<string>`. Default: `[]`.``
+Type: `Array<string>`. Default: `[]`.
 
 Environment variables that you'd like to make available in your client-side code. All you need to provide is the variable name, and it will be available at `process.env.${name}` in your JS.
 
@@ -121,6 +120,16 @@ By default, only [Autoprefixer] is applied.
 
 Type: `Array<string>`. Absolute paths, please. Default: `[]`.
 
+Additional plugins to pass to Babel. **You should `require.resolve()` your plugins.** Otherwise, Babel might end up looking in the wrong place for the npm package.
+
+For example:
+
+```js
+{ babelPlugins: [require.resolve('babel-plugin-transform-fancy-optimization')] }
+```
+
+See [`lib/create-babel-config.js`](../lib/create-babel-config.js) to see the defaults, which differ some depending on whether the configuration is targeting development, production, or Node.
+
 ### babelPresets
 
 Type: `Array<string>`. Absolute paths, please. Default: `[]`.
@@ -132,20 +141,6 @@ Additional presets to pass to Babel. **You should `require.resolve()` your prese
 ```
 
 The two presets [`babel-preset-react`] and [`babel-preset-env`] are automatically applied.
-
-### babelPlugins
-
-Type: `Array<string>`. Absolute paths, please. Default: `[]`.
-
-Additional plugins to pass to Babel. **You should `require.resolve()` your plugins.** Otherwise, Babel might end up looking in the wrong place for the npm package.
-
-For example:
-
-```js
-{ babelPlugins: [require.resolve('babel-plugin-transform-fancy-optimization')] }
-```
-
-See [`lib/create-babel-config.js`](../lib/create-babel-config.js) to see the defaults, which differ some depending on whether the configuration is targeting development, production, or Node.
 
 ### webpackLoaders
 

@@ -1,10 +1,18 @@
 # @mapbox/underreact
 
-🚨👷🏻‍
-**WORK IN PROGRESS!**
-👷🚨
+🚨🚨**WORK IN PROGRESS!**🚨🚨
 
-Minimal, extensible React app build system that you won't need to eject.
+Minimal, extensible React app build system that you won't need to eject when things get weird.
+
+It's a pretty thin wrapper around Babel, Webpack, and PostCSS, and will never accumulate an ecosystem of its own. And it aims to be just as useful for complex production applications with idiosyncratic demands as for simple prototypes.
+
+## Table of contents
+
+- [Installation](#installation)
+  - [Getting started](#getting-started)
+- [Usage](#usage)
+  - [Defining your HTML](#defining-your-html)
+  - [Configuration](#configuration)
 
 ## Installation
 
@@ -24,22 +32,7 @@ Install the peer dependencies:
 npm install react react-dom
 ```
 
-Add `_underreact*` to your `.gitignore`, and maybe other ignore files (e.g. `.eslintignore`). That's Underreact's default output directory.
-
-## Usage
-
-You should not installed the Underreact CLI globally. Instead, install it as a dependnecy of your project and use the `underreact` command via npm `"scripts"`, `npx`, or `node_modules/.bin/underreact`.
-
-The easiest way to do this is to set up npm scripts in `package.json`, so you can use `npm run start`, `npm run build`, etc., as needed.
-
-The CLI provides the following commands:
-
-- `start`: Start a development server.
-- `build`: Build for deployment.
-- `serve-static`: Serve the files that you built for deployment.
-- `write-babelrc`: Write a `.bablerc` file.
-
-All commands look for `underreact.config.js` in the current working directory.
+Add `_underreact*` to your `.gitignore`, and maybe other ignore files (e.g. `.eslintignore`). That way you'll ignore files that Underreact generates. (If you set the [`outputDirectory`] option, you'll want to do this for your custom value.)
 
 ### Getting started
 
@@ -75,17 +68,30 @@ All commands look for `underreact.config.js` in the current working directory.
 
 Now you are up and running, ready to start building your website.
 
+## Usage
+
+You should not install the Underreact CLI globally. Instead, install it as a dependency of your project and use the `underreact` command via npm `"scripts"`, `npx`, or `node_modules/.bin/underreact`. The easiest way is probably to set up npm scripts in `package.json`, so you can use `npm run start`, `npm run build`, etc., as needed.
+
+The CLI provides the following commands:
+
+- `start`: Start a development server.
+- `build`: Build for deployment.
+- `serve-static`: Serve the files that you built for deployment.
+- `write-babelrc`: Write a `.bablerc` file.
+
+All commands look for `underreact.config.js` in the current working directory.
+
 ### Defining your HTML
 
 Underreact is intended for single-page apps, so you only need one HTML page. Your JavaScript needs to use `react-dom` to render your application component into the HTML.
 
 You have 3 choices:
 
-- Write a JS module exporting a function that returns an HTML string or a Promise that resolves with an HTML string. Put it at `src/html.js` (the default) or point to it with the [`htmlSource`] configuration option.
+- **Preferred:** Write a JS module exporting a function that returns an HTML string or a Promise that resolves with an HTML string. Put it at `src/html.js` (the default) or point to it with the [`htmlSource`] configuration option.
 - Write static HTML page and point to it with the [`htmlSource`] configuration option.
 - Provide no HTML and let Underreact use a default document. *You should only do this during initial development*: you'll definitely want to define your own HTML at some point, if only for the `<title>`.
 
-A JS module is the most versatile option. You can use JS template literals to interpolate expressions, and you can use any async I/O you need to put together the page. For example, you could read JS files and inject their code directly into `<script>` tags, or inject CSS into `<style>` tags. You could make an HTTP call to fetch dynamic data and inject it into the page with a `<script>` tag, so it's available to your React app.
+A JS module is the most versatile option. You can use JS template literals to interpolate expressions, and you can use any async I/O you need to put together the page. For example, you could read JS files and inject their code directly into `<script>` tags, or inject CSS into `<style>` tags. Or you could make an HTTP call to fetch dynamic data and inject it into the page with a `<script>` tag, so it's available to your React app.
 
 The function exported by your JS module will be passed a context object with the following properties:
 
@@ -144,3 +150,5 @@ See [`docs/configuration.md`](docs/configuration.md).
 [`sitebasepath`]: ./docs/configuration.md#sitebasepath
 
 [`publicassetspath`]: ./docs/configuration.md#publicassetspath
+
+[`outputdirectory`]: ./docs/configuration.md#outputdirectory
