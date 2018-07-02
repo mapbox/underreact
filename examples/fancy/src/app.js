@@ -1,6 +1,6 @@
 import React from 'react';
 import _ from 'lodash';
-import pFinally from './vendor/p-finally';
+import pFinally from 'p-finally';
 import './styles.less';
 
 export default class App extends React.Component {
@@ -35,6 +35,9 @@ export default class App extends React.Component {
           Real image snowflake:
         </p>
         <img src="images/snowflake.jpg" />
+        <p>
+          The library <code>p-finally</code> is not ES5, so this page should throw an error in older browsers like IE11.
+        </p>
       </div>
     );
   }

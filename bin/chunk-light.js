@@ -9,7 +9,6 @@ const start = require('../commands/start');
 const build = require('../commands/build');
 const serveStatic = require('../commands/serve-static');
 const writeBabelrc = require('../commands/write-babelrc');
-const vendor = require('../commands/vendor');
 const logger = require('../lib/chunk-light-logger');
 const normalizeConfig = require('../lib/normalize-config');
 
@@ -64,12 +63,6 @@ yargs
     'Write a .babelrc file.',
     defineWriteBabelrc,
     runWriteBabelrc
-  )
-  .command(
-    'vendor [options] <pkg..>',
-    'Vendor ES2015+ npm packages so they can be compiled with Babel. They will be bundled with their dependencies but otherwise uncompiled: import them from the output directory, which defaults to `vendor/`.',
-    defineVendor,
-    runVendor
   )
   .demand(1, 'You must specify a command')
   .example('chunk-light start')
@@ -142,27 +135,6 @@ function defineWriteBabelrc(y) {
 
 function runWriteBabelrc(argv) {
   writeBabelrc(getConfig('write-babelrc', argv), argv.output, argv.env);
-}
-
-function defineVendor(y) {
-  y.version(false)
-    .positional('pkg', {
-      description: 'Packages that should be compiled',
-      type: 'array'
-    })
-    .option('output', {
-      description:
-        'Destination directory where compiled packages should be written',
-      alias: 'o',
-      type: 'string',
-      normalize: true,
-      default: './src/vendor'
-    })
-    .help();
-}
-
-function runVendor(argv) {
-  vendor(argv.output, argv.pkg);
 }
 
 function getConfig(command, argv) {

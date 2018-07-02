@@ -5,6 +5,10 @@ const path = require('path');
 
 module.exports = ({ webpack, production }) => {
   return {
+    polyfills: {
+      promise: true,
+      fetch: true
+    },
     siteBasePath: 'fancy',
     publicAssetsPath: 'cacheable-things',
     stylesheets: [
@@ -40,6 +44,10 @@ module.exports = ({ webpack, production }) => {
     browserslist: [
       "last 2 chrome version",
       "ie 11"
-    ]
+    ],
+    webpackConfigTransform: config => {
+      config.devtool = false;
+      return config;
+    }
   };
 };
