@@ -100,13 +100,15 @@ Type: `boolean`. Default: `false`.
 
 Set to `true` if you want to use HTML5 History for client-side routing (as opposed to hash routing). This configures the development server to fall back to `index.html` when you request nested routes.
 
+This is `false` by default because it should only be *intentionally* turned on, when you know you're going to configure your server to allow for HTML5 History—powered client-side routing.
+
 ## Advanced configuration
 
 ### htmlSource
 
-Type: `string`. Default: `${project-directory}/src/html.js`.
+Type: `string`. Absolute path, please. Default: `${project-directory}/src/html.js`.
 
-TODO
+The path to your HTML source file. For more information, read ["Defining your HTML"].
 
 ### postcssPlugins
 
@@ -237,3 +239,5 @@ If the specified port is unavailable, another port is used.
 [`babel-preset-react`]: https://babeljs.io/docs/plugins/preset-react/
 
 [`babel-preset-env`]: https://babeljs.io/docs/plugins/preset-env/
+
+["defining your html"]: ../readme.md#defining-your-html

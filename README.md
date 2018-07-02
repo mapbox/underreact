@@ -85,7 +85,7 @@ You have 3 choices:
 - Write static HTML page and point to it with the [`htmlSource`] configuration option.
 - Provide no HTML and let Underreact use a default document. *You should only do this during initial development*: you'll definitely want to define your own HTML at some point, if only for the `<title>`.
 
-A JS module is the most versatile option. You can use JS template literals to interpolate expressionss, and you can use any async I/O you need to put together the page. For example, you could read JS files and inject their code directly into `<script>` tags, or inject CSS into `<style>` tags. You could make an HTTP call to fetch dynamic data and inject it into the page with a `<script>` tag, so it's available to your React app.
+A JS module is the most versatile option. You can use JS template literals to interpolate expressions, and you can use any async I/O you need to put together the page. For example, you could read JS files and inject their code directly into `<script>` tags, or inject CSS into `<style>` tags. You could make an HTTP call to fetch dynamic data and inject it into the page with a `<script>` tag, so it's available to your React app.
 
 The function exported by your JS module will be passed a context object with the following properties:
 
