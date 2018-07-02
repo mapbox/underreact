@@ -1,7 +1,7 @@
 {
   "private": true,
   "scripts": {
-    "underreact": "node ../../bin/underreact --config ./clc.js"
+    "underreact": "node ../../bin/underreact --config ./urc.js"
   },
   "dependencies": {
     "react": "^16.0.0",

@@ -12,20 +12,20 @@ const cssCompiler = require('../lib/css-compiler');
 const writeWebpackStats = require('../lib/write-webpack-stats');
 const logger = require('../lib/logger');
 
-function start(cl) {
+function start(urc) {
   logger.log(`Starting underreact. ${chalk.yellow('Wait ...')}`);
 
-  const webpackConfig = createWebpackConfig(cl);
+  const webpackConfig = createWebpackConfig(urc);
 
   const onFirstCompilation = () => {
-    htmlCompiler.watch(cl);
-    cssCompiler.watch(cl);
-    startServer(cl);
+    htmlCompiler.watch(urc);
+    cssCompiler.watch(urc);
+    startServer(urc);
   };
 
-  del.sync(cl.outputDirectory);
+  del.sync(urc.outputDirectory);
 
-  publicFilesCopier.watch(cl, logger.error);
+  publicFilesCopier.watch(urc, logger.error);
 
   const compiler = webpack(webpackConfig);
   let hasCompiled = false;
@@ -54,8 +54,8 @@ function start(cl) {
       return;
     }
 
-    if (cl.stats) {
-      writeWebpackStats(cl.stats, stats);
+    if (urc.stats) {
+      writeWebpackStats(urc.stats, stats);
     }
   };
 

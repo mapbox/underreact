@@ -11,25 +11,25 @@ const cssCompiler = require('../lib/css-compiler');
 const writeWebpackStats = require('../lib/write-webpack-stats');
 const webpackPromise = require('../lib/webpack-promise');
 
-function build(cl) {
+function build(urc) {
   logger.log('Building your site ...');
 
-  del.sync(cl.outputDirectory);
+  del.sync(urc.outputDirectory);
 
-  const webpackConfig = createWebpackConfig(cl);
+  const webpackConfig = createWebpackConfig(urc);
 
   return webpackPromise(webpackConfig)
     .then(stats => {
-      if (cl.stats) {
-        writeWebpackStats(cl.stats, stats);
+      if (urc.stats) {
+        writeWebpackStats(urc.stats, stats);
       }
     })
-    .then(() => cssCompiler.write(cl))
-    .then(cssFilename => htmlCompiler.write(cl, cssFilename))
-    .then(() => publicFilesCopier.copy(cl))
+    .then(() => cssCompiler.write(urc))
+    .then(cssFilename => htmlCompiler.write(urc, cssFilename))
+    .then(() => publicFilesCopier.copy(urc))
     .then(() => {
       // Clean up files you won't need to deploy.
-      del.sync(path.join(cl.outputDirectory, 'assets.json'));
+      del.sync(path.join(urc.outputDirectory, 'assets.json'));
     })
     .then(() => {
       logger.log(chalk.green.bold('Finished building your site.'));

@@ -5,12 +5,12 @@ const path = require('path');
 const createBabelConfig = require('../lib/create-babel-config');
 const logger = require('../lib/logger');
 
-function writeBabelrc(cl, dir, env) {
+function writeBabelrc(urc, dir, env) {
   const babelConfig = createBabelConfig({
     env,
-    customPresets: cl.babelPresets,
-    customPlugins: cl.babelPlugins,
-    devBrowserslist: cl.devBrowserslist
+    customPresets: urc.babelPresets,
+    customPlugins: urc.babelPlugins,
+    devBrowserslist: urc.devBrowserslist
   });
 
   try {

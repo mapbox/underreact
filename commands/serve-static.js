@@ -2,8 +2,8 @@
 
 const startServer = require('../lib/start-server');
 
-function serveStatic(cl) {
-  startServer(cl);
+function serveStatic(urc) {
+  startServer(urc);
 }
 
 module.exports = serveStatic;
