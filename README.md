@@ -85,16 +85,17 @@ All commands look for `underreact.config.js` in the current working directory.
 
 Underreact is intended for single-page apps, so you only need one HTML page. Your JavaScript needs to use `react-dom` to render your application component into the HTML.
 
-You have 3 choices:
+You have 2 choices:
 
 - **Preferred:** Write a JS module exporting a function that returns an HTML string or a Promise that resolves with an HTML string. Put it at `src/html.js` (the default) or point to it with the [`htmlSource`] configuration option.
-- Write static HTML page and point to it with the [`htmlSource`] configuration option.
-- Provide no HTML and let Underreact use a default document. *You should only do this during initial development*: you'll definitely want to define your own HTML at some point, if only for the `<title>`.
+- Provide no HTML-rendering module and let Underreact create a default document. *You should only do this for prototyping and early development*: for production projects, you'll definitely want to define your own HTML at some point, if only for the `<title>`.
 
-A JS module is the most versatile option. You can use JS template literals to interpolate expressions, and you can use any async I/O you need to put together the page. For example, you could read JS files and inject their code directly into `<script>` tags, or inject CSS into `<style>` tags. Or you could make an HTTP call to fetch dynamic data and inject it into the page with a `<script>` tag, so it's available to your React app.
+In your JS module, you can use JS template literals to interpolate expressions, and you can use any async I/O you need to put together the page. For example, you could read JS files and inject their code directly into `<script>` tags, or inject CSS into `<style>` tags. Or you could make an HTTP call to fetch dynamic data and inject it into the page with a `<script>` tag, so it's available to your React app.
 
 The function exported by your JS module will be passed a context object with the following properties:
 
+- `renderJsBundles`: **You must use this function to add JS to the page.** Typically you'll invoke it at the end of your `<body>`. It adds the `<script>` tags that pull in Webpack bundles.
+- `renderCssLinks`: **You must use this function to add CSS to the page,** unless your only sources of CSS are `<link>`s and `<style>`s that you write directly into your HTML. It will add CSS compiled from the [`stylesheets`] option and also any CSS that was created through other Webpack plugins you added.
 - `siteBasePath`: The [`siteBasePath`] you set in your configuration (or the default).
 - `publicAssetsPath`: The [`publicAssetsPath`] you set in your configuration (or the default).
 - `production`: Whether or not the HTML is being built for production. You may want to use this, for example, to decide whether or not to minify JS or CSS you are inlining into the HTML.
@@ -108,7 +109,7 @@ const fs = require('fs');
 const path = require('path');
 const minimizeJs = require('./minimize-js');
 
-module.exports = ({ production }) => {
+module.exports = ({ renderJsBundles, renderCssLinks, production }) => {
   let inlineJs = fs.readFileSync(path.join(__dirname, './path/to/some-script.js'));
   if (production) {
     inlineJs = minimizeJs(inlineJs);
@@ -124,6 +125,7 @@ module.exports = ({ production }) => {
       <title>Words that rhyme with fish</title>
       <meta name="description" content="A website about words that rhyme with fish, like plish">
       <link href="https://api.mapbox.com/mapbox-assembly/v0.21.2/assembly.min.css" rel="stylesheet">
+      ${renderCssLinks()}
       <script async defer src="https://api.mapbox.com/mapbox-assembly/v0.21.2/assembly.js"></script>
       <script>${inlineJs}</script>
     </head>
@@ -132,6 +134,7 @@ module.exports = ({ production }) => {
       <div id="app">
         <!-- React app will be rendered into this div -->
       </div>
+      ${renderJsBundles()}
     </body>
 
     </html>
@@ -152,3 +155,5 @@ See [`docs/configuration.md`](docs/configuration.md).
 [`publicassetspath`]: ./docs/configuration.md#publicassetspath
 
 [`outputdirectory`]: ./docs/configuration.md#outputdirectory
+
+[`stylesheets`]: ./docs/configuration.md#stylesheets
