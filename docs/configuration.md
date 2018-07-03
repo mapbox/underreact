@@ -111,7 +111,7 @@ The path to your HTML source file. For more information, read ["Defining your HT
 
 ### postcssPlugins
 
-Type: `Array<Function> | Function`. Default: [Autoprefixer].
+Type: `Array<Function>`. Default: [Autoprefixer].
 
 All of the CSS you load via [`stylesheets`] is run through [PostCSS](http://postcss.org/), so you can apply any [PostCSS plugins](https://github.com/postcss/postcss/blob/master/docs/plugins.md) to it.
 By default, only [Autoprefixer] is applied.
