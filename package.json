@@ -73,6 +73,7 @@
     "time-stamp": "^2.0.0",
     "uglify-js": "^3.4.2",
     "uglifyjs-webpack-plugin": "^1.2.7",
+    "url-join": "^4.0.0",
     "webpack": "^4.12.2",
     "webpack-format-messages": "^2.0.1",
     "whatwg-fetch": "^2.0.4",

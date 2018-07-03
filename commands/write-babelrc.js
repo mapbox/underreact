@@ -2,7 +2,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const createBabelConfig = require('../lib/create-babel-config');
+const createBabelConfig = require('../lib/packageable/create-babel-config');
 const logger = require('../lib/logger');
 
 function writeBabelrc(urc, dir, env) {

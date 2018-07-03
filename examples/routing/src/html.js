@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = ({ renderBundledScripts, renderCssLinks }) => {
+module.exports = ({ renderJsBundles, renderCssLinks }) => {
   const html = `
     <!DOCTYPE html>
     <html lang="en">
