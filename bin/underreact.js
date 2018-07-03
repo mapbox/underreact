@@ -84,7 +84,11 @@ function defineStart(y) {
 }
 
 function runStart(argv) {
-  start(getConfig('start', argv));
+  try {
+    start(getConfig('start', argv));
+  } catch (error) {
+    errorOut(error);
+  }
 }
 
 function defineBuild(y) {
@@ -100,7 +104,11 @@ function defineBuild(y) {
 }
 
 function runBuild(argv) {
-  build(getConfig('build', argv));
+  try {
+    build(getConfig('build', argv));
+  } catch (error) {
+    errorOut(error);
+  }
 }
 
 function defineServeStatic(y) {
@@ -111,7 +119,11 @@ function defineServeStatic(y) {
 }
 
 function runServeStatic(argv) {
-  serveStatic(getConfig('serve-static', argv));
+  try {
+    serveStatic(getConfig('serve-static', argv));
+  } catch (error) {
+    errorOut(error);
+  }
 }
 
 function defineWriteBabelrc(y) {
@@ -134,7 +146,11 @@ function defineWriteBabelrc(y) {
 }
 
 function runWriteBabelrc(argv) {
-  writeBabelrc(getConfig('write-babelrc', argv), argv.output, argv.env);
+  try {
+    writeBabelrc(getConfig('write-babelrc', argv), argv.output, argv.env);
+  } catch (error) {
+    errorOut(error);
+  }
 }
 
 function getConfig(command, argv) {
@@ -176,7 +192,7 @@ function getConfig(command, argv) {
         : configModule;
   } catch (error) {
     if (!configIsNotSpecified) {
-      logger.log(
+      logger.error(
         `Failed to load configuration module from ${chalk.underline(
           configPath
         )}`
@@ -191,4 +207,9 @@ function getConfig(command, argv) {
   });
 
   return normalizeConfig(configWithArgs, path.dirname(configPath));
+}
+
+function errorOut(error) {
+  logger.error(error);
+  process.exit(1);
 }

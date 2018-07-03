@@ -18,7 +18,6 @@ module.exports = ({ webpack, production }) => {
     babelPlugins: [
       require.resolve('babel-plugin-lodash')
     ],
-    babelInclude: ['p-finally'],
     webpackLoaders: [
       {
         test: /\.less$/,

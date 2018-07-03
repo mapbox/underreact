@@ -18,14 +18,21 @@ function start(urc) {
   const webpackConfig = createWebpackConfig(urc);
 
   const onFirstCompilation = () => {
-    htmlCompiler.watch(urc);
-    cssCompiler.watch(urc);
-    startServer(urc);
+    Promise.all([
+      htmlCompiler.write(urc),
+      cssCompiler.write(urc),
+      publicFilesCopier.copy(urc)
+    ])
+      .then(() => {
+        htmlCompiler.watch(urc);
+        cssCompiler.watch(urc);
+        publicFilesCopier.watch(urc);
+        startServer(urc);
+      })
+      .catch(logger.error);
   };
 
   del.sync(urc.outputDirectory);
-
-  publicFilesCopier.watch(urc, logger.error);
 
   const compiler = webpack(webpackConfig);
   let hasCompiled = false;
