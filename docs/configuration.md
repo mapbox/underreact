@@ -20,7 +20,7 @@
   - [webpackLoaders](#webpackloaders)
   - [webpackPlugins](#webpackplugins)
   - [webpackConfigTransform](#webpackconfigtransform)
-  - [jsSource](#jssource)
+  - [jsEntry](#jsentry)
   - [outputDirectory](#outputdirectory)
   - [publicDirectory](#publicdirectory)
   - [publicAssetsPath](#publicassetspath)
@@ -128,7 +128,7 @@ For example:
 { babelPlugins: [require.resolve('babel-plugin-transform-fancy-optimization')] }
 ```
 
-See [`lib/create-babel-config.js`](../lib/create-babel-config.js) to see the defaults, which differ some depending on whether the configuration is targeting development, production, or Node.
+See [`lib/packageable/create-babel-config.js`](../lib/packageable/create-babel-config.js) to see the defaults, which differ some depending on whether the configuration is targeting development, production, or Node.
 
 ### babelPresets
 
@@ -177,11 +177,11 @@ Type: `config => transformedConfig`. Default `x => x` (identify function).
 If you want to make changes to the Webpack configuration beyond what's available in the above options, you can use this, the nuclear option.
 Your function receives the Webpack configuration that Underreact generates and returns a new Webpack configuration, representing your heart's desires.
 
-### jsSource
+### jsEntry
 
 Type: `string`. Absolute path, please. Default: `${project-directory}/src/index.js`.
 
-You main JS file. Typically this is the file where you'll use `react-dom` to render your app on an element.
+The entry JS file for your app. Typically this is the file where you'll use `react-dom` to render your app on an element.
 
 In the default value, `project-directory` refers to the directory of your `underreact.config.js` file, or the current working directory.
 
