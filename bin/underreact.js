@@ -129,12 +129,6 @@ function runServeStatic(argv) {
 function defineWriteBabelrc(y) {
   y.version(false)
     .option(...configOption)
-    .option('env', {
-      description: 'Environment .babelrc should target',
-      alias: 'e',
-      choices: ['node', 'prod', 'dev'],
-      default: 'node'
-    })
     .option('output', {
       description: 'Directory where .babelrc should be written',
       alias: 'o',
