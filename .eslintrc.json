@@ -1,6 +1,0 @@
-{
-  "extends": [
-    "@mapbox/eslint-config-mapbox",
-    "prettier"
-  ]
-}

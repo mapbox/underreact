@@ -4,10 +4,9 @@
   "description": "Minimal, extensible React app build system that you won't need to eject",
   "main": "index.js",
   "scripts": {
-    "precommit": "lint-staged",
-    "format": "prettier --write '**/*.js'",
-    "lint": "eslint .",
-    "lint-md": "remark-preset-davidtheclark",
+    "lint": "stickler lint",
+    "format": "stickler format",
+    "precommit": "stickler precommit",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "lint-staged": {
@@ -81,6 +80,7 @@
   },
   "devDependencies": {
     "@mapbox/eslint-config-mapbox": "^1.2.1",
+    "@mapbox/stickler": "^0.2.5",
     "eslint": "^5.0.1",
     "eslint-config-prettier": "^2.9.0",
     "eslint-plugin-node": "^6.0.1",
