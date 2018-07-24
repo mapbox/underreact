@@ -9,20 +9,6 @@
     "precommit": "stickler precommit",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "lint-staged": {
-    "*.js": [
-      "eslint",
-      "prettier --write",
-      "git add"
-    ],
-    "*.md": [
-      "remark-preset-davidtheclark",
-      "git add"
-    ]
-  },
-  "prettier": {
-    "singleQuote": true
-  },
   "author": "Mapbox",
   "license": "BSD-2-Clause",
   "engines": {
@@ -79,14 +65,7 @@
     "yargs": "^11.0.0"
   },
   "devDependencies": {
-    "@mapbox/eslint-config-mapbox": "^1.2.1",
     "@mapbox/stickler": "^0.2.5",
-    "eslint": "^5.0.1",
-    "eslint-config-prettier": "^2.9.0",
-    "eslint-plugin-node": "^6.0.1",
-    "husky": "^0.14.3",
-    "lint-staged": "^7.2.0",
-    "prettier": "^1.13.6",
     "react": "^16.4.1",
     "react-dom": "^16.4.1"
   },
