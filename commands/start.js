@@ -3,12 +3,14 @@
 const webpack = require('webpack');
 const del = require('del');
 const chalk = require('chalk');
+const chokidar = require('chokidar');
+
 const createWebpackConfig = require('../lib/create-webpack-config');
 const renderWebpackErrors = require('../lib/render-webpack-errors');
 const startServer = require('../lib/start-server');
 const publicFilesCopier = require('../lib/public-files-copier');
-const htmlCompiler = require('../lib/html-compiler');
-const cssCompiler = require('../lib/css-compiler');
+const { writeHtml } = require('../lib/html-compiler');
+const { writeCss } = require('../lib/css-compiler');
 const writeWebpackStats = require('../lib/write-webpack-stats');
 const logger = require('../lib/logger');
 
@@ -18,14 +20,26 @@ function start(urc) {
   const webpackConfig = createWebpackConfig(urc);
 
   const onFirstCompilation = () => {
-    Promise.all([
-      htmlCompiler.write(urc),
-      cssCompiler.write(urc),
-      publicFilesCopier.copy(urc)
-    ])
+    Promise.all([writeHtml(urc), writeCss(urc), publicFilesCopier.copy(urc)])
       .then(() => {
-        htmlCompiler.watch(urc);
-        cssCompiler.watch(urc);
+        const watcherHtml = chokidar.watch(urc.htmlSource, {
+          ignoreInitial: true
+        });
+        watcherHtml.on('all', () => {
+          logger.log('Writing HTML');
+          writeHtml(urc).catch(logger.error);
+        });
+        watcherHtml.on('error', logger.error);
+
+        const watchStyleSheets = chokidar.watch(urc.stylesheets, {
+          ignoreInitial: true
+        });
+        watchStyleSheets.on('all', () => {
+          logger.log('Writing CSS');
+          writeCss(urc).catch(logger.error);
+        });
+        watchStyleSheets.on('error', logger.error);
+
         publicFilesCopier.watch(urc);
         startServer(urc);
       })
