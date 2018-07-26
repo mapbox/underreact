@@ -10,7 +10,7 @@ const build = require('../commands/build');
 const serveStatic = require('../commands/serve-static');
 const writeBabelrc = require('../commands/write-babelrc');
 const logger = require('../lib/logger');
-const normalizeConfig = require('../lib/normalize-config');
+const createConfig = require('../lib/create-config');
 const getDefaultConfig = require('../lib/default-underreact.config');
 
 const configOption = [
@@ -200,7 +200,7 @@ function getConfig(command, argv) {
     }
   }
 
-  return normalizeConfig(userConfig, defaultConfig);
+  return createConfig(userConfig, defaultConfig);
 }
 
 function errorOut(error) {
