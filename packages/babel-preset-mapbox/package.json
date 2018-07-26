@@ -1,0 +1,41 @@
+{
+  "name": "@mapbox/babel-preset-mapbox",
+  "version": "6.0.0",
+  "description": "",
+  "main": "index.js",
+  "engines": {
+    "node": ">6"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mapbox/babel-preset-mapbox.git"
+  },
+  "author": "Mapbox",
+  "contributors": [
+    "Kushan Joshi <0o3ko0@gmail.com>"
+  ],
+  "license": "BSD 2-Clause",
+  "dependencies": {
+    "@mapbox/babel-plugin-transform-jsxtreme-markdown": "^0.5.0",
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.4",
+    "babel-plugin-dynamic-import-node": "^2.0.0",
+    "babel-plugin-syntax-dynamic-import": "^6.18.0",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-plugin-transform-es2015-destructuring": "^6.23.0",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-plugin-transform-react-jsx-self": "^6.22.0",
+    "babel-plugin-transform-react-jsx-source": "^6.22.0",
+    "babel-plugin-transform-react-remove-prop-types": "^0.4.13",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-react": "^6.24.1",
+    "is-plain-obj": "^1.1.0"
+  }
+}
