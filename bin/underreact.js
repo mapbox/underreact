@@ -11,7 +11,7 @@ const build = require('../commands/build');
 const serveStatic = require('../commands/serve-static');
 const logger = require('../lib/logger');
 const { DEFAULT_CONFIG_NAME } = require('../lib/constants');
-const normalizeConfig = require('../lib/normalize-config');
+const createConfig = require('../lib/config');
 const getDefaultConfig = require('../lib/default-underreact.config');
 
 const configOption = [
@@ -167,7 +167,7 @@ function getConfig(command, argv) {
           port: argv.port
         })
       );
-      return normalizeConfig(userConfig, defaultConfig);
+      return createConfig(userConfig, defaultConfig);
     });
 }
 
