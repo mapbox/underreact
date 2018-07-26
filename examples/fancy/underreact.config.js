@@ -40,10 +40,6 @@ module.exports = ({ webpack, production }) => {
     environmentVariables: [
       'ENV_VAR'
     ],
-    browserslist: [
-      "last 2 chrome version",
-      "ie 11"
-    ],
     webpackConfigTransform: config => {
       config.devtool = false;
       return config;

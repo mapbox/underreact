@@ -12,6 +12,7 @@ const publicFilesCopier = require('../lib/public-files-copier');
 const { writeHtml } = require('../lib/html-compiler');
 const { writeCss } = require('../lib/css-compiler');
 const writeWebpackStats = require('../lib/write-webpack-stats');
+const autoCopy = require('../lib/packageable/auto-copy');
 const logger = require('../lib/logger');
 
 function start(urc) {
@@ -20,8 +21,9 @@ function start(urc) {
   const webpackConfig = createWebpackConfig(urc);
 
   const onFirstCompilation = () => {
-    Promise.all([writeHtml(urc), writeCss(urc), publicFilesCopier.copy(urc)])
+    Promise.all([writeHtml(urc), writeCss(urc), publicFilesCopier(urc)])
       .then(() => {
+        // HTML
         const watcherHtml = chokidar.watch(urc.htmlSource, {
           ignoreInitial: true
         });
@@ -31,6 +33,7 @@ function start(urc) {
         });
         watcherHtml.on('error', logger.error);
 
+        // CSS
         const watchStyleSheets = chokidar.watch(urc.stylesheets, {
           ignoreInitial: true
         });
@@ -40,7 +43,19 @@ function start(urc) {
         });
         watchStyleSheets.on('error', logger.error);
 
-        publicFilesCopier.watch(urc);
+        // Public Dir files
+        const copier = autoCopy.watch({
+          sourceDir: urc.publicDirectory,
+          destDir: urc.outputDirectory
+        });
+        copier.on('copy', filename => {
+          logger.log(`Copying ${filename}`);
+        });
+        copier.on('delete', filename => {
+          logger.log(`Deleting ${filename}`);
+        });
+        copier.on('error', logger.error);
+
         startServer(urc);
       })
       .catch(logger.error);
