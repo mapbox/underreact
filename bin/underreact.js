@@ -10,7 +10,8 @@ const build = require('../commands/build');
 const serveStatic = require('../commands/serve-static');
 const writeBabelrc = require('../commands/write-babelrc');
 const logger = require('../lib/logger');
-const normalizeConfig = require('../lib/normalize-config');
+const createConfig = require('../lib/config');
+const getDefaultConfig = require('../lib/default-underreact.config');
 
 const configOption = [
   'config',
@@ -172,15 +173,20 @@ function getConfig(command, argv) {
     webpack,
     command,
     production,
-    argv
+    argv,
+    configDir: path.dirname(configPath),
+    stats: argv.stats,
+    port: argv.port
   };
 
-  let config = {};
+  const defaultConfig = getDefaultConfig(configModuleContext);
+
+  let userConfig = {};
   // If the user didn't use --config, it's fine if the default does not exist.
   // But if they did specify a path, tell them if it doesn't work.
   try {
     const configModule = require(configPath);
-    config =
+    userConfig =
       typeof configModule === 'function'
         ? configModule(configModuleContext)
         : configModule;
@@ -194,13 +200,7 @@ function getConfig(command, argv) {
     }
   }
 
-  const configWithArgs = Object.assign({}, config, {
-    production,
-    stats: argv.stats,
-    port: argv.port
-  });
-
-  return normalizeConfig(configWithArgs, path.dirname(configPath));
+  return createConfig(userConfig, defaultConfig);
 }
 
 function errorOut(error) {
