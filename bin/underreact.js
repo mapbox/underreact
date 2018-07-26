@@ -149,20 +149,24 @@ function getConfig(command, argv) {
       } else if (argv.env === 'prod') {
         production = true;
       }
+
       // This object is passed as the argument to the config module, if it's a
       // function.
       const configModuleContext = {
         webpack,
         command,
-        production,
-        argv,
-        configDir: path.dirname(configPath),
-        stats: argv.stats,
-        port: argv.port
+        production
       };
-      const defaultConfig = getDefaultConfig(configModuleContext);
-      const userConfig = getUserConfig(configModuleContext);
 
+      const userConfig = getUserConfig(configModuleContext);
+      const defaultConfig = getDefaultConfig(
+        Object.assign({}, configModuleContext, {
+          argv,
+          configDir: path.dirname(configPath),
+          stats: argv.stats,
+          port: argv.port
+        })
+      );
       return normalizeConfig(userConfig, defaultConfig);
     });
 }
