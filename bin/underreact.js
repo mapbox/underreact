@@ -10,7 +10,7 @@ const build = require('../commands/build');
 const serveStatic = require('../commands/serve-static');
 const writeBabelrc = require('../commands/write-babelrc');
 const logger = require('../lib/logger');
-const createConfig = require('../lib/create-config');
+const createConfig = require('../lib/config');
 const getDefaultConfig = require('../lib/default-underreact.config');
 
 const configOption = [
