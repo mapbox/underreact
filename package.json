@@ -76,6 +76,7 @@
     "eslint-plugin-node": "^6.0.1",
     "husky": "^0.14.3",
     "jest": "^23.4.1",
+    "jest-serializer-path": "^0.1.15",
     "lint-staged": "^7.2.0",
     "prettier": "^1.13.6",
     "react": "^16.4.1",
@@ -102,6 +103,10 @@
       "text",
       "html"
     ],
+    "snapshotSerializers": [
+      "jest-serializer-path"
+    ],
+    "setupTestFrameworkScriptFile": "<rootDir>/testSetup.js",
     "collectCoverageFrom": [
       "<rootDir>/lib/**/*.js",
       "!<rootDir>/test/**"
