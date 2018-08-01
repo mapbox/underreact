@@ -106,7 +106,7 @@
     "snapshotSerializers": [
       "jest-serializer-path"
     ],
-    "setupTestFrameworkScriptFile": "<rootDir>/testSetup.js",
+    "setupTestFrameworkScriptFile": "<rootDir>/test-setup.js",
     "collectCoverageFrom": [
       "<rootDir>/lib/**/*.js",
       "!<rootDir>/test/**"
