@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = ({ renderBundledScripts, renderCssLinks }) => {
+module.exports = ({ renderCssLinks, renderJsBundles }) => {
   return `
     <!DOCTYPE html>
     <html lang="en">
@@ -11,7 +11,7 @@ module.exports = ({ renderBundledScripts, renderCssLinks }) => {
       ${renderCssLinks()}
     </head>
     <body>
-      ${renderBundledScripts()}
+      ${renderJsBundles()}
     </body>
     </html>
   `;
