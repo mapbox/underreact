@@ -6,7 +6,7 @@ Urc {
   "babelPresets": Array [],
   "devServerHistoryFallback": false,
   "environmentVariables": Array [],
-  "htmlSource": "<PROJECT_ROOT>/underreact.config.js/src/html.js",
+  "htmlSource": "<PROJECT_ROOT>/lib/default-html.js",
   "jsEntry": "<PROJECT_ROOT>/underreact.config.js/src/entry.js",
   "outputDirectory": "<PROJECT_ROOT>/underreact.config.js/_underreact-site",
   "polyfills": Object {

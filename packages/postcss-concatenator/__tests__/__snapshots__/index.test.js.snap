@@ -1,0 +1,45 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`with a URL output contains each CSS file in order 1`] = `
+"#bar { color: yellow; }#a {
+  color: blue;
+}#baz { color: pink; }
+/*# sourceMappingURL=output.css.map */"
+`;
+
+exports[`with external source map output contains each CSS file in order, with an external source map 1`] = `
+"#a {
+  color: blue;
+}#c {
+  color: purple;
+  background-image: url('something_2cc5d05.png');
+}#b {
+  color: red;
+}
+
+/*# sourceMappingURL=output.css.map */"
+`;
+
+exports[`with external source map source map written 1`] = `"{\\"version\\":3,\\"sources\\":[\\"../../../../../../..<PROJECT_ROOT>/packages/postcss-concatenator/__tests__/fixtures/a.css\\",\\"../../../../../../..<PROJECT_ROOT>/packages/postcss-concatenator/__tests__/fixtures/nested/c.css\\",\\"../../../../../../..<PROJECT_ROOT>/packages/postcss-concatenator/__tests__/fixtures/b.css\\"],\\"names\\":[],\\"mappings\\":\\"AAAA;EACE,YAAY;CACb,ACFD;EACE,cAAc;EACd,+CAAsD;CACvD,ACHD;EACE,WAAW;CACZ\\",\\"file\\":\\"output.css\\",\\"sourcesContent\\":[\\"#a {/n  color: blue;/n}/n\\",\\"#c {/n  color: purple;/n  background-image: url('./nested-again/something.png');/n}/n\\",\\"#b {/n  color: red;/n}/n\\"]}"`;
+
+exports[`with inline source map nice error when PostCSS fails to parse 1`] = `
+"PostCSS error: <PROJECT_ROOT>/packages/postcss-concatenator/__tests__/fixtures/invalid.css:2:3: Unknown word
+ [90m 1 | [39m[35m#invalid[39m [33m{[39m
+[31m[1m>[22m[39m[90m 2 | [39m  foo 7
+ [90m   | [39m  [31m[1m^[22m[39m
+ [90m 3 | [39m[33m}[39m
+ [90m 4 | [39m"
+`;
+
+exports[`with inline source map output contains each CSS file in order, with an inline source map 1`] = `
+"#a {
+  color: blue;
+}#c {
+  color: purple;
+  background-image: url('something_2cc5d05.png');
+}#b {
+  color: red;
+}
+
+/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uLy4uLy4uLy4uLy4uLy4uL1VzZXJzL2RhdmlkY2xhcmsvZGV2L21hcGJveC91bmRlcnJlYWN0L3BhY2thZ2VzL3Bvc3Rjc3MtY29uY2F0ZW5hdG9yL19fdGVzdHNfXy9maXh0dXJlcy9hLmNzcyIsIi4uLy4uLy4uLy4uLy4uLy4uLy4uL1VzZXJzL2RhdmlkY2xhcmsvZGV2L21hcGJveC91bmRlcnJlYWN0L3BhY2thZ2VzL3Bvc3Rjc3MtY29uY2F0ZW5hdG9yL19fdGVzdHNfXy9maXh0dXJlcy9uZXN0ZWQvYy5jc3MiLCIuLi8uLi8uLi8uLi8uLi8uLi8uLi9Vc2Vycy9kYXZpZGNsYXJrL2Rldi9tYXBib3gvdW5kZXJyZWFjdC9wYWNrYWdlcy9wb3N0Y3NzLWNvbmNhdGVuYXRvci9fX3Rlc3RzX18vZml4dHVyZXMvYi5jc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7RUFDRSxZQUFZO0NBQ2IsQUNGRDtFQUNFLGNBQWM7RUFDZCwrQ0FBc0Q7Q0FDdkQsQUNIRDtFQUNFLFdBQVc7Q0FDWiIsImZpbGUiOiJvdXRwdXQuY3NzIiwic291cmNlc0NvbnRlbnQiOlsiI2Ege1xuICBjb2xvcjogYmx1ZTtcbn1cbiIsIiNjIHtcbiAgY29sb3I6IHB1cnBsZTtcbiAgYmFja2dyb3VuZC1pbWFnZTogdXJsKCcuL25lc3RlZC1hZ2Fpbi9zb21ldGhpbmcucG5nJyk7XG59XG4iLCIjYiB7XG4gIGNvbG9yOiByZWQ7XG59XG4iXX0= */"
+`;
