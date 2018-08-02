@@ -41,7 +41,14 @@ describe('with inline source map', () => {
   });
 
   test('output contains each CSS file in order, with an inline source map', () => {
-    expect(fs.readFileSync(outputPath, 'utf8')).toMatchSnapshot();
+    const output = fs.readFileSync(outputPath, 'utf8');
+    // Check the source map independent of the snapshot because it will contain
+    // (encoded) file-system-specific paths that the PROJECT_ROOT Jest
+    // serializer will not find (because they're encoded).
+    expect(output.replace(/\/\*#[\s\S]+\*\//, '')).toMatchSnapshot();
+    expect(output).toContain(
+      '/*# sourceMappingURL=data:application/json;base64'
+    );
   });
 
   test('source map not written', () => {
