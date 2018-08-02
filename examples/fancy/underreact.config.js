@@ -14,7 +14,7 @@ module.exports = ({ webpack, production }) => {
     stylesheets: [
       path.join(__dirname, './src/bg.css'),
     ],
-    htmlSource: path.join(__dirname, './src/index.html'),
+    htmlSource: path.join(__dirname, './src/html.js'),
     babelPlugins: [
       require.resolve('babel-plugin-lodash')
     ],
