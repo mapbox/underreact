@@ -37,6 +37,7 @@ function build(urc) {
     })
     .then(() => {
       logger.log(chalk.green.bold('Finished building your site.'));
+      return true;
     })
     .catch(logger.error);
 }

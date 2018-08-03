@@ -4,8 +4,19 @@
     "es6": true,
     "jest": true
   },
-  "extends": [
-    "@mapbox/eslint-config-mapbox",
-    "prettier"
+  "extends": ["@mapbox/eslint-config-mapbox", "prettier"],
+  "overrides": [
+    {
+      "files": ["*.test.js", "*.spec.js"],
+      "rules": {
+        "node/no-unsupported-features": [
+          "error",
+          {
+            "version": 8,
+            "ignores": []
+          }
+        ]
+      }
+    }
   ]
 }
