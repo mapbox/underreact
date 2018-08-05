@@ -1,8 +1,8 @@
 'use strict';
 
 // Do this as the first thing so that any code reading it knows the right env.
-process.env.BABEL_ENV = 'development';
-process.env.NODE_ENV = 'development';
+process.env.BABEL_ENV = process.env.BABEL_ENV || 'development';
+process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
 const webpack = require('webpack');
 const del = require('del');
@@ -65,7 +65,7 @@ function start(urc) {
       .catch(logger.error);
   };
 
-  del.sync(urc.outputDirectory);
+  del.sync(urc.outputDirectory, { force: true });
 
   const compiler = webpack(webpackConfig);
   let hasCompiled = false;
