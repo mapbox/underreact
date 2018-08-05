@@ -7,6 +7,7 @@ process.env.NODE_ENV = process.env.NODE_ENV || 'production';
 const path = require('path');
 const del = require('del');
 const chalk = require('chalk');
+
 const createWebpackConfig = require('../lib/create-webpack-config');
 const logger = require('../lib/logger');
 const publicFilesCopier = require('../lib/public-files-copier');
