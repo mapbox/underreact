@@ -9,12 +9,12 @@ const del = require('del');
 const chalk = require('chalk');
 const chokidar = require('chokidar');
 
-const createWebpackConfig = require('../lib/create-webpack-config');
-const renderWebpackErrors = require('../lib/render-webpack-errors');
+const createWebpackConfig = require('../lib/webpack/create-webpack-config');
+const renderWebpackErrors = require('../lib/webpack/render-webpack-errors');
 const startServer = require('../lib/start-server');
 const { writeHtml } = require('../lib/html-compiler');
 const { writeCss } = require('../lib/css-compiler');
-const writeWebpackStats = require('../lib/write-webpack-stats');
+const writeWebpackStats = require('../lib/webpack/write-webpack-stats');
 const autoCopy = require('../lib/utils/auto-copy');
 const logger = require('../lib/logger');
 

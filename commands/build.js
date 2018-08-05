@@ -8,13 +8,13 @@ const path = require('path');
 const del = require('del');
 const chalk = require('chalk');
 
-const createWebpackConfig = require('../lib/create-webpack-config');
+const createWebpackConfig = require('../lib/webpack/create-webpack-config');
 const logger = require('../lib/logger');
 const autoCopy = require('../lib/utils/auto-copy');
 const { writeHtml } = require('../lib/html-compiler');
 const { writeCss } = require('../lib/css-compiler');
-const writeWebpackStats = require('../lib/write-webpack-stats');
-const webpackPromise = require('../lib/webpack-promise');
+const writeWebpackStats = require('../lib/webpack/write-webpack-stats');
+const webpackPromise = require('../lib/webpack/webpack-promise');
 
 function build(urc) {
   logger.log('Building your site ...');
