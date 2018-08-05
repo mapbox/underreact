@@ -10,7 +10,7 @@ const chalk = require('chalk');
 
 const createWebpackConfig = require('../lib/create-webpack-config');
 const logger = require('../lib/logger');
-const publicFilesCopier = require('../lib/public-files-copier');
+const autoCopy = require('../lib/utils/auto-copy');
 const { writeHtml } = require('../lib/html-compiler');
 const { writeCss } = require('../lib/css-compiler');
 const writeWebpackStats = require('../lib/write-webpack-stats');
@@ -32,7 +32,12 @@ function build(urc) {
       })
       .then(() => writeCss(urc))
       .then(cssFilename => writeHtml(urc, cssFilename))
-      .then(() => publicFilesCopier(urc))
+      .then(() =>
+        autoCopy.copy({
+          sourceDir: urc.publicDirectory,
+          destDir: urc.outputDirectory
+        })
+      )
       // Clean up files you won't need to deploy.
       .then(() =>
         del(path.join(urc.outputDirectory, 'assets.json'), { force: true })

@@ -12,7 +12,6 @@ const chokidar = require('chokidar');
 const createWebpackConfig = require('../lib/create-webpack-config');
 const renderWebpackErrors = require('../lib/render-webpack-errors');
 const startServer = require('../lib/start-server');
-const publicFilesCopier = require('../lib/public-files-copier');
 const { writeHtml } = require('../lib/html-compiler');
 const { writeCss } = require('../lib/css-compiler');
 const writeWebpackStats = require('../lib/write-webpack-stats');
@@ -25,7 +24,14 @@ function start(urc) {
   const webpackConfig = createWebpackConfig(urc);
 
   const onFirstCompilation = () => {
-    Promise.all([writeHtml(urc), writeCss(urc), publicFilesCopier(urc)])
+    Promise.all([
+      writeHtml(urc),
+      writeCss(urc),
+      autoCopy.copy({
+        sourceDir: urc.publicDirectory,
+        destDir: urc.outputDirectory
+      })
+    ])
       .then(() => {
         // HTML
         const watcherHtml = chokidar.watch(urc.htmlSource, {
