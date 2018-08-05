@@ -16,7 +16,7 @@ const publicFilesCopier = require('../lib/public-files-copier');
 const { writeHtml } = require('../lib/html-compiler');
 const { writeCss } = require('../lib/css-compiler');
 const writeWebpackStats = require('../lib/write-webpack-stats');
-const autoCopy = require('../lib/packageable/auto-copy');
+const autoCopy = require('../lib/utils/auto-copy');
 const logger = require('../lib/logger');
 
 function start(urc) {

@@ -6,7 +6,7 @@ const fs = require('fs');
 const dirTree = require('directory-tree');
 const p = require('util.promisify');
 
-const { copy } = require('../lib/packageable/auto-copy');
+const { copy } = require('../lib/utils/auto-copy');
 const config = require('../lib/config');
 const buildCommand = require('../commands/build');
 const removePath = require('./test-utils/remove-path');
