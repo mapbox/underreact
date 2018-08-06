@@ -16,7 +16,7 @@ export default class App extends React.Component {
     return (
       <div>
         <p>
-          Here's a random numbessr: {_.random(0, 100)}
+          Here's a random number: {_.random(0, 100)}
         </p>
         <p>
           Did the DefinePlugin work? {typeof DEFINE_WORKED === 'undefined' ? 'No' : DEFINE_WORKED}
