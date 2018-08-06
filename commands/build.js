@@ -26,7 +26,7 @@ function build(urc) {
       .then(() => webpackPromise(webpackConfig))
       .then(stats => {
         if (urc.stats) {
-          writeWebpackStats(urc.stats, stats);
+          return writeWebpackStats(urc.stats, stats);
         }
       })
       .then(() => writeCss(urc))
