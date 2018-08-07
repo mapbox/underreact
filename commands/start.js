@@ -8,7 +8,6 @@ const del = require('del');
 const chalk = require('chalk');
 const chokidar = require('chokidar');
 const webpack = require('webpack');
-const { EventEmitter } = require('events');
 
 const startServer = require('../lib/start-server');
 const { writeHtml } = require('../lib/html-compiler');
@@ -20,7 +19,7 @@ const {
   createWebpackConfig,
   renderWebpackErrors,
   writeWebpackStats
-} = require('../lib/webpack');
+} = require('../lib/webpack-helpers');
 
 module.exports = main;
 
@@ -29,8 +28,8 @@ function main(urc) {
   return (
     del(urc.outputDirectory, { force: true })
       // webpack needs to run first as others depend on the assets
-      .then(() => watchWebpack(urc).webpackFirstRun)
-      .then(() =>
+      .then(() => new Promise(resolve => watchWebpack(urc, resolve)))
+      .then(() => {
         Promise.all([
           writeHtml(urc),
           writeCss(urc),
@@ -38,8 +37,8 @@ function main(urc) {
             sourceDir: urc.publicDirectory,
             destDir: urc.outputDirectory
           })
-        ])
-      )
+        ]);
+      })
       .then(() => startServer(urc))
       .then(() => {
         watchHtml(urc);
@@ -49,10 +48,10 @@ function main(urc) {
   );
 }
 
-function watchWebpack(urc) {
+function watchWebpack(urc, onFirstRun) {
   const webpackConfig = createWebpackConfig(urc);
-  const watcher = webpack(webpackConfig);
-  let emitter = new EventEmitter();
+  const compiler = webpack(webpackConfig);
+  let isFirstRun = true;
   let lastHash;
 
   const onCompilation = (compilationError, stats) => {
@@ -60,11 +59,6 @@ function watchWebpack(urc) {
     // There's often a series of many compilations with the same output.
     if (stats.hash === lastHash) return;
     lastHash = stats.hash;
-
-    // needed to resolve webpackFirstRun promise
-    if (emitter) {
-      emitter.emit('ready', stats);
-    }
 
     if (compilationError) {
       logger.error(compilationError);
@@ -77,6 +71,11 @@ function watchWebpack(urc) {
       return;
     }
 
+    if (isFirstRun) {
+      isFirstRun = false;
+      onFirstRun();
+    }
+
     logger.log('Compiled JS.');
 
     if (urc.stats) {
@@ -85,19 +84,7 @@ function watchWebpack(urc) {
     }
   };
 
-  watcher.watch({ ignored: [/node_modules/] }, onCompilation);
-
-  const webpackFirstRun = new Promise(resolve => {
-    emitter.once('ready', stats => {
-      resolve(stats);
-      emitter = undefined;
-    });
-  });
-
-  return {
-    webpackFirstRun,
-    watcher: watcher
-  };
+  compiler.watch({ ignored: [/node_modules/] }, onCompilation);
 }
 
 function watchHtml(urc) {
@@ -109,8 +96,6 @@ function watchHtml(urc) {
     writeHtml(urc).catch(logger.error);
   });
   watcherHtml.on('error', logger.error);
-
-  return watcherHtml;
 }
 
 function watchCss(urc) {
@@ -123,33 +108,22 @@ function watchCss(urc) {
   });
 
   watchStyleSheets.on('error', logger.error);
-
-  return watchStyleSheets;
 }
 
 function watchPublicDir(urc) {
-  const watcher = mirrorDir.watchDir({
+  const watcher = mirrorDir({
     sourceDir: urc.publicDirectory,
     destDir: urc.outputDirectory
   });
 
-  watcher.on('copy', filename => {
+  watcher.on('copy', ({ filename, commit }) => {
     logger.log(`Copying ${filename}`);
-    return mirrorDir.copyFile({
-      filename,
-      sourceDir: urc.publicDirectory,
-      destDir: urc.outputDirectory
-    });
+    return commit();
   });
 
-  watcher.on('delete', filename => {
+  watcher.on('delete', ({ filename, commit }) => {
     logger.log(`Deleting ${filename}`);
-    return mirrorDir.delFile({
-      filename,
-      destDir: urc.outputDirectory
-    });
+    return commit();
   });
   watcher.on('error', logger.error);
-
-  return watcher;
 }

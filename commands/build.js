@@ -16,7 +16,7 @@ const {
   createWebpackConfig,
   webpackPromise,
   writeWebpackStats
-} = require('../lib/webpack');
+} = require('../lib/webpack-helpers');
 
 function build(urc) {
   logger.log('Building your site ...');
