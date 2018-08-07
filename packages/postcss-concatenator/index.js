@@ -1,7 +1,7 @@
 'use strict';
 
 const fs = require('fs');
-const p = require('util.promisify');
+const promisify = require('util.promisify');
 const got = require('got');
 const postcss = require('postcss');
 const isAbsoluteUrl = require('is-absolute-url');
@@ -67,9 +67,9 @@ function concatToFile({
         }
       })
       .then(result => {
-        const promises = [p(fs.writeFile)(output, result.css)];
+        const promises = [promisify(fs.writeFile)(output, result.css)];
         if (sourceMap === SOURCE_MAP_FILE) {
-          promises.push(p(fs.writeFile)(`${output}.map`, result.map));
+          promises.push(promisify(fs.writeFile)(`${output}.map`, result.map));
         }
         return Promise.all(promises);
       })
@@ -102,7 +102,7 @@ function parseStylesheetFromUrl(url, urlCache) {
 }
 
 function parseStylesheetFromFs(filename) {
-  return p(fs.readFile)(filename, 'utf8').then(css =>
+  return promisify(fs.readFile)(filename, 'utf8').then(css =>
     parseStylesheet(css, filename)
   );
 }

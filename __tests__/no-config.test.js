@@ -4,7 +4,7 @@ const path = require('path');
 const tempy = require('tempy');
 const fs = require('fs');
 const dirTree = require('directory-tree');
-const p = require('util.promisify');
+const promisify = require('util.promisify');
 
 const { copy } = require('../lib/utils/auto-copy');
 const config = require('../lib/config');
@@ -21,7 +21,7 @@ describe('No Config Test', () => {
   const dirPath = path.join(tempDir, 'test');
 
   beforeAll(() =>
-    p(fs.mkdir)(dirPath)
+    promisify(fs.mkdir)(dirPath)
       .then(() => bootstrapReactRepo(dirPath))
       .then(() =>
         copy({

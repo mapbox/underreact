@@ -1,12 +1,12 @@
 'use strict';
 
 const path = require('path');
-const p = require('util.promisify');
+const promisify = require('util.promisify');
 const fs = require('fs');
 
 const ensureDir = require('../../lib/utils/ensure-dir');
 
-const writeFile = p(fs.writeFile);
+const writeFile = promisify(fs.writeFile);
 
 module.exports = function bootstrapReactRepo(dirPath) {
   const nodeModulesPath = path.join(dirPath, 'node_modules');
