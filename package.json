@@ -47,14 +47,13 @@
     "cpy": "^7.0.1",
     "del": "^3.0.0",
     "findup-sync": "^2.0.0",
-    "fs-extra": "^7.0.0",
     "get-port": "^3.2.0",
     "got": "^8.3.2",
     "is-absolute-url": "^2.1.0",
     "live-server": "^1.2.0",
     "lodash": "^4.17.10",
+    "mkdirp": "^0.5.1",
     "object-assign": "^4.1.1",
-    "pify": "^3.0.0",
     "postcss": "^6.0.23",
     "postcss-csso": "^3.0.0",
     "postcss-url": "^7.3.2",
@@ -66,6 +65,7 @@
     "uglify-js": "^3.4.2",
     "uglifyjs-webpack-plugin": "^1.2.7",
     "url-join": "^4.0.0",
+    "util.promisify": "^1.0.0",
     "webpack": "^4.12.2",
     "webpack-format-messages": "^2.0.1",
     "whatwg-fetch": "^2.0.4",
@@ -73,6 +73,7 @@
   },
   "devDependencies": {
     "@mapbox/eslint-config-mapbox": "^1.2.1",
+    "directory-tree": "^2.1.0",
     "eslint": "^5.0.1",
     "eslint-config-prettier": "^2.9.0",
     "eslint-plugin-node": "^6.0.1",
@@ -110,6 +111,11 @@
       "jest-serializer-path"
     ],
     "setupTestFrameworkScriptFile": "<rootDir>/test-setup.js",
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/fixtures/",
+      "/test-utils/"
+    ],
     "collectCoverageFrom": [
       "<rootDir>/lib/**/*.js",
       "!<rootDir>/test/**"

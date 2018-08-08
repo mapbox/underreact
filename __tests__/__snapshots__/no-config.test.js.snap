@@ -1,0 +1,48 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`No Config Test builds the correct output 1`] = `
+Object {
+  "children": Array [
+    Object {
+      "extension": ".html",
+      "name": "index.html",
+      "path": "<TEMP_DIR>/_underreact-site/index.html",
+      "size": 1904,
+      "type": "file",
+    },
+    Object {
+      "children": Array [
+        Object {
+          "extension": ".js",
+          "name": "main-9d92f92f30.chunk.js",
+          "path": "<TEMP_DIR>/_underreact-site/underreact-assets/main-9d92f92f30.chunk.js",
+          "size": 1297,
+          "type": "file",
+        },
+        Object {
+          "extension": ".js",
+          "name": "runtime-912ed6ecb8.js",
+          "path": "<TEMP_DIR>/_underreact-site/underreact-assets/runtime-912ed6ecb8.js",
+          "size": 1468,
+          "type": "file",
+        },
+        Object {
+          "extension": ".js",
+          "name": "vendor-b00bbe6085.chunk.js",
+          "path": "<TEMP_DIR>/_underreact-site/underreact-assets/vendor-b00bbe6085.chunk.js",
+          "size": 175,
+          "type": "file",
+        },
+      ],
+      "name": "underreact-assets",
+      "path": "<TEMP_DIR>/_underreact-site/underreact-assets",
+      "size": 2940,
+      "type": "directory",
+    },
+  ],
+  "name": "_underreact-site",
+  "path": "<TEMP_DIR>/_underreact-site",
+  "size": 4844,
+  "type": "directory",
+}
+`;

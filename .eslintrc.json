@@ -4,8 +4,5 @@
     "es6": true,
     "jest": true
   },
-  "extends": [
-    "@mapbox/eslint-config-mapbox",
-    "prettier"
-  ]
+  "extends": ["@mapbox/eslint-config-mapbox", "prettier"]
 }
