@@ -30,7 +30,7 @@ function main(urc) {
       .then(() => {
         Promise.all([
           writeHtml(urc),
-          writeCss(urc),
+          writeCss(urc).then(r => console.log(r)),
           autoCopy.copy({
             sourceDir: urc.publicDirectory,
             destDir: urc.outputDirectory
@@ -102,7 +102,9 @@ function watchCss(urc) {
   });
 
   watchStyleSheets.on('all', () => {
-    writeCss(urc).catch(logger.error);
+    writeCss(urc)
+      .then(r => console.log(r))
+      .catch(logger.error);
   });
 
   watchStyleSheets.on('error', logger.error);
