@@ -1,0 +1,136 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Basic Test 1`] = `
+Object {
+  "bail": undefined,
+  "devtool": false,
+  "entry": Object {
+    "main": Array [
+      "<PROJECT_ROOT>/lib/polyfills/promise.js",
+      "<PROJECT_ROOT>/lib/polyfills/fetch.js",
+      "<PROJECT_ROOT>/src/entry.js",
+    ],
+    "vendor": Array [
+      "<PROJECT_ROOT>/node_modules/react",
+      "<PROJECT_ROOT>/node_modules/react-dom",
+    ],
+  },
+  "mode": "development",
+  "module": Object {
+    "rules": Array [
+      Object {
+        "exclude": Array [
+          /\\[\\\\/\\\\\\\\\\\\\\\\\\]node_modules\\[\\\\/\\\\\\\\\\\\\\\\\\]/,
+        ],
+        "test": /\\\\\\.jsx\\?\\$/,
+        "use": Array [
+          Object {
+            "loader": "babel-loader",
+            "options": Object {
+              "babelrc": false,
+              "cacheDirectory": true,
+              "compact": false,
+              "presets": Array [
+                "<PROJECT_ROOT>/packages/babel-preset-mapbox/index.js",
+              ],
+            },
+          },
+        ],
+      },
+      Object {
+        "test": /\\\\\\.less\\$/,
+        "use": Array [
+          "css-loader",
+          "less-loader",
+        ],
+      },
+    ],
+  },
+  "node": Object {
+    "child_process": "empty",
+    "dgram": "empty",
+    "fs": "empty",
+    "net": "empty",
+    "tls": "empty",
+  },
+  "optimization": Object {
+    "minimizer": Array [
+      UglifyJsPlugin {
+        "options": Object {
+          "cache": true,
+          "exclude": undefined,
+          "extractComments": false,
+          "include": undefined,
+          "parallel": true,
+          "sourceMap": false,
+          "test": /\\\\\\.js\\(\\\\\\?\\.\\*\\)\\?\\$/i,
+          "uglifyOptions": Object {
+            "compress": Object {
+              "comparisons": false,
+              "ecma": 5,
+              "warnings": false,
+            },
+            "mangle": Object {
+              "safari10": true,
+            },
+            "output": Object {
+              "ascii_only": true,
+              "comments": false,
+              "ecma": 5,
+            },
+            "parse": Object {
+              "ecma": 8,
+            },
+          },
+          "warningsFilter": [Function],
+        },
+      },
+    ],
+    "runtimeChunk": "single",
+    "splitChunks": Object {
+      "cacheGroups": Object {
+        "vendor": Object {
+          "chunks": "initial",
+          "enforce": true,
+          "name": "vendor",
+          "test": "vendor",
+        },
+      },
+    },
+  },
+  "output": Object {
+    "chunkFilename": "[name].chunk.js",
+    "filename": "[name].js",
+    "path": "<PROJECT_ROOT>/_underreact-site/cacheable-things",
+    "publicPath": "/fancy/cacheable-things",
+  },
+  "performance": false,
+  "plugins": Array [
+    AssetsWebpackPlugin {
+      "options": Object {
+        "filename": "assets.json",
+        "fullPath": true,
+        "manifestFirst": true,
+        "path": "<PROJECT_ROOT>/_underreact-site",
+        "prettyPrint": false,
+        "processOutput": [Function],
+        "update": false,
+      },
+      "writer": [Function],
+    },
+    EnvironmentPlugin {
+      "defaultValues": Object {},
+      "keys": Array [
+        "ENV_VAR",
+      ],
+    },
+    [Function],
+  ],
+  "resolveLoader": Object {
+    "modules": Array [
+      "<PROJECT_ROOT>/node_modules",
+      "node_modules",
+    ],
+  },
+}
+`;

@@ -4,90 +4,61 @@
 process.env.BABEL_ENV = process.env.BABEL_ENV || 'development';
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
-const webpack = require('webpack');
 const del = require('del');
 const chalk = require('chalk');
 const chokidar = require('chokidar');
+const webpack = require('webpack');
 
-const createWebpackConfig = require('../lib/create-webpack-config');
-const renderWebpackErrors = require('../lib/render-webpack-errors');
 const startServer = require('../lib/start-server');
 const { writeHtml } = require('../lib/html-compiler');
 const { writeCss } = require('../lib/css-compiler');
-const writeWebpackStats = require('../lib/write-webpack-stats');
 const autoCopy = require('../lib/utils/auto-copy');
+const mirrorDir = require('../lib/utils/mirror-dir');
 const logger = require('../lib/logger');
+const {
+  createWebpackConfig,
+  renderWebpackErrors,
+  writeWebpackStats
+} = require('../lib/webpack-helpers');
 
-function start(urc) {
+module.exports = main;
+
+function main(urc) {
   logger.log(`Starting underreact. ${chalk.yellow('Wait ...')}`);
-
-  const webpackConfig = createWebpackConfig(urc);
-
-  const onFirstCompilation = () => {
-    Promise.all([
-      writeHtml(urc),
-      writeCss(urc),
-      autoCopy.copy({
-        sourceDir: urc.publicDirectory,
-        destDir: urc.outputDirectory
-      })
-    ])
+  return (
+    del(urc.outputDirectory, { force: true })
+      // webpack needs to run first as others depend on the assets
+      .then(() => new Promise(resolve => watchWebpack(urc, resolve)))
       .then(() => {
-        // HTML
-        const watcherHtml = chokidar.watch(urc.htmlSource, {
-          ignoreInitial: true
-        });
-        watcherHtml.on('all', () => {
-          logger.log('Writing HTML');
-          writeHtml(urc).catch(logger.error);
-        });
-        watcherHtml.on('error', logger.error);
-
-        // CSS
-        const watchStyleSheets = chokidar.watch(urc.stylesheets, {
-          ignoreInitial: true
-        });
-        watchStyleSheets.on('all', () => {
-          logger.log('Writing CSS');
-          writeCss(urc).catch(logger.error);
-        });
-        watchStyleSheets.on('error', logger.error);
-
-        // Public Dir files
-        const copier = autoCopy.watch({
-          sourceDir: urc.publicDirectory,
-          destDir: urc.outputDirectory
-        });
-        copier.on('copy', filename => {
-          logger.log(`Copying ${filename}`);
-        });
-        copier.on('delete', filename => {
-          logger.log(`Deleting ${filename}`);
-        });
-        copier.on('error', logger.error);
-
-        startServer(urc);
+        Promise.all([
+          writeHtml(urc),
+          writeCss(urc),
+          autoCopy.copy({
+            sourceDir: urc.publicDirectory,
+            destDir: urc.outputDirectory
+          })
+        ]);
       })
-      .catch(logger.error);
-  };
+      .then(() => startServer(urc))
+      .then(() => {
+        watchHtml(urc);
+        watchCss(urc);
+        watchPublicDir(urc);
+      })
+  );
+}
 
-  del.sync(urc.outputDirectory, { force: true });
-
+function watchWebpack(urc, onFirstRun) {
+  const webpackConfig = createWebpackConfig(urc);
   const compiler = webpack(webpackConfig);
-  let hasCompiled = false;
+  let isFirstRun = true;
   let lastHash;
+
   const onCompilation = (compilationError, stats) => {
     // Don't do anything if the compilation is just repetition.
     // There's often a series of many compilations with the same output.
     if (stats.hash === lastHash) return;
     lastHash = stats.hash;
-
-    if (!hasCompiled) {
-      hasCompiled = true;
-      onFirstCompilation();
-    } else {
-      logger.log('Compiled JS.');
-    }
 
     if (compilationError) {
       logger.error(compilationError);
@@ -96,16 +67,63 @@ function start(urc) {
 
     const renderedErrors = renderWebpackErrors(stats);
     if (renderedErrors) {
-      logger.error(renderedErrors);
+      logger.error(new Error(renderedErrors));
       return;
     }
 
+    if (isFirstRun) {
+      isFirstRun = false;
+      onFirstRun();
+    }
+
+    logger.log('Compiled JS.');
+
     if (urc.stats) {
       writeWebpackStats(urc.stats, stats);
+      return;
     }
   };
 
   compiler.watch({ ignored: [/node_modules/] }, onCompilation);
 }
 
-module.exports = start;
+function watchHtml(urc) {
+  const watcherHtml = chokidar.watch(urc.htmlSource, {
+    ignoreInitial: true
+  });
+
+  watcherHtml.on('all', () => {
+    writeHtml(urc).catch(logger.error);
+  });
+  watcherHtml.on('error', logger.error);
+}
+
+function watchCss(urc) {
+  const watchStyleSheets = chokidar.watch(urc.stylesheets, {
+    ignoreInitial: true
+  });
+
+  watchStyleSheets.on('all', () => {
+    writeCss(urc).catch(logger.error);
+  });
+
+  watchStyleSheets.on('error', logger.error);
+}
+
+function watchPublicDir(urc) {
+  const watcher = mirrorDir({
+    sourceDir: urc.publicDirectory,
+    destDir: urc.outputDirectory
+  });
+
+  watcher.on('copy', ({ filename, commit }) => {
+    logger.log(`Copying ${filename}`);
+    return commit();
+  });
+
+  watcher.on('delete', ({ filename, commit }) => {
+    logger.log(`Deleting ${filename}`);
+    return commit();
+  });
+  watcher.on('error', logger.error);
+}
