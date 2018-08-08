@@ -1,9 +1,5 @@
 'use strict';
 
-// Do this as the first thing so that any code reading it knows the right env.
-process.env.BABEL_ENV = process.env.BABEL_ENV || 'development';
-process.env.NODE_ENV = process.env.NODE_ENV || 'development';
-
 const del = require('del');
 const chalk = require('chalk');
 const chokidar = require('chokidar');
@@ -24,7 +20,9 @@ const {
 module.exports = main;
 
 function main(urc) {
-  logger.log(`Starting underreact. ${chalk.yellow('Wait ...')}`);
+  logger.log(
+    `Starting underreact in ${urc.mode} mode. ${chalk.yellow('Wait ...')}`
+  );
   return (
     del(urc.outputDirectory, { force: true })
       // webpack needs to run first as others depend on the assets
@@ -32,7 +30,7 @@ function main(urc) {
       .then(() => {
         Promise.all([
           writeHtml(urc),
-          writeCss(urc),
+          writeCss(urc).then(r => console.log(r)),
           autoCopy.copy({
             sourceDir: urc.publicDirectory,
             destDir: urc.outputDirectory
@@ -104,7 +102,9 @@ function watchCss(urc) {
   });
 
   watchStyleSheets.on('all', () => {
-    writeCss(urc).catch(logger.error);
+    writeCss(urc)
+      .then(r => console.log(r))
+      .catch(logger.error);
   });
 
   watchStyleSheets.on('error', logger.error);
