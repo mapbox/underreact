@@ -25,7 +25,7 @@ Object {
         "test": /\\\\\\.jsx\\?\\$/,
         "use": Array [
           Object {
-            "loader": "babel-loader",
+            "loader": "<PROJECT_ROOT>/node_modules/babel-loader/lib/index.js",
             "options": Object {
               "babelrc": false,
               "cacheDirectory": true,
@@ -120,11 +120,13 @@ Object {
     },
     EnvironmentPlugin {
       "defaultValues": Object {
+        "DEPLOY_ENV": "test",
         "NODE_ENV": "test",
         "PUBLIC_URL": "/fancy",
       },
       "keys": Array [
         "NODE_ENV",
+        "DEPLOY_ENV",
         "PUBLIC_URL",
       ],
     },

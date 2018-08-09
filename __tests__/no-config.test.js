@@ -31,9 +31,7 @@ describe('No Config Test', () => {
       ));
 
   test('builds the correct output', () => {
-    const result = commandBuild([
-      `--config=${path.join(dirPath, 'underreact.config.js')}`
-    ]);
+    const result = commandBuild([], { cwd: dirPath });
 
     const tree = removePath({
       object: dirTree(path.join(dirPath, '_underreact-site')),
@@ -49,9 +47,10 @@ describe('No Config Test', () => {
     const result = commandBuild(
       [`--config=${path.join(dirPath, 'not-exists.config.js')}`],
       {
-        // ignore the stdio as it is expected it console.error and
-        // it might look like this is failing
-        stdio: 'ignore'
+        // ignore the stdio as it is expected it will log to console.error and
+        // it might mistakingly look like tests are failing
+        stdio: 'ignore',
+        cwd: dirPath
       }
     );
     expect(result.status).toBe(1);

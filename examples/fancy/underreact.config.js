@@ -15,6 +15,7 @@ module.exports = ({ webpack, production }) => {
       path.join(__dirname, './src/bg.css'),
     ],
     htmlSource: path.join(__dirname, './src/html.js'),
+    clientEnvPrefix: 'UNDERREACT_APP_',
     babelPlugins: [
       require.resolve('babel-plugin-lodash')
     ],

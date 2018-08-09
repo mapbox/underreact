@@ -1,9 +1,28 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`getClientEnvVars doesnt leak internal vars 1`] = `
+Object {
+  "DEPLOY_ENV": "test",
+  "NODE_ENV": "test",
+  "PUBLIC_URL": "",
+  "VISIBLE_TOKEN": "visible",
+}
+`;
+
+exports[`getClientEnvVars only includes vars which start with urc.clientEnvPrefix  1`] = `
+Object {
+  "DEPLOY_ENV": "test",
+  "MY_APP_TOKEN": "visible",
+  "NODE_ENV": "test",
+  "PUBLIC_URL": "",
+}
+`;
+
 exports[`normalizes empty configuration 1`] = `
 Urc {
   "babelPlugins": Array [],
   "babelPresets": Array [],
+  "clientEnvPrefix": "",
   "devServerHistoryFallback": false,
   "htmlSource": "<PROJECT_ROOT>/lib/default-html.js",
   "jsEntry": "/fake-volume/src/entry.js",
@@ -37,6 +56,7 @@ Urc {
     "/babel-plugin-lodash",
   ],
   "babelPresets": Array [],
+  "clientEnvPrefix": "",
   "devServerHistoryFallback": false,
   "htmlSource": "<PROJECT_ROOT>/lib/config/src/index.html",
   "jsEntry": "/fake-volume/src/entry.js",
