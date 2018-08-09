@@ -17,7 +17,7 @@ const middlewares = [
     if (!process.env.NODE_ENV) {
       process.env.NODE_ENV = argv.mode;
     }
-    // if the user specified a nonexistent path, tell them if doesn't exist
+    // if the user specified a nonexistent path, tell them if it doesn't exist
     if (argv.config !== undefined && !fs.existsSync(argv.config)) {
       errorOut(
         new Error(
@@ -75,11 +75,10 @@ const statsOption = [
 const modeOption = defaultMode => [
   'mode',
   {
-    description: 'The optimization option for the output.',
+    description: 'The optimization option for the build.',
     alias: 'm',
     choices: ['development', 'production'],
-    default: defaultMode,
-    normalize: true
+    default: defaultMode
   }
 ];
 

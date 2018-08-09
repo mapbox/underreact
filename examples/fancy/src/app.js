@@ -31,7 +31,7 @@ export default class App extends React.Component {
           Value of the env variable from file UNDERREACT_APP_CLIENT_TOKEN: {process.env.UNDERREACT_APP_CLIENT_TOKEN}
         </p>
         <p>
-        Does it leak SECRET_TOKEN: {process.env.SECRET_TOKEN=== undefined? `No`: 'Yes'}
+        Does it leak SECRET_TOKEN: {process.env.SECRET_TOKEN === undefined? 'No': 'Yes'}
         </p>
         <p>
           Background image snowflake:
