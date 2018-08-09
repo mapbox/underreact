@@ -30,7 +30,7 @@ describe('No Config Test', () => {
         })
       ));
 
-  test('builds the correct output', () => {
+  test('builds the correct output without any configuration', () => {
     const result = commandBuild([], { cwd: dirPath });
 
     const tree = removePath({

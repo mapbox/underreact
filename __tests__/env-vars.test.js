@@ -14,7 +14,6 @@ jest.setTimeout(15 * 1000);
 
 describe('Env vars with clientEnvPrefix set', () => {
   const tempDir = tempy.directory();
-
   const dirPath = path.join(tempDir, 'test');
 
   let mainFileContent;

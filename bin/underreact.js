@@ -132,7 +132,6 @@ function defineBuild(y) {
 function runBuild(argv) {
   const build = require('../commands/build');
   const config = require('../lib/config');
-
   const urc = config(getCliOpts('build', argv));
 
   build(urc).catch(errorOut);
@@ -148,7 +147,6 @@ function defineServeStatic(y) {
 function runServeStatic(argv) {
   const serveStatic = require('../commands/serve-static');
   const config = require('../lib/config');
-
   const urc = config(getCliOpts('serve-static', argv));
 
   serveStatic(urc).catch(errorOut);
