@@ -17,6 +17,10 @@ const middlewares = [
     if (!process.env.NODE_ENV) {
       process.env.NODE_ENV = argv.mode;
     }
+    if (!process.env.DEPLY_ENV) {
+      process.env.DEPLOY_ENV = argv.mode;
+    }
+
     // if the user specified a nonexistent path, tell them if it doesn't exist
     if (argv.config !== undefined && !fs.existsSync(argv.config)) {
       errorOut(

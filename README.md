@@ -12,6 +12,11 @@ It's a pretty thin wrapper around Babel, Webpack, and PostCSS, and will never ac
   - [Getting started](#getting-started)
 - [Usage](#usage)
   - [Defining your HTML](#defining-your-html)
+- [Deployment environments](#deployment-environments)
+  - [Env vars](#env-vars)
+  - [Targeting multiple deployment environments](#targeting-multiple-deployment-environments)
+  - [Why not use NODE_ENV?](#why-not-use-node_env)
+  - [Using inside underreact.config.js](#using-inside-underreactconfigjs)
   - [Configuration](#configuration)
 
 ## Installation
@@ -132,7 +137,6 @@ module.exports = ({ renderJsBundles, renderCssLinks, production }) => {
   const html = `
     <!DOCTYPE html>
     <html lang="en">
-
     <head>
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
@@ -143,7 +147,6 @@ module.exports = ({ renderJsBundles, renderCssLinks, production }) => {
       <script async defer src="https://api.mapbox.com/mapbox-assembly/v0.21.2/assembly.js"></script>
       <script>${inlineJs}</script>
     </head>
-
     <body>
       <div id="app">
         <!-- React app will be rendered into this div -->
@@ -155,6 +158,104 @@ module.exports = ({ renderJsBundles, renderCssLinks, production }) => {
   `;
 
   return html;
+};
+```
+
+## Deployment environments
+
+### Env vars
+
+Underreact allows you to inject environment variables **during the build time**. You can set them up by creating a `.env` file at the root of your project:
+
+```
+#.env
+SERVER=https://example.com
+```
+
+You can then use them in your codebase:
+
+```javascript
+const url = process.env.SERVER;
+fetch(`${url}/data`);
+```
+
+Any env variable that you use in your app must be declared in the `.env` file. This is required to prevent unintentional leaking of env vars in your javascript bundle. 
+
+If you want to pass an environment variable in the CLI, make sure it is declared in your `.env` file first and use it like:
+
+```
+SERVER=https://foobar.com npx underreact start
+```
+
+You can also expand already existing env variables in your machine (using [dotenv-expand](https://github.com/motdotla/dotenv-expand))
+
+```
+APP_VERSION=${npm_package_version}
+```
+
+Or expand local variables
+
+```
+SERVER=https://example.com
+SERVER_FOO=$SERVER/foo
+```
+
+### Targeting multiple deployment environments
+
+Underreact allows your app to target different environments with the help of the env var `DEPLOY_ENV`. There are certain rules on how `DEPLOY_ENV` behaves:
+
+- If `DEPLOY_ENV` is not set it will default to `development` in development mode and `production` in production mode.
+- You can set `DEPLOY_ENV` to any value you wish to better align with your target environments.
+- `DEPLOY_ENV` is not the same as `NODE_ENV`, refer to [Why not use NODE_ENV](#why-not-use-node_env).
+
+Underreact allows you to have multiple `.env` files for different deployment targets. It can read the following type of `.env` files
+
+- `.env:` Default.
+- `.env.development`, `.env.staging`, `.env.production`: Deployment-specific settings.
+
+The deployment target is defined by the env variable `DEPLOY_ENV`. Underreact would then find the file which matches the `.env.<DEPLOY_ENV>`. For example if your machine has `DEPLOY_ENV=staging`, underreact would try to find `.env.staging`. 
+
+**Underreact would always first load `.env` file** before loading the deployment specific `.env.<DEPLOY_ENV>`. This allows for overriding env variables mentioned in `.env` with the ones in `.env.<DEPLOY_ENV>`. The following example illustrates the overriding of env variables:
+
+```
+#.env
+SERVER=example.com
+TOKEN=abcd
+```
+
+```
+#.env.mapbox
+SERVER=mapbox.com
+```
+
+The final output of the code built with `DEPLOY_ENV=mapbox npx underreact build`
+
+```javascript
+console.log(process.env.SERVER) // mapbox.com
+console.log(process.env.TOKEN) // abcd
+```
+
+However, if the code is built with just `npx underreact build`, underreact would not load `.env.mapbox` as no explicit `DEPLOY_ENV` is set and it would default to `DEPLOY_ENV=production` as the mode is production.
+
+```
+console.log(process.env.SERVER) // example.com
+console.log(process.env.TOKEN) // abcd
+```
+
+### Why not use `NODE_ENV`?
+
+Underreact discourages setting of `NODE_ENV` manually, as a number of libraries depend on its value and a wrong value could result with unoptimized builds. You should instead use the cli `mode` option to signal optimization of your bundle, internally it would set `NODE_ENV` for your app. 
+
+**If you are used to using `NODE_ENV` to target different deployment environments, you should instead use `DEPLOY_ENV`.**
+
+### Using inside `underreact.config.js`
+
+You can also use env variables in your `underreact.config.js`, this can allow you to have different config options for different deployment targets.
+
+```js
+// underreact.config.js
+module.exports = {
+    siteBasePath: process.env.SITE_BASE_PATH
 };
 ```
 
