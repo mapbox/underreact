@@ -4,7 +4,6 @@ exports[`getClientEnvVars doesnt leak internal vars 1`] = `
 Object {
   "DEPLOY_ENV": "test",
   "NODE_ENV": "test",
-  "PUBLIC_URL": "",
   "VISIBLE_TOKEN": "visible",
 }
 `;
@@ -14,7 +13,6 @@ Object {
   "DEPLOY_ENV": "test",
   "MY_APP_TOKEN": "visible",
   "NODE_ENV": "test",
-  "PUBLIC_URL": "",
 }
 `;
 

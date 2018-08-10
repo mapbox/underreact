@@ -122,12 +122,10 @@ Object {
       "defaultValues": Object {
         "DEPLOY_ENV": "test",
         "NODE_ENV": "test",
-        "PUBLIC_URL": "/fancy",
       },
       "keys": Array [
         "NODE_ENV",
         "DEPLOY_ENV",
-        "PUBLIC_URL",
       ],
     },
     [Function],
