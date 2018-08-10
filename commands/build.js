@@ -6,6 +6,7 @@ const chalk = require('chalk');
 
 const logger = require('../lib/logger');
 const autoCopy = require('../lib/utils/auto-copy');
+const { WEBPACK_ASSETS_BASENAME } = require('../lib/constants');
 const { writeHtml } = require('../lib/html-compiler');
 const { writeCss } = require('../lib/css-compiler');
 const {
@@ -37,7 +38,9 @@ function build(urc) {
       )
       // Clean up files you won't need to deploy.
       .then(() =>
-        del(path.join(urc.outputDirectory, 'assets.json'), { force: true })
+        del(path.join(urc.outputDirectory, WEBPACK_ASSETS_BASENAME), {
+          force: true
+        })
       )
       .then(() => {
         logger.log(chalk.green.bold('Finished building your site.'));

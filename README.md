@@ -20,13 +20,13 @@ Requirements:
 
 - Node 6+.
 
-Install Underreact as a dependency of your project:
+Install Underreact as a developer dependency of your project:
 
 ```
-npm install @mapbox/underreact
+npm install -D @mapbox/underreact
 ```
 
-Install the peer dependencies:
+If you are building a react application, you also need to install react dependencies:
 
 ```
 npm install react react-dom
@@ -38,46 +38,60 @@ Add `_underreact*` to your `.gitignore`, and maybe other ignore files (e.g. `.es
 
 **The bare minimum to get started with Underreact.**
 
-- Install Underreact and its peer dependencies.
-  ```
-  npm install @mapbox/underreact react react-dom
-  ```
-- Create a new `script` in your `package.json`:
-  ```json
-  "start": "underreact start",
-  ```
-- Create your entry JS file at `src/index.js`.
+- Create your entry JS file at `src/entry.js`.
 
-  ```js
-  import React from 'react';
-  import ReactDOM from 'react-dom';
+```js
+// src/entry.js
+console.log('hello world!');
+```
 
-  class App extends React.Component {
-    render() {
-      return <div>Hello world</div>;
-    }
-  }
+- Run it with `underreact`
 
-  const container = document.createElement('div');
-  document.body.appendChild(container);
-  ReactDOM.render('<App />', container);
-  ```
+```bash
+npx underreact start 
+# or 
+node node_modules/.bin/underreact start
+```
 
-- Run `npm run start`.
 - Open the URL printed in your terminal.
 
-Now you are up and running, ready to start building your website.
+**Using with react**
+
+- Create your entry JS file at `src/entry.js`.
+
+```jsx
+// src/entry.js
+import React from 'react';
+import ReactDOM from 'react-dom';
+
+class App extends React.Component {
+  render() {
+    return <div>Hello world</div>;
+  }
+}
+
+const container = document.createElement('div');
+document.body.appendChild(container);
+ReactDOM.render(<App />, container);
+```
+
+- Run it with `underreact`
+
+```bash
+npx underreact start
+```
+
+- Open the URL printed in your terminal.
 
 ## Usage
 
-You should not install the Underreact CLI globally. Instead, install it as a dependency of your project and use the `underreact` command via npm `"scripts"`, `npx`, or `node_modules/.bin/underreact`. The easiest way is probably to set up npm scripts in `package.json`, so you can use `npm run start`, `npm run build`, etc., as needed.
+You should not install the Underreact CLI globally. Instead, install it as a dependency of your project and use the `underreact` command via  `npx`, npm `"scripts"`, or `node_modules/.bin/underreact`. The easiest way is probably to set up npm scripts in `package.json`, so you can use `npm run start`, `npm run build`, etc., as needed.
 
 The CLI provides the following commands:
 
 - `start`: Start a development server.
 - `build`: Build for deployment.
 - `serve-static`: Serve the files that you built for deployment.
-- `write-babelrc`: Write a `.bablerc` file.
 
 All commands look for `underreact.config.js` in the current working directory.
 
@@ -98,7 +112,7 @@ The function exported by your JS module will be passed a context object with the
 - `renderCssLinks`: **You must use this function to add CSS to the page,** unless your only sources of CSS are `<link>`s and `<style>`s that you write directly into your HTML. It will add CSS compiled from the [`stylesheets`] option and also any CSS that was created through other Webpack plugins you added.
 - `siteBasePath`: The [`siteBasePath`] you set in your configuration (or the default).
 - `publicAssetsPath`: The [`publicAssetsPath`] you set in your configuration (or the default).
-- `production`: Whether or not the HTML is being built for production. You may want to use this, for example, to decide whether or not to minify JS or CSS you are inlining into the HTML.
+- `production`: Whether or not the HTML is being built in production mode. You may want to use this, for example, to decide whether or not to minify JS or CSS you are inlining into the HTML.
 
 Here's an example of what an HTML-rendering module might look like:
 
