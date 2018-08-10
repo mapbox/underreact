@@ -1,9 +1,5 @@
 'use strict';
 
-// Do this as the first thing so that any code reading it knows the right env.
-process.env.BABEL_ENV = process.env.BABEL_ENV || 'production';
-process.env.NODE_ENV = process.env.NODE_ENV || 'production';
-
 const path = require('path');
 const del = require('del');
 const chalk = require('chalk');
@@ -19,10 +15,9 @@ const {
 } = require('../lib/webpack-helpers');
 
 function build(urc) {
-  logger.log('Building your site ...');
+  logger.log(`Building your site in ${urc.mode} mode ...`);
 
   const webpackConfig = createWebpackConfig(urc);
-
   // force is needed to get test fixtures passing
   return (
     del(urc.outputDirectory, { force: true })

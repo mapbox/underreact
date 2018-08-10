@@ -2,7 +2,7 @@
 
 exports[`Basic Test 1`] = `
 Object {
-  "bail": undefined,
+  "bail": false,
   "devtool": false,
   "entry": Object {
     "main": Array [
@@ -119,9 +119,13 @@ Object {
       "writer": [Function],
     },
     EnvironmentPlugin {
-      "defaultValues": Object {},
+      "defaultValues": Object {
+        "NODE_ENV": "test",
+        "PUBLIC_URL": "/fancy",
+      },
       "keys": Array [
-        "ENV_VAR",
+        "NODE_ENV",
+        "PUBLIC_URL",
       ],
     },
     [Function],

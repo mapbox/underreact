@@ -37,9 +37,6 @@ module.exports = ({ webpack, production }) => {
         DEFINE_WORKED: '"Yes"'
       })
     ],
-    environmentVariables: [
-      'ENV_VAR'
-    ],
     webpackConfigTransform: config => {
       config.devtool = false;
       return config;

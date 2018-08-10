@@ -25,7 +25,13 @@ export default class App extends React.Component {
           Less-loading worked if this text is light blue.
         </p>
         <p>
-          Value of the env variable ENV_VAR: {process.env.ENV_VAR}
+          Value of the env variable passed through cli ENV_VAR: {process.env.UNDERREACT_APP_ENV_VAR}
+        </p>
+        <p>
+          Value of the env variable from file UNDERREACT_APP_CLIENT_TOKEN: {process.env.UNDERREACT_APP_CLIENT_TOKEN}
+        </p>
+        <p>
+        Does it leak SECRET_TOKEN: {process.env.SECRET_TOKEN === undefined? 'No': 'Yes'}
         </p>
         <p>
           Background image snowflake:
