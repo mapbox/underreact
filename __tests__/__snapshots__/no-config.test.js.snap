@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`No Config Test builds the correct output 1`] = `
+exports[`No Config Test builds the correct output without any configuration 1`] = `
 Object {
   "children": Array [
     Object {
