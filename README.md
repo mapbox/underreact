@@ -13,10 +13,10 @@ It's a pretty thin wrapper around Babel, Webpack, and PostCSS, and will never ac
 - [Usage](#usage)
   - [Defining your HTML](#defining-your-html)
 - [Deployment environments](#deployment-environments)
-  - [Env vars](#env-vars)
+  - [Using environment variables](#using-environment-variables)
   - [Targeting multiple deployment environments](#targeting-multiple-deployment-environments)
   - [Why not use NODE_ENV?](#why-not-use-node_env)
-  - [Using inside underreact.config.js](#using-inside-underreactconfigjs)
+  - [Using environment variables inside underreact.config.js](#using-environment-variables-inside-underreactconfigjs)
   - [Configuration](#configuration)
 
 ## Installation
@@ -28,10 +28,10 @@ Requirements:
 Install Underreact as a developer dependency of your project:
 
 ```
-npm install -D @mapbox/underreact
+npm install ---save-dev @mapbox/underreact
 ```
 
-If you are building a react application, you also need to install react dependencies:
+If you are building a React application, you also need to install React dependencies:
 
 ```
 npm install react react-dom
@@ -60,7 +60,7 @@ node node_modules/.bin/underreact start
 
 - Open the URL printed in your terminal.
 
-**Using with react**
+**Using with React**
 
 - Create your entry JS file at `src/entry.js`.
 
@@ -163,7 +163,7 @@ module.exports = ({ renderJsBundles, renderCssLinks, production }) => {
 
 ## Deployment environments
 
-### Env vars
+### Using environment variables
 
 Underreact allows you to inject environment variables **during the build time**. You can set them up by creating a `.env` file at the root of your project:
 
@@ -172,28 +172,37 @@ Underreact allows you to inject environment variables **during the build time**.
 SERVER=https://example.com
 ```
 
-You can then use them in your codebase:
+You can then use them in your client-side code:
 
 ```javascript
 const url = process.env.SERVER;
 fetch(`${url}/data`);
 ```
 
-Any env variable that you use in your app must be declared in the `.env` file. This is required to prevent unintentional leaking of env vars in your javascript bundle. 
+All the variables in your environment **will not be automatically available** in your client-side code: any environment variable that you want to use in your app must be declared in the .env file. This is required to prevent unintentional leaking of env vars in your javascript bundle.
 
-If you want to pass an environment variable in the CLI, make sure it is declared in your `.env` file first and use it like:
+**Note: There is an exception to the above rule, [`DEPLOY_ENV`](#targeting-multiple-deployment-environments) & [`NODE_ENV`](#targeting-multiple-deployment-environments) are special environment variables in Underreactand they should never be set in `.env` files.**
+
+If you want to pass an environment variable directly to Underreactcommand, make sure it is first declared in your `.env` file:
 
 ```
-SERVER=https://foobar.com npx underreact start
+#.env
+API_URL=https://example.com
 ```
 
-You can also expand already existing env variables in your machine (using [dotenv-expand](https://github.com/motdotla/dotenv-expand))
+Ypu can then override its value directly like this:
+
+```
+API_URL=https://one.two.com npx underreact start
+```
+
+You can also expand already existing env variables in your machine:
 
 ```
 APP_VERSION=${npm_package_version}
 ```
 
-Or expand local variables
+Or expand local variables:
 
 ```
 SERVER=https://example.com
@@ -202,20 +211,24 @@ SERVER_FOO=$SERVER/foo
 
 ### Targeting multiple deployment environments
 
-Underreact allows your app to target different environments with the help of the env var `DEPLOY_ENV`. There are certain rules on how `DEPLOY_ENV` behaves:
+Underreact allows your app to target different environments with the help of `DEPLOY_ENV` environment variable. There are certain things to keep in mind:
 
 - If `DEPLOY_ENV` is not set it will default to `development` in development mode and `production` in production mode.
-- You can set `DEPLOY_ENV` to any value you wish to better align with your target environments.
+- It is recommended that you do not change the default value of `DEPLOY_ENV` when running in development mode.
+- `DEPLOY_ENV` is generally recommended to be set to `staging` or `production` for production mode, but you can set it to any value you wish to better align with your target environments.
 - `DEPLOY_ENV` is not the same as `NODE_ENV`, refer to [Why not use NODE_ENV](#why-not-use-node_env).
+- Do not set `DEPLOY_ENV` in any of `.env` files, as it is expected to be already available in your environment.
 
 Underreact allows you to have multiple `.env` files for different deployment targets. It can read the following type of `.env` files
 
 - `.env:` Default.
 - `.env.development`, `.env.staging`, `.env.production`: Deployment-specific settings.
 
-The deployment target is defined by the env variable `DEPLOY_ENV`. Underreact would then find the file which matches the `.env.<DEPLOY_ENV>`. For example if your machine has `DEPLOY_ENV=staging`, underreact would try to find `.env.staging`. 
+The deployment target is defined by the env variable `DEPLOY_ENV`. Underreact would then find the file which matches the `.env.<DEPLOY_ENV>`. For example if your machine has `DEPLOY_ENV=staging`, Underreact would try to find `.env.staging`. 
 
-**Underreact would always first load `.env` file** before loading the deployment specific `.env.<DEPLOY_ENV>`. This allows for overriding env variables mentioned in `.env` with the ones in `.env.<DEPLOY_ENV>`. The following example illustrates the overriding of env variables:
+**Note: values in `.env.<DEPLOY_ENV>` will override values in `.env`**. This also means you do not need to keep all the variables in `.env.<DEPLOY_ENV>` but only the ones that are supposed to override values set in `.env`.
+
+The following example illustrates the how multiple env files work:
 
 ```
 #.env
@@ -226,31 +239,34 @@ TOKEN=abcd
 ```
 #.env.mapbox
 SERVER=mapbox.com
+ANALYTICS=sentry.com
 ```
 
-The final output of the code built with `DEPLOY_ENV=mapbox npx underreact build`
+The final output of the code built with `DEPLOY_ENV=mapbox npx underreact build`, notice that `SERVER` value was overridden and a new value `ANALYTICS` was set:
 
 ```javascript
 console.log(process.env.SERVER) // mapbox.com
 console.log(process.env.TOKEN) // abcd
+console.log(process.env.ANALYTICS) // sentry.com
 ```
 
-However, if the code is built with just `npx underreact build`, underreact would not load `.env.mapbox` as no explicit `DEPLOY_ENV` is set and it would default to `DEPLOY_ENV=production` as the mode is production.
+However, if the code is built with just `npx underreact build`, Underreact would not load `.env.mapbox` as no explicit `DEPLOY_ENV` is set and it would default to `DEPLOY_ENV=production` as the mode is production.
 
-```
+```javascript
 console.log(process.env.SERVER) // example.com
 console.log(process.env.TOKEN) // abcd
+console.log(process.env.ANALYTICS) // undefined
 ```
 
 ### Why not use `NODE_ENV`?
 
-Underreact discourages setting of `NODE_ENV` manually, as a number of libraries depend on its value and a wrong value could result with unoptimized builds. You should instead use the cli `mode` option to signal optimization of your bundle, internally it would set `NODE_ENV` for your app. 
+Underreact discourages setting of `NODE_ENV` manually, as a number of libraries depend on its value and a wrong value could result in unoptimized builds. You should instead use the cli `mode` option to signal optimization of your bundle. (Internally it would set `NODE_ENV` for your app.)
 
 **If you are used to using `NODE_ENV` to target different deployment environments, you should instead use `DEPLOY_ENV`.**
 
-### Using inside `underreact.config.js`
+### Using environment variables inside `underreact.config.js`
 
-You can also use env variables in your `underreact.config.js`, this can allow you to have different config options for different deployment targets.
+You can also use env variables in your `underreact.config.js`. This can allow you to have different config options for different deployment targets.
 
 ```js
 // underreact.config.js
