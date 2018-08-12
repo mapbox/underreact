@@ -1,0 +1,245 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Applies options correctly to internal plugins and presets 1`] = `
+"\\"use strict\\";
+
+var _jsxFileName = \\"test\\";
+const F = () => dom(Zoo, {
+  __source: {
+    fileName: _jsxFileName,
+    lineNumber: 1
+  },
+  __self: undefined
+});"
+`;
+
+exports[`Browserslist doesnt get injected in test env  1`] = `
+Array [
+  "babel-preset-react",
+  Array [
+    "babel-preset-env",
+    Object {
+      "targets": Object {
+        "node": "current",
+      },
+    },
+  ],
+]
+`;
+
+exports[`Passes opts correctly 1`] = `
+Object {
+  "plugins": Array [
+    "babel-plugin-transform-es2015-destructuring",
+    Array [
+      "babel-plugin-transform-class-properties",
+      Object {
+        "xyz": "123",
+      },
+    ],
+    Array [
+      "babel-plugin-transform-object-rest-spread",
+      Object {
+        "useBuiltIns": true,
+      },
+    ],
+    Array [
+      "babel-plugin-transform-react-jsx",
+      Object {
+        "useBuiltIns": true,
+      },
+    ],
+    Array [
+      "babel-plugin-transform-runtime",
+      Object {
+        "helpers": false,
+        "polyfill": false,
+        "regenerator": true,
+      },
+    ],
+    "babel-plugin-dynamic-import-node",
+    "babel-plugin-transform-react-jsx-source",
+    "babel-plugin-transform-react-jsx-self",
+  ],
+  "presets": Array [
+    Array [
+      "babel-preset-react",
+      Object {
+        "abc": "def",
+      },
+    ],
+    Array [
+      "babel-preset-env",
+      Object {
+        "targets": Object {
+          "node": "current",
+        },
+      },
+    ],
+  ],
+}
+`;
+
+exports[`Right order of configuration in development 1`] = `
+Object {
+  "plugins": Array [
+    "babel-plugin-transform-es2015-destructuring",
+    "babel-plugin-transform-class-properties",
+    Array [
+      "babel-plugin-transform-object-rest-spread",
+      Object {
+        "useBuiltIns": true,
+      },
+    ],
+    Array [
+      "babel-plugin-transform-react-jsx",
+      Object {
+        "useBuiltIns": true,
+      },
+    ],
+    Array [
+      "babel-plugin-transform-runtime",
+      Object {
+        "helpers": false,
+        "polyfill": false,
+        "regenerator": true,
+      },
+    ],
+    "babel-plugin-syntax-dynamic-import",
+    "babel-plugin-transform-react-jsx-source",
+    "babel-plugin-transform-react-jsx-self",
+  ],
+  "presets": Array [
+    "babel-preset-react",
+    Array [
+      "babel-preset-env",
+      Object {
+        "modules": false,
+      },
+    ],
+  ],
+}
+`;
+
+exports[`Right order of configuration in production 1`] = `
+Object {
+  "plugins": Array [
+    "babel-plugin-transform-es2015-destructuring",
+    "babel-plugin-transform-class-properties",
+    Array [
+      "babel-plugin-transform-object-rest-spread",
+      Object {
+        "useBuiltIns": true,
+      },
+    ],
+    Array [
+      "babel-plugin-transform-react-jsx",
+      Object {
+        "useBuiltIns": true,
+      },
+    ],
+    Array [
+      "babel-plugin-transform-runtime",
+      Object {
+        "helpers": false,
+        "polyfill": false,
+        "regenerator": true,
+      },
+    ],
+    "babel-plugin-syntax-dynamic-import",
+    "babel-plugin-transform-react-remove-prop-types",
+  ],
+  "presets": Array [
+    "babel-preset-react",
+    Array [
+      "babel-preset-env",
+      Object {
+        "modules": false,
+      },
+    ],
+  ],
+}
+`;
+
+exports[`Right order of configuration in test 1`] = `
+Object {
+  "plugins": Array [
+    "babel-plugin-transform-es2015-destructuring",
+    "babel-plugin-transform-class-properties",
+    Array [
+      "babel-plugin-transform-object-rest-spread",
+      Object {
+        "useBuiltIns": true,
+      },
+    ],
+    Array [
+      "babel-plugin-transform-react-jsx",
+      Object {
+        "useBuiltIns": true,
+      },
+    ],
+    Array [
+      "babel-plugin-transform-runtime",
+      Object {
+        "helpers": false,
+        "polyfill": false,
+        "regenerator": true,
+      },
+    ],
+    "babel-plugin-dynamic-import-node",
+    "babel-plugin-transform-react-jsx-source",
+    "babel-plugin-transform-react-jsx-self",
+  ],
+  "presets": Array [
+    "babel-preset-react",
+    Array [
+      "babel-preset-env",
+      Object {
+        "targets": Object {
+          "node": "current",
+        },
+      },
+    ],
+  ],
+}
+`;
+
+exports[`Throws error when incorrect options are provided 1`] = `"\`@mapbox/babel-preset-mapbox\` expects an object as an option. (While processing preset: \\"<PROJECT_ROOT>/packages/babel-preset-mapbox/index.js\\")"`;
+
+exports[`Works with React 1`] = `
+"'use strict';
+
+var _jsxFileName = 'test';
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+const F = () => _react2.default.createElement(Zoo, {
+        __source: {
+                fileName: _jsxFileName,
+                lineNumber: 3
+        },
+        __self: undefined
+});"
+`;
+
+exports[`browserslist property works in non test env  1`] = `
+Array [
+  "babel-preset-react",
+  Array [
+    "babel-preset-env",
+    Object {
+      "targets": Object {
+        "browsers": Array [
+          ">0.25%",
+          "not ie 11",
+          "not op_mini all",
+        ],
+      },
+    },
+  ],
+]
+`;
