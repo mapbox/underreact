@@ -17,7 +17,7 @@ const middlewares = [
     if (!process.env.NODE_ENV) {
       process.env.NODE_ENV = argv.mode;
     }
-    if (!process.env.DEPLY_ENV) {
+    if (!process.env.DEPLOY_ENV) {
       process.env.DEPLOY_ENV = argv.mode;
     }
 
