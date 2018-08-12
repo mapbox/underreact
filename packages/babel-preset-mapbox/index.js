@@ -1,7 +1,8 @@
 'use strict';
+const isPlainObj = require('is-plain-obj');
 
 module.exports = function preset(context, opts) {
-  opts = opts || [];
+  opts = opts || {};
   // see https://github.com/facebook/create-react-app/blob/590df7eead1a2526828aa36ceff41397e82bd4dd/packages/babel-preset-react-app/index.js#L52
   const env = process.env.BABEL_ENV || process.env.NODE_ENV;
   if (
@@ -19,16 +20,23 @@ module.exports = function preset(context, opts) {
     );
   }
 
-  if (!Array.isArray(opts)) {
+  if (!isPlainObj(opts)) {
     throw new Error(
-      '`@mapbox/babel-preset-mapbox` expects an array as an option.'
+      '`@mapbox/babel-preset-mapbox` expects an object as an option.'
     );
   }
 
-  // a shorthand if you want to override one property
-  if (opts.length === 2 && typeof opts[0] === 'string') {
-    opts = [opts];
+  // prevent ambiguity if user is using both
+  if (
+    (opts.browserslist && opts['babel-preset-env']) ||
+    (opts.browserslist && opts['env'])
+  ) {
+    throw new Error(
+      'Please do not provide `browserslist` and `babel-preset-env` together, instead just use `browserslist`.'
+    );
   }
+
+  opts = Object.assign({}, opts);
 
   const isEnvDevelopment = env === 'development' || env === undefined;
   const isEnvProduction = env === 'production';
@@ -80,14 +88,23 @@ module.exports = function preset(context, opts) {
       }
     );
   } else {
-    payload.push(
-      {
-        name: 'babel-preset-env',
-        options: {
-          // Do not transform modules to CJS
-          modules: false
+    const presetEnv = {
+      name: 'babel-preset-env',
+      options: {
+        // Do not transform modules to CJS
+        modules: false
+      }
+    };
+    if (opts.browserslist) {
+      presetEnv.options = {
+        targets: {
+          browsers: opts.browserslist
         }
-      },
+      };
+    }
+
+    payload.push(
+      presetEnv,
       // Adds syntax support for import()
       { name: 'babel-plugin-syntax-dynamic-import' }
     );
@@ -122,8 +139,14 @@ module.exports = function preset(context, opts) {
 };
 
 function findProperty(data, name) {
-  const found = data.find(r => typeof r[0] === 'string' && r[0] === name);
-  return found && found[1];
+  if (data[name]) {
+    return data[name];
+  }
+  // NOTE: babel-preset & babel-plugin have same length
+  const len = 'babel-preset-'.length;
+  // If the user used a shorthand for eg. dynamic-import-node instead of babel-plugin-dynamic-import-node
+  // remove `babel-*-` and then try to find it.
+  return data[name.substring(len)];
 }
 
 function filterOutPlugins(payload) {
