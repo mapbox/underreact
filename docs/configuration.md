@@ -15,8 +15,6 @@
 - [Advanced configuration](#advanced-configuration)
   - [htmlSource](#htmlsource)
   - [postcssPlugins](#postcssplugins)
-  - [babelPlugins](#babelplugins)
-  - [babelPresets](#babelpresets)
   - [webpackLoaders](#webpackloaders)
   - [webpackPlugins](#webpackplugins)
   - [webpackConfigTransform](#webpackconfigtransform)
@@ -116,32 +114,6 @@ Type: `Array<Function>`. Default: [Autoprefixer].
 All of the CSS you load via [`stylesheets`] is run through [PostCSS](http://postcss.org/), so you can apply any [PostCSS plugins](https://github.com/postcss/postcss/blob/master/docs/plugins.md) to it.
 By default, only [Autoprefixer] is applied.
 
-### babelPlugins
-
-Type: `Array<string>`. Absolute paths, please. Default: `[]`.
-
-Additional plugins to pass to Babel. **You should `require.resolve()` your plugins.** Otherwise, Babel might end up looking in the wrong place for the npm package.
-
-For example:
-
-```js
-{ babelPlugins: [require.resolve('babel-plugin-transform-fancy-optimization')] }
-```
-
-See [`lib/packageable/create-babel-config.js`](../lib/packageable/create-babel-config.js) to see the defaults, which differ some depending on whether the configuration is targeting development, production, or Node.
-
-### babelPresets
-
-Type: `Array<string>`. Absolute paths, please. Default: `[]`.
-
-Additional presets to pass to Babel. **You should `require.resolve()` your presets.** Otherwise, Babel might end up looking in the wrong place for the npm package. For example:
-
-```js
-{ babelPresets: [require.resolve('babel-preset-magic')] }
-```
-
-The two presets [`babel-preset-react`] and [`babel-preset-env`] are automatically applied.
-
 ### webpackLoaders
 
 Type: `Array<Rule>`.
@@ -172,7 +144,7 @@ module.exports = ({ webpack }) => {
 
 ### webpackConfigTransform
 
-Type: `config => transformedConfig`. Default `x => x` (identify function).
+Type: `config => transformedConfig`. Default `x => x` (Identity function).
 
 If you want to make changes to the Webpack configuration beyond what's available in the above options, you can use this, the nuclear option.
 Your function receives the Webpack configuration that Underreact generates and returns a new Webpack configuration, representing your heart's desires.
