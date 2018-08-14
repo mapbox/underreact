@@ -181,9 +181,9 @@ fetch(`${url}/data`);
 
 All the variables in your environment **will not be automatically available** in your client-side code: any environment variable that you want to use in your app must be declared in the .env file. This is required to prevent unintentional leaking of env vars in your javascript bundle.
 
-**Note: There is an exception to the above rule, [`DEPLOY_ENV`](#targeting-multiple-deployment-environments) & [`NODE_ENV`](#targeting-multiple-deployment-environments) are special environment variables in Underreactand they should never be set in `.env` files.**
+**Note: There is an exception to the above rule, [`DEPLOY_ENV`](#targeting-multiple-deployment-environments) & [`NODE_ENV`](#targeting-multiple-deployment-environments) are special environment variables in Underreact and they should never be set in `.env` files.**
 
-If you want to pass an environment variable directly to Underreactcommand, make sure it is first declared in your `.env` file:
+If you want to pass an environment variable directly to Underreact command, make sure it is first declared in your `.env` file:
 
 ```
 #.env
