@@ -12,12 +12,28 @@ It's a pretty thin wrapper around Babel, Webpack, and PostCSS, and will never ac
   - [Getting started](#getting-started)
 - [Usage](#usage)
   - [Defining your HTML](#defining-your-html)
+- [Babel](#babel)
+  - [Exposing .babelrc](#exposing-babelrc)
 - [Deployment environments](#deployment-environments)
   - [Using environment variables](#using-environment-variables)
   - [Targeting multiple deployment environments](#targeting-multiple-deployment-environments)
   - [Why not use NODE_ENV?](#why-not-use-node_env)
   - [Using environment variables inside underreact.config.js](#using-environment-variables-inside-underreactconfigjs)
-  - [Configuration](#configuration)
+- [Configuration](#configuration)
+  - [siteBasePath](#sitebasepath)
+  - [stylesheets](#stylesheets)
+  - [vendorModules](#vendormodules)
+  - [devServerHistoryFallback](#devserverhistoryfallback)
+  - [htmlSource](#htmlsource)
+  - [postcssPlugins](#postcssplugins)
+  - [webpackLoaders](#webpackloaders)
+  - [webpackPlugins](#webpackplugins)
+  - [webpackConfigTransform](#webpackconfigtransform)
+  - [jsEntry](#jsentry)
+  - [outputDirectory](#outputdirectory)
+  - [publicDirectory](#publicdirectory)
+  - [publicAssetsPath](#publicassetspath)
+  - [port](#port)
 
 ## Installation
 
@@ -37,7 +53,7 @@ If you are building a React application, you also need to install React dependen
 npm install react react-dom
 ```
 
-Add `_underreact*` to your `.gitignore`, and maybe other ignore files (e.g. `.eslintignore`). That way you'll ignore files that Underreact generates. (If you set the [`outputDirectory`] option, you'll want to do this for your custom value.)
+Add `_underreact*` to your `.gitignore`, and maybe other ignore files (e.g. `.eslintignore`). That way you'll ignore files that Underreact generates. (If you set the [outputDirectory](#outputdirectory) option, you'll want to do this for your custom value.)
 
 ### Getting started
 
@@ -106,7 +122,7 @@ Underreact is intended for single-page apps, so you only need one HTML page. You
 
 You have 2 choices:
 
-- **Preferred:** Write a JS module exporting a function that returns an HTML string or a Promise that resolves with an HTML string. Put it at `src/html.js` (the default) or point to it with the [`htmlSource`] configuration option.
+- **Preferred:** Write a JS module exporting a function that returns an HTML string or a Promise that resolves with an HTML string. Put it at `src/html.js` (the default) or point to it with the [htmlSource](#htmlsource) configuration option.
 - Provide no HTML-rendering module and let Underreact create a default document. *You should only do this for prototyping and early development*: for production projects, you'll definitely want to define your own HTML at some point, if only for the `<title>`.
 
 In your JS module, you can use JS template literals to interpolate expressions, and you can use any async I/O you need to put together the page. For example, you could read JS files and inject their code directly into `<script>` tags, or inject CSS into `<style>` tags. Or you could make an HTTP call to fetch dynamic data and inject it into the page with a `<script>` tag, so it's available to your React app.
@@ -114,9 +130,9 @@ In your JS module, you can use JS template literals to interpolate expressions, 
 The function exported by your JS module will be passed a context object with the following properties:
 
 - `renderJsBundles`: **You must use this function to add JS to the page.** Typically you'll invoke it at the end of your `<body>`. It adds the `<script>` tags that pull in Webpack bundles.
-- `renderCssLinks`: **You must use this function to add CSS to the page,** unless your only sources of CSS are `<link>`s and `<style>`s that you write directly into your HTML. It will add CSS compiled from the [`stylesheets`] option and also any CSS that was created through other Webpack plugins you added.
-- `siteBasePath`: The [`siteBasePath`] you set in your configuration (or the default).
-- `publicAssetsPath`: The [`publicAssetsPath`] you set in your configuration (or the default).
+- `renderCssLinks`: **You must use this function to add CSS to the page,** unless your only sources of CSS are `<link>`s and `<style>`s that you write directly into your HTML. It will add CSS compiled from the [`stylesheets`](#stylesheets) option and also any CSS that was created through other Webpack plugins you added.
+- `siteBasePath`: The [siteBasePath](#sitebasepath) you set in your configuration (or the default).
+- `publicAssetsPath`: The [publicAssetsPath](#publicassetspath) you set in your configuration (or the default).
 - `production`: Whether or not the HTML is being built in production mode. You may want to use this, for example, to decide whether or not to minify JS or CSS you are inlining into the HTML.
 
 Here's an example of what an HTML-rendering module might look like:
@@ -160,6 +176,29 @@ module.exports = ({ renderJsBundles, renderCssLinks, production }) => {
   return html;
 };
 ```
+
+## Babel
+
+Out of the box Underreact doesn't require you to setup a `.babelrc` file. It uses [`@mapbox/babel-preset-mapbox`](https://github.com/mapbox/underreact/tree/next/packages/babel-preset-mapbox) internally to provide a set of default configuration for your application.
+
+### Exposing `.babelrc`
+
+There are certain libraries that expect `.babelrc` to exist at the root your project. In this case it is best to create a `.babelrc` at the root of your project:
+
+```npm
+npm install --save-dev @mapbox/babel-preset-mapbox
+```
+
+```json5
+// .babelrc
+{
+    "presets": [
+        "@mapbox/babel-preset-mapbox"
+    ]
+}
+```
+
+While you are free to use any Babel presets & plugins, we strongly recommend you to use `@mapbox/babel-preset-mapbox` as it provides a good combination of presets and plugins that are necessary for any Underreact application to work properly. For more advanced configuration visit [`@mapbox/babel-preset-mapbox`](https://github.com/mapbox/underreact/tree/next/packages/babel-preset-mapbox).
 
 ## Deployment environments
 
@@ -275,16 +314,135 @@ module.exports = {
 };
 ```
 
-### Configuration
+## Configuration
 
-See [`docs/configuration.md`](docs/configuration.md).
+**No configuration is necessary to get started.** On most production projects you'll want to set at least a few of the "Basic configuration" options. "Advanced configuration" options shouldn't be necessary in *most* cases ... but you never know.
 
-[`htmlsource`]: ./docs/configuration.md#htmlsource
+### siteBasePath
 
-[`sitebasepath`]: ./docs/configuration.md#sitebasepath
+Type: `string`. Default: `''`.
 
-[`publicassetspath`]: ./docs/configuration.md#publicassetspath
+Root-relative path to the base directory on the domain where the site will be deployed.
 
-[`outputdirectory`]: ./docs/configuration.md#outputdirectory
+There's a good chance your app isn't at the root of your domain. So this option represents the path of your site *within* that domain.
 
-[`stylesheets`]: ./docs/configuration.md#stylesheets
+For example, if your app is at `https://www.special.com/ketchup/*`, you should set `siteBasePath: ketchup`.
+
+### stylesheets
+
+Type: `Array<string>`. Absolute paths, please. Default: `[]`.
+
+An array of filenames pointing to stylesheets that you want to include in your site.
+
+These will be processed by PostCSS with [Autoprefixer](https://github.com/postcss/autoprefixer) and any other [postcssPlugins](#postcssplugins) that you specify; concatenated in the order specified; and added to the `<head>` of your document.
+
+Assets referenced by your stylesheets will be hashed and copied to the [outputDirectory](#outputdirectory), unless they are absolute URLs.
+
+### vendorModules
+
+Type: `Array<string>`. Default: `[]`.
+
+Identifiers of npm modules that you want to be added to the vendor bundle.
+The purpose of the vendor bundle is to deliberately group dependencies that change relatively infrequently — so this bundle will stay cached for longer than the others.
+
+By default, the vendor bundle includes `react` and `react-dom`.
+
+### devServerHistoryFallback
+
+Type: `boolean`. Default: `false`.
+
+Set to `true` if you want to use HTML5 History for client-side routing (as opposed to hash routing). This configures the development server to fall back to `index.html` when you request nested routes.
+
+This is `false` by default because it should only be *intentionally* turned on, when you know you're going to configure your server to allow for HTML5 History—powered client-side routing.
+
+### htmlSource
+
+Type: `string`. Absolute path, please. Default: `${project-directory}/src/html.js`.
+
+The path to your HTML source file. For more information, read [Defining your HTML](#defining-your-html).
+
+### postcssPlugins
+
+Type: `Array<Function>`. Default: [Autoprefixer](https://github.com/postcss/autoprefixer).
+
+All of the CSS you load via [`stylesheets`](#stylesheets) is run through [PostCSS](http://postcss.org/), so you can apply any [PostCSS plugins](https://github.com/postcss/postcss/blob/master/docs/plugins.md) to it.
+By default, only [Autoprefixer](https://github.com/postcss/autoprefixer) is applied.
+
+### webpackLoaders
+
+Type: `Array<Rule>`.
+
+[Webpack `Rule`s](https://webpack.js.org/configuration/module/#rule) specifying additional loaders that you'd like to add your Webpack configuration.
+
+If you need more fine-grained control over the Webpack configuration, use [webpackConfigTransform](#webpackconfigtransform).
+
+### webpackPlugins
+
+Type: `Array<Object>`.
+
+Additional plugins to add to your Webpack configuration.
+
+For plugins exposed on the `webpack` module itself (e.g. `webpack.DefinePlugin`), **you should use Underreact's version of Webpack instead of installing your own.**
+That will prevent any version incompatibilities.
+That version is available in the context object passed to your configuration module function.
+
+Here, for example, is how you could use the `DefinePlugin` in your `underreact.config.js`:
+
+```js
+module.exports = ({ webpack }) => {
+  return {
+    webpackPlugins: [new webpack.DefinePlugin(..)]
+  };
+}
+```
+
+### webpackConfigTransform
+
+Type: `config => transformedConfig`. Default `x => x` (identify function).
+
+If you want to make changes to the Webpack configuration beyond what's available in the above options, you can use this, the nuclear option.
+Your function receives the Webpack configuration that Underreact generates and returns a new Webpack configuration, representing your heart's desires.
+
+### jsEntry
+
+Type: `string`. Absolute path, please. Default: `${project-directory}/src/index.js`.
+
+The entry JS file for your app. Typically this is the file where you'll use `react-dom` to render your app on an element.
+
+In the default value, `project-directory` refers to the directory of your `underreact.config.js` file, or the current working directory.
+
+### outputDirectory
+
+Type `string`. Absolute path, please. Default: `${project-directory}/_underreact-site/`.
+
+The directory where files should be written.
+
+You'll want to ignore this directory with `.gitignore`, `.eslintignore`, etc.
+
+In the default value, `project-directory` refers to the directory of your `underreact.config.js` file, or the current working directory.
+
+### publicDirectory
+
+Type `string`. Absolute path, please. Default: `${project-directory}/src/public/`.
+
+Any files you put into this directory will be copied, without processing, into the [outputDirectory](#outputdirectory).
+You can put images, favicons, data files, anything else you want in here.
+
+In the default value, `project-directory` refers to the directory of your `underreact.config.js` file, or the current working directory.
+
+### publicAssetsPath
+
+Type: `string`. Default: `underreact-assets`.
+
+The directory where Underreact assets will be placed, relative to the site's root.
+
+By default, for example, the main JS chunk will be written to `underreact-assets/main.chunk.js`.
+
+It's important to know about this value so you can set up caching and other asset configuration on your server.
+
+### port
+
+Type: `number`. Default: `8080`.
+
+Preferred port for development servers.
+If the specified port is unavailable, another port is used.
