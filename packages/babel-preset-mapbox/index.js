@@ -95,10 +95,8 @@ module.exports = function preset(context, opts) {
       }
     };
     if (process.env.BROWSERSLIST) {
-      presetEnv.options = {
-        targets: {
-          browsers: process.env.BROWSERSLIST
-        }
+      presetEnv.options.targets = {
+        browsers: process.env.BROWSERSLIST
       };
     }
 

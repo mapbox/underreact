@@ -28,13 +28,7 @@ It's a pretty thin wrapper around Babel, Webpack, and PostCSS, and will never ac
   - [publicDirectory](#publicdirectory)
   - [publicAssetsPath](#publicassetspath)
   - [port](#port)
-  - [postcssPlugins](#postcssplugins)
-  - [siteBasePath](#sitebasepath)
-  - [stylesheets](#stylesheets)
-  - [webpackLoaders](#webpackloaders)
-  - [webpackPlugins](#webpackplugins)
-  - [webpackConfigTransform](#webpackconfigtransform)
-  - [vendorModules](#vendormodules)
+  - [browserslist](#browserslist)
 
 ## Installation
 
@@ -347,6 +341,34 @@ module.exports = {
 
 ## Configuration Object Properties
 
+### browserslist
+
+Type: `Array<string>` \| `Object`. A valid [Browserslist](https://github.com/browserslist/browserslist) value. Default:`['> 0.5%', 'last 2 versions', 'Firefox ESR', 'not dead']`.
+
+This value is used by Autoprefixer to set vendor prefixes in the CSS of your stylesheets, and is used to determine Babel compilation via [babel-preset-env](#babel).
+
+The default value uses Browserslist's default, which is `> 0.5%, last 2 versions, Firefox ESR, not dead`.
+
+You can also target different settings for different Underreact modes, by sending an object:
+
+```javascript
+// underreact.config.js
+{
+module.exports = {
+browserslist: {
+production: [
+'> 1%',
+'ie 10'
+],
+development: [
+'last 1 chrome version',
+'last 1 firefox version'
+]
+}
+}
+}
+```
+
 ### devServerHistoryFallback
 
 Type: `boolean`. Default: `false`.
@@ -467,11 +489,74 @@ Type: `config => transformedConfig`. Default `x => x` (identify function).
 If you want to make changes to the Webpack configuration beyond what's available in the above options, you can use this, the nuclear option.
 Your function receives the Webpack configuration that Underreact generates and returns a new Webpack configuration, representing your heart's desires.
 
-### vendorModules
+### jsEntry
 
-Type: `Array<string>`. Default: `[]`.
+Type: `string`. Absolute path, please. Default: `${project-directory}/src/index.js`.
 
-Identifiers of npm modules that you want to be added to the vendor bundle.
-The purpose of the vendor bundle is to deliberately group dependencies that change relatively infrequently — so this bundle will stay cached for longer than the others.
+The entry JS file for your app. Typically this is the file where you'll use `react-dom` to render your app on an element.
 
-By default, the vendor bundle includes `react` and `react-dom`.
+In the default value, `project-directory` refers to the directory of your `underreact.config.js` file, or the current working directory.
+
+### outputDirectory
+
+Type `string`. Absolute path, please. Default: `${project-directory}/_underreact-site/`.
+
+The directory where files should be written.
+
+You'll want to ignore this directory with `.gitignore`, `.eslintignore`, etc.
+
+In the default value, `project-directory` refers to the directory of your `underreact.config.js` file, or the current working directory.
+
+### publicDirectory
+
+Type `string`. Absolute path, please. Default: `${project-directory}/src/public/`.
+
+Any files you put into this directory will be copied, without processing, into the [outputDirectory](#outputdirectory).
+You can put images, favicons, data files, anything else you want in here.
+
+In the default value, `project-directory` refers to the directory of your `underreact.config.js` file, or the current working directory.
+
+### publicAssetsPath
+
+Type: `string`. Default: `underreact-assets`.
+
+The directory where Underreact assets will be placed, relative to the site's root.
+
+By default, for example, the main JS chunk will be written to `underreact-assets/main.chunk.js`.
+
+It's important to know about this value so you can set up caching and other asset configuration on your server.
+
+### port
+
+Type: `number`. Default: `8080`.
+
+Preferred port for development servers.
+If the specified port is unavailable, another port is used.
+
+### browserslist
+
+Type: `Array<string>` \| `Object`. A valid [Browserslist](https://github.com/browserslist/browserslist) value. Default:`['> 0.5%', 'last 2 versions', 'Firefox ESR', 'not dead']`.
+
+This value is used by Autoprefixer to set vendor prefixes in the CSS of your stylesheets, and is used to determine Babel compilation via [babel-preset-env](#babel).
+
+The default value uses Browserslist's default, which is `> 0.5%, last 2 versions, Firefox ESR, not dead`.
+
+You can also target different settings for different Underreact modes, by sending an object:
+
+```javascript
+// underreact.config.js
+{
+  module.exports = {
+    browserslist: {
+      production: [
+        '> 1%',
+        'ie 10'
+      ],
+      development: [
+        'last 1 chrome version',
+        'last 1 firefox version'
+      ]
+    }
+  }
+}
+```

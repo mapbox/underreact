@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`getClientEnvVars doesnt leak internal vars 1`] = `
+exports[`getClientEnvVars doesn't leak internal vars 1`] = `
 Object {
   "DEPLOY_ENV": "test",
   "NODE_ENV": "test",
