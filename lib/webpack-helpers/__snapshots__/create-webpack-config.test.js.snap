@@ -29,6 +29,7 @@ Object {
             "options": Object {
               "babelrc": false,
               "cacheDirectory": true,
+              "cacheIdentifier": "{\\"babel-loader\\":\\"7.1.5\\",\\"babel-core\\":\\"6.26.3\\",\\"babelrc\\":\\"\\",\\"env\\":\\"test\\"}",
               "compact": false,
               "presets": Array [
                 "<PROJECT_ROOT>/packages/babel-preset-mapbox/index.js",

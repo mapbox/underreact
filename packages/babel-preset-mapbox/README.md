@@ -49,33 +49,37 @@ Then create a `.babelrc` at the root of your project:
 
 ### Modifying browser support with the help of `browserslist`
 
-`babel-preset-mapbox` uses [babel-preset-env](https://www.npmjs.com/package/babel-preset-env) internally to compile ES2015+ Javascript to older Javascript. You can customize the amount of compilation done by giving a list of browsers you want to support. We use [browserslist](https://github.com/ai/browserslist) to parse this information, so you can use [any valid query format supported by browserslist](https://github.com/ai/browserslist#queries).
+You can customize the amount of compilation done by giving a list of browsers you want to support. We use [browserslist](https://github.com/ai/browserslist) to parse this information, so you can use [any valid query format supported by browserslist](https://github.com/ai/browserslist#queries).
+
+`@mapbox/babel-preset-mapbox` allows you to customize [browserslist](https://github.com/ai/browserslist) by setting the environment variable `BROWSERSLIST`. You can set it directly in your shell before running Babel:
+
+```bash
+export BROWSERSLIST=">0.25%, not ie 11"
+npx babel script.js
+```
+
+Make sure your `.babelrc` files includes the `@mapbox/babel-preset-mapbox` preset:
 
 ```
+// .babelrc
 {
   "presets": [
-    "@mapbox/babel-preset-mapbox", {
-      browserslist: [">0.25%", "not ie 11", "not op_mini all"]
-    }
+    "@mapbox/babel-preset-mapbox"
   ]
 }
 ```
 
-### Different configuration with node environment
+**Note:** Using [babel-preset-env](https://www.npmjs.com/package/babel-preset-env) along with `BROWSERSLIST` environment variable would throw an **error** to avoid ambiguity between coexisting `browserslist` value. You should instead just set the environment variable `BROWSERSLIST`. If your use case doesn't allow for this, please feel free to open a ticket about it.
 
-If you want to have a different configuration for each node environments, for e.g. `production`, `test` or `development`, you can configure your `.babelrc` accordingly. In the example below, we are overriding the `browserslist` to target only Chrome for development environment. For more information visit [babelrc](https://babeljs.io/docs/en/babelrc).
+You can also set the `BROWSERSLIST` environment variable in your node application before parsing code with Babel and `"@mapbox/babel-preset-mapbox"`:
 
-```
-{
-  "env": {
-    "production": {
-      "presets": ["@mapbox/babel-preset-mapbox"],
-    },
-    "development": {
-      "presets": ["@mapbox/babel-preset-mapbox", {
-        browserslist: ["last 2 Chrome versions"]
-      }]
-    }
-  }
-}
+```js
+const babel = require('babel-core');
+
+process.env.BROWSERSLIST = ">0.25%, not ie 11";
+
+babel.transform(code, {
+    presets: [require.resolve('@mapbox/babel-preset-mapbox')],
+    filename: 'source.js'
+}).code;
 ```

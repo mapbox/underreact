@@ -25,14 +25,13 @@ module.exports = function preset(context, opts) {
       '`@mapbox/babel-preset-mapbox` expects an object as an option.'
     );
   }
-
   // prevent ambiguity if user is using both
   if (
-    (opts.browserslist && opts['babel-preset-env']) ||
-    (opts.browserslist && opts['env'])
+    (process.env.BROWSERSLIST && opts['babel-preset-env']) ||
+    (process.env.BROWSERSLIST && opts['env'])
   ) {
     throw new Error(
-      'Please do not provide `browserslist` and `babel-preset-env` together, instead just use `browserslist`.'
+      'Please do not use process.env.BROWSERSLIST and `babel-preset-env` together.'
     );
   }
 
@@ -95,10 +94,10 @@ module.exports = function preset(context, opts) {
         modules: false
       }
     };
-    if (opts.browserslist) {
+    if (process.env.BROWSERSLIST) {
       presetEnv.options = {
         targets: {
-          browsers: opts.browserslist
+          browsers: process.env.BROWSERSLIST
         }
       };
     }

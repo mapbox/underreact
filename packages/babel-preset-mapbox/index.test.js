@@ -54,29 +54,34 @@ test('Passes opts correctly', () => {
   expect(config).toMatchSnapshot();
 });
 
-test('browserslist property works in non test env ', () => {
+test('BROWSERSLIST env var works in non test env ', () => {
   process.env.BABEL_ENV = 'development';
-  const config = preset(null, {
-    browserslist: ['>0.25%', 'not ie 11', 'not op_mini all']
-  });
+  process.env.BROWSERSLIST = ['>0.25%', 'not ie 11', 'not op_mini all'].join(
+    ','
+  );
+  const config = preset(null);
   expect(config.presets).toMatchSnapshot();
   delete process.env.BABEL_ENV;
+  delete process.env.BROWSERSLIST;
 });
 
-test('Throws error when both browserslist and env are provided ', () => {
+test('Throws error when both BROWSERSLIST and babel-preset-env are provided ', () => {
+  process.env.BROWSERSLIST = 'something';
   expect(() =>
     preset(null, {
-      browserslist: ['>0.25%', 'not ie 11', 'not op_mini all'],
       'babel-preset-env': {}
     })
   ).toThrowError();
+  delete process.env.BROWSERSLIST;
 });
 
-test('Browserslist doesnt get injected in test env ', () => {
-  const config = preset(null, {
-    browserslist: ['>0.25%', 'not ie 11', 'not op_mini all']
-  });
+test("BROWSERSLIST env var doesn't get injected in test env ", () => {
+  process.env.BROWSERSLIST = ['>0.25%', 'not ie 11', 'not op_mini all'].join(
+    ','
+  );
+  const config = preset(null);
   expect(config.presets).toMatchSnapshot();
+  delete process.env.BROWSERSLIST;
 });
 
 test('Works with React', () => {

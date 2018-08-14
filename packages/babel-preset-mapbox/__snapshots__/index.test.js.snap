@@ -13,7 +13,7 @@ const F = () => dom(Zoo, {
 });"
 `;
 
-exports[`Browserslist doesnt get injected in test env  1`] = `
+exports[`BROWSERSLIST env var doesn't get injected in test env  1`] = `
 Array [
   "babel-preset-react",
   Array [
@@ -21,6 +21,20 @@ Array [
     Object {
       "targets": Object {
         "node": "current",
+      },
+    },
+  ],
+]
+`;
+
+exports[`BROWSERSLIST env var works in non test env  1`] = `
+Array [
+  "babel-preset-react",
+  Array [
+    "babel-preset-env",
+    Object {
+      "targets": Object {
+        "browsers": ">0.25%,not ie 11,not op_mini all",
       },
     },
   ],
@@ -224,22 +238,4 @@ const F = () => _react2.default.createElement(Zoo, {
         },
         __self: undefined
 });"
-`;
-
-exports[`browserslist property works in non test env  1`] = `
-Array [
-  "babel-preset-react",
-  Array [
-    "babel-preset-env",
-    Object {
-      "targets": Object {
-        "browsers": Array [
-          ">0.25%",
-          "not ie 11",
-          "not op_mini all",
-        ],
-      },
-    },
-  ],
-]
 `;

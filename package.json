@@ -40,6 +40,7 @@
     "autoprefixer": "^8.6.4",
     "babel-core": "^6.26.3",
     "babel-loader": "^7.1.5",
+    "browserslist": "^4.0.2",
     "chalk": "^2.4.1",
     "chokidar": "^2.0.4",
     "concat-with-sourcemaps": "^1.1.0",
