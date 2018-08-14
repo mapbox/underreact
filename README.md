@@ -19,21 +19,22 @@ It's a pretty thin wrapper around Babel, Webpack, and PostCSS, and will never ac
   - [Targeting multiple deployment environments](#targeting-multiple-deployment-environments)
   - [Why not use NODE_ENV?](#why-not-use-node_env)
   - [Using environment variables inside underreact.config.js](#using-environment-variables-inside-underreactconfigjs)
-- [Configuration](#configuration)
-  - [siteBasePath](#sitebasepath)
-  - [stylesheets](#stylesheets)
-  - [vendorModules](#vendormodules)
+- [Underreact configuration file](#underreact-configuration-file)
+- [Configuration Object Properties](#configuration-object-properties)
   - [devServerHistoryFallback](#devserverhistoryfallback)
   - [htmlSource](#htmlsource)
-  - [postcssPlugins](#postcssplugins)
-  - [webpackLoaders](#webpackloaders)
-  - [webpackPlugins](#webpackplugins)
-  - [webpackConfigTransform](#webpackconfigtransform)
   - [jsEntry](#jsentry)
   - [outputDirectory](#outputdirectory)
   - [publicDirectory](#publicdirectory)
   - [publicAssetsPath](#publicassetspath)
   - [port](#port)
+  - [postcssPlugins](#postcssplugins)
+  - [siteBasePath](#sitebasepath)
+  - [stylesheets](#stylesheets)
+  - [webpackLoaders](#webpackloaders)
+  - [webpackPlugins](#webpackplugins)
+  - [webpackConfigTransform](#webpackconfigtransform)
+  - [vendorModules](#vendormodules)
 
 ## Installation
 
@@ -314,38 +315,37 @@ module.exports = {
 };
 ```
 
-## Configuration
+## Underreact configuration file
 
-**No configuration is necessary to get started.** On most production projects you'll want to set at least a few of the "Basic configuration" options. "Advanced configuration" options shouldn't be necessary in *most* cases ... but you never know.
+Underreact expects a `underreact.config.js` file to exist at the root of your project. Please note that **No configuration is necessary to get started.** On most production projects you'll want to set at least a few of the [configuration object](#configuration-object-properties) properties.
 
-### siteBasePath
+Your `underreact.config.js` can look like either of the below:
 
-Type: `string`. Default: `''`.
+- **Exporting a Function (Preferred)**: You can export a function which would then be used as a factory method for your [configuration object](#configuration-object-properties). This function is called the following parameter properties of an object:
 
-Root-relative path to the base directory on the domain where the site will be deployed.
+```javascript
+// underreact.config.js
+/**
+ * @param {Object} opts 
+ * @param {Webpack} opts.webpack - The Webpack object.
+ * @param {'start'|'build'|'serve-static'} opts.command - The current command Underreact is following.
+ * @param {'production'|'development'} opts.mode - The current mode of Underreact.
+ */
+module.exports = function({ webpack, command, mode }) {
+  return {/*Underreact configuration object*/}
+}
+```
 
-There's a good chance your app isn't at the root of your domain. So this option represents the path of your site *within* that domain.
+- **Exporting an Object**: You can also directly export the [configuration object](#configuration-object-properties). This is a great way to start experimenting with Underreact's configuration. For example in the code below we simply want to modify the `siteBasePath`:
 
-For example, if your app is at `https://www.special.com/ketchup/*`, you should set `siteBasePath: ketchup`.
+```javascript
+// underreact.config.js
+module.exports = {
+   siteBasePath: 'fancy'
+}
+```
 
-### stylesheets
-
-Type: `Array<string>`. Absolute paths, please. Default: `[]`.
-
-An array of filenames pointing to stylesheets that you want to include in your site.
-
-These will be processed by PostCSS with [Autoprefixer](https://github.com/postcss/autoprefixer) and any other [postcssPlugins](#postcssplugins) that you specify; concatenated in the order specified; and added to the `<head>` of your document.
-
-Assets referenced by your stylesheets will be hashed and copied to the [outputDirectory](#outputdirectory), unless they are absolute URLs.
-
-### vendorModules
-
-Type: `Array<string>`. Default: `[]`.
-
-Identifiers of npm modules that you want to be added to the vendor bundle.
-The purpose of the vendor bundle is to deliberately group dependencies that change relatively infrequently — so this bundle will stay cached for longer than the others.
-
-By default, the vendor bundle includes `react` and `react-dom`.
+## Configuration Object Properties
 
 ### devServerHistoryFallback
 
@@ -360,48 +360,6 @@ This is `false` by default because it should only be *intentionally* turned on, 
 Type: `string`. Absolute path, please. Default: `${project-directory}/src/html.js`.
 
 The path to your HTML source file. For more information, read [Defining your HTML](#defining-your-html).
-
-### postcssPlugins
-
-Type: `Array<Function>`. Default: [Autoprefixer](https://github.com/postcss/autoprefixer).
-
-All of the CSS you load via [`stylesheets`](#stylesheets) is run through [PostCSS](http://postcss.org/), so you can apply any [PostCSS plugins](https://github.com/postcss/postcss/blob/master/docs/plugins.md) to it.
-By default, only [Autoprefixer](https://github.com/postcss/autoprefixer) is applied.
-
-### webpackLoaders
-
-Type: `Array<Rule>`.
-
-[Webpack `Rule`s](https://webpack.js.org/configuration/module/#rule) specifying additional loaders that you'd like to add your Webpack configuration.
-
-If you need more fine-grained control over the Webpack configuration, use [webpackConfigTransform](#webpackconfigtransform).
-
-### webpackPlugins
-
-Type: `Array<Object>`.
-
-Additional plugins to add to your Webpack configuration.
-
-For plugins exposed on the `webpack` module itself (e.g. `webpack.DefinePlugin`), **you should use Underreact's version of Webpack instead of installing your own.**
-That will prevent any version incompatibilities.
-That version is available in the context object passed to your configuration module function.
-
-Here, for example, is how you could use the `DefinePlugin` in your `underreact.config.js`:
-
-```js
-module.exports = ({ webpack }) => {
-  return {
-    webpackPlugins: [new webpack.DefinePlugin(..)]
-  };
-}
-```
-
-### webpackConfigTransform
-
-Type: `config => transformedConfig`. Default `x => x` (identify function).
-
-If you want to make changes to the Webpack configuration beyond what's available in the above options, you can use this, the nuclear option.
-Your function receives the Webpack configuration that Underreact generates and returns a new Webpack configuration, representing your heart's desires.
 
 ### jsEntry
 
@@ -446,3 +404,74 @@ Type: `number`. Default: `8080`.
 
 Preferred port for development servers.
 If the specified port is unavailable, another port is used.
+
+### postcssPlugins
+
+Type: `Array<Function>`. Default: [Autoprefixer](https://github.com/postcss/autoprefixer).
+
+All of the CSS you load via [`stylesheets`](#stylesheets) is run through [PostCSS](http://postcss.org/), so you can apply any [PostCSS plugins](https://github.com/postcss/postcss/blob/master/docs/plugins.md) to it.
+By default, only [Autoprefixer](https://github.com/postcss/autoprefixer) is applied.
+
+### siteBasePath
+
+Type: `string`. Default: `''`.
+
+Root-relative path to the base directory on the domain where the site will be deployed.
+
+There's a good chance your app isn't at the root of your domain. So this option represents the path of your site *within* that domain.
+
+For example, if your app is at `https://www.special.com/ketchup/*`, you should set `siteBasePath: ketchup`.
+
+### stylesheets
+
+Type: `Array<string>`. Absolute paths, please. Default: `[]`.
+
+An array of filenames pointing to stylesheets that you want to include in your site.
+
+These will be processed by PostCSS with [Autoprefixer](https://github.com/postcss/autoprefixer) and any other [postcssPlugins](#postcssplugins) that you specify; concatenated in the order specified; and added to the `<head>` of your document.
+
+Assets referenced by your stylesheets will be hashed and copied to the [outputDirectory](#outputdirectory), unless they are absolute URLs.
+
+### webpackLoaders
+
+Type: `Array<Rule>`.
+
+[Webpack `Rule`s](https://webpack.js.org/configuration/module/#rule) specifying additional loaders that you'd like to add your Webpack configuration.
+
+If you need more fine-grained control over the Webpack configuration, use [webpackConfigTransform](#webpackconfigtransform).
+
+### webpackPlugins
+
+Type: `Array<Object>`.
+
+Additional plugins to add to your Webpack configuration.
+
+For plugins exposed on the `webpack` module itself (e.g. `webpack.DefinePlugin`), **you should use Underreact's version of Webpack instead of installing your own.**
+That will prevent any version incompatibilities.
+That version is available in the context object passed to your configuration module function.
+
+Here, for example, is how you could use the `DefinePlugin` in your `underreact.config.js`:
+
+```js
+module.exports = ({ webpack }) => {
+  return {
+    webpackPlugins: [new webpack.DefinePlugin(..)]
+  };
+}
+```
+
+### webpackConfigTransform
+
+Type: `config => transformedConfig`. Default `x => x` (identify function).
+
+If you want to make changes to the Webpack configuration beyond what's available in the above options, you can use this, the nuclear option.
+Your function receives the Webpack configuration that Underreact generates and returns a new Webpack configuration, representing your heart's desires.
+
+### vendorModules
+
+Type: `Array<string>`. Default: `[]`.
+
+Identifiers of npm modules that you want to be added to the vendor bundle.
+The purpose of the vendor bundle is to deliberately group dependencies that change relatively infrequently — so this bundle will stay cached for longer than the others.
+
+By default, the vendor bundle includes `react` and `react-dom`.
