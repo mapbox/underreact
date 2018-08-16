@@ -69,8 +69,6 @@ Make sure your `.babelrc` files includes the `@mapbox/babel-preset-mapbox` prese
 }
 ```
 
-**Note:** Using [babel-preset-env](https://www.npmjs.com/package/babel-preset-env) along with `BROWSERSLIST` environment variable would throw an **error** to avoid ambiguity between coexisting `browserslist` value. You should instead just set the environment variable `BROWSERSLIST`. If your use case doesn't allow for this, please feel free to open a ticket about it.
-
 You can also set the `BROWSERSLIST` environment variable in your node application before parsing code with Babel and `"@mapbox/babel-preset-mapbox"`:
 
 ```js
@@ -83,3 +81,5 @@ babel.transform(code, {
     filename: 'source.js'
 }).code;
 ```
+
+**Note:** Please avoid using [babel-preset-env](https://www.npmjs.com/package/babel-preset-env) to define your browser support. Using it would throw an **error** to avoid conflicting with the `BROWSERSLIST` env var. You should instead just set the value of environment variable `BROWSERSLIST`. If your use case doesn't allow for this, please feel free to open a ticket about it.

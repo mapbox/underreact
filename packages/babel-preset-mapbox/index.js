@@ -136,14 +136,7 @@ module.exports = function preset(context, opts) {
 };
 
 function findProperty(data, name) {
-  if (data[name]) {
-    return data[name];
-  }
-  // NOTE: babel-preset & babel-plugin have same length
-  const len = 'babel-preset-'.length;
-  // If the user used a shorthand for eg. dynamic-import-node instead of babel-plugin-dynamic-import-node
-  // remove `babel-*-` and then try to find it.
-  return data[name.substring(len)];
+  return data[name] || data[name.replace(/^babel-(preset|plugin)-/, '')];
 }
 
 function filterOutPlugins(payload) {

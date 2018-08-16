@@ -539,8 +539,6 @@ Type: `Array<string>` \| `Object`. A valid [Browserslist](https://github.com/bro
 
 This value is used by Autoprefixer to set vendor prefixes in the CSS of your stylesheets, and is used to determine Babel compilation via [babel-preset-env](#babel).
 
-The default value uses Browserslist's default, which is `> 0.5%, last 2 versions, Firefox ESR, not dead`.
-
 You can also target different settings for different Underreact modes, by sending an object:
 
 ```javascript
