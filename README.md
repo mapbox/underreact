@@ -17,11 +17,12 @@ It's a pretty thin wrapper around Babel, Webpack, and PostCSS, and will never ac
 - [Deployment environments](#deployment-environments)
   - [Using environment variables](#using-environment-variables)
   - [Targeting multiple deployment environments](#targeting-multiple-deployment-environments)
-  - [Why not use NODE_ENV?](#why-not-use-node_env)
   - [Using environment variables inside underreact.config.js](#using-environment-variables-inside-underreactconfigjs)
 - [Underreact configuration file](#underreact-configuration-file)
 - [Configuration object properties](#configuration-object-properties)
   - [browserslist](#browserslist)
+- [Configuration Object Properties](#configuration-object-properties-1)
+  - [clientEnvPrefix](#clientenvprefix)
   - [devServerHistoryFallback](#devserverhistoryfallback)
   - [htmlSource](#htmlsource)
   - [jsEntry](#jsentry)
@@ -32,9 +33,28 @@ It's a pretty thin wrapper around Babel, Webpack, and PostCSS, and will never ac
   - [postcssPlugins](#postcssplugins)
   - [siteBasePath](#sitebasepath)
   - [stylesheets](#stylesheets)
+  - [vendorModules](#vendormodules)
   - [webpackLoaders](#webpackloaders)
   - [webpackPlugins](#webpackplugins)
   - [webpackConfigTransform](#webpackconfigtransform)
+- [FAQs](#faqs)
+  - [Why can't I import CSS?](#why-cant-i-import-css)
+  - [How do I deploy my code to a branch like hey-pages?](#how-do-i-deploy-my-code-to-a-branch-like-hey-pages)
+  - [How do I access siteBasePath in my code?](#how-do-i-access-sitebasepath-in-my-code)
+  - [Why not use NODE_ENV?](#why-not-use-node_env)
+  - [How do I use Underreact without React?](#how-do-i-use-underreact-without-react)
+  - [How do I use Mapbox Assembly?](#how-do-i-use-mapbox-assembly)
+  - [How do I use a CSS preprocessor like SCSS, LESS?](#how-do-i-use-a-css-preprocessor-like-scss-less)
+  - [How do I upgrade to newer Underreact versions ?](#how-do-i-upgrade-to-newer-underreact-versions-)
+  - [How do I setup Eslint and Prettier?](#how-do-i-setup-eslint-and-prettier)
+  - [How do I setup testing with Jest?](#how-do-i-setup-testing-with-jest)
+  - [How do I use this new fancy ES2030 feature?](#how-do-i-use-this-new-fancy-es2030-feature)
+  - [How do I code split?](#how-do-i-code-split)
+  - [Lodash is a bloat, how do I reduce my build size?](#lodash-is-a-bloat-how-do-i-reduce-my-build-size)
+  - [How do I use Flow?](#how-do-i-use-flow)
+  - [How do I use images, fonts and files?](#how-do-i-use-images-fonts-and-files)
+  - [How do I add a client side Router?](#how-do-i-add-a-client-side-router)
+  - [How do I use Service Worker?](#how-do-i-use-service-worker)
 
 ## Installation
 
@@ -298,12 +318,6 @@ console.log(process.env.TOKEN) // abcd
 console.log(process.env.ANALYTICS) // undefined
 ```
 
-### Why not use `NODE_ENV`?
-
-Underreact discourages setting of `NODE_ENV` manually, as a number of libraries depend on its value and a wrong value could result in unoptimized builds. You should instead use the cli `mode` option to signal optimization of your bundle. (Internally it would set `NODE_ENV` for your app.)
-
-**If you are used to using `NODE_ENV` to target different deployment environments, you should instead use `DEPLOY_ENV`.**
-
 ### Using environment variables inside `underreact.config.js`
 
 You can also use env variables in your `underreact.config.js`. This can allow you to have different config options for different deployment targets.
@@ -398,13 +412,38 @@ module.exports = {
 }
 ```
 
+## Configuration Object Properties
+
+### clientEnvPrefix
+
+Type: `string`. Default: `''`.
+
+Set a prefix to filter only the environment variables in your `.env` file that start with it. This is useful if you are sharing your `.env` file with other processes and do not want to leak an env var to the client code.
+
+Please note that this prefix filter would not be applied to `DEPLOY_ENV` and `NODE_ENV`, which means you can continue using them without prefixing even when `clientEnvPrefix` is set.
+
+In the example below the client we have set the `clientEnvPrefix: 'UNDERREACT_APP_'` in [`underreact.config.js`](#underreact-configuration-file):
+
+```
+#.env
+SECRET=super_secret
+UNDERREACT_APP_TOKEN=abcd
+```
+
+```
+// src/app.js
+console.log(process.env.SECRET); // undefined
+console.log(process.env.UNDERREACT_APP_TOKEN); // abcd
+console.log(process.env.DEPLOY_ENV); // production
+```
+
 ### devServerHistoryFallback
 
 Type: `boolean`. Default: `false`.
 
 Set to `true` if you want to use HTML5 History for client-side routing (as opposed to hash routing). This configures the development server to fall back to `index.html` when you request nested routes.
 
-This is `false` by default because it should only be *intentionally* turned on, when you know you're going to configure your server to allow for HTML5 History—powered client-side routing.
+**Tip**: It should only be *intentionally* turned on, when you know you're going to configure your server to allow for HTML5 History—powered client-side routing.
 
 ### htmlSource
 
@@ -447,7 +486,7 @@ The directory where Underreact assets will be placed, relative to the site's roo
 
 By default, for example, the main JS chunk will be written to `underreact-assets/main.chunk.js`.
 
-It's important to know about this value so you can set up caching and other asset configuration on your server.
+**Tip**: It's important to know about this value so you can set up caching and other asset configuration on your server.
 
 ### port
 
@@ -458,10 +497,10 @@ If the specified port is unavailable, another port is used.
 
 ### postcssPlugins
 
-Type: `Array<Function>`. Default: [Autoprefixer](https://github.com/postcss/autoprefixer).
+Type: `Array<Function>`. Default: \[].
 
 All of the CSS you load via [`stylesheets`](#stylesheets) is run through [PostCSS](http://postcss.org/), so you can apply any [PostCSS plugins](https://github.com/postcss/postcss/blob/master/docs/plugins.md) to it.
-By default, only [Autoprefixer](https://github.com/postcss/autoprefixer) is applied.
+By default we already include [Autoprefixer](https://github.com/postcss/autoprefixer) for you.
 
 ### siteBasePath
 
@@ -469,9 +508,7 @@ Type: `string`. Default: `''`.
 
 Root-relative path to the base directory on the domain where the site will be deployed.
 
-There's a good chance your app isn't at the root of your domain. So this option represents the path of your site *within* that domain.
-
-For example, if your app is at `https://www.special.com/ketchup/*`, you should set `siteBasePath: 'ketchup'`.
+**Tip**: There's a good chance your app isn't at the root of your domain. So this option represents the path of your site *within* that domain. For example, if your app is at `https://www.special.com/ketchup/*`, you should set `siteBasePath: 'ketchup'`.
 
 ### stylesheets
 
@@ -483,6 +520,17 @@ These will be processed by PostCSS with [Autoprefixer](https://github.com/postcs
 
 Assets referenced by your stylesheets will be hashed and copied to the [`outputDirectory`](#outputdirectory), unless they are absolute URLs.
 
+### vendorModules
+
+Type: `Array<string>`. Default: `[]`.
+
+Identifiers of npm modules that you want to be added to the vendor bundle.
+The purpose of the vendor bundle is to deliberately group dependencies that change relatively infrequently — so this bundle will stay cached for longer than the others.
+
+By default, the vendor bundle includes `react` and `react-dom`.
+
+**Tip:** It is good idea to include big stable libraries your project depends on, for eg. `redux`, `moment.js`, `lodash` etc.
+
 ### webpackLoaders
 
 Type: `Array<Rule>`.
@@ -490,6 +538,8 @@ Type: `Array<Rule>`.
 [Webpack `Rule`s](https://webpack.js.org/configuration/module/#rule) specifying additional loaders that you'd like to add your Webpack configuration.
 
 If you need more fine-grained control over the Webpack configuration, use [`webpackConfigTransform`](#webpackconfigtransform).
+
+**Tip**: You should be careful before adding support for a new resource s(`scss`, `less`, `ts`) as it is not officially supported by ECMAScript and would make your application dependant on Webpack and its ecosystem.
 
 ### webpackPlugins
 
@@ -518,11 +568,48 @@ Type: `config => transformedConfig`. Default `x => x` (identify function).
 If you want to make changes to the Webpack configuration beyond what's available in the above options, you can use this, the nuclear option.
 Your function receives the Webpack configuration that Underreact generates and returns a new Webpack configuration, representing your heart's desires.
 
-### vendorModules
+**Tip:** You should think twice before using `webpackConfigTransform`, as Underreact tries its best to abstract away Webpack so that you can focus on the important part of building your application.
 
-Type: `Array<string>`. Default: `[]`.
+## FAQs
 
-Identifiers of npm modules that you want to be added to the vendor bundle.
-The purpose of the vendor bundle is to deliberately group dependencies that change relatively infrequently — so this bundle will stay cached for longer than the others.
+### Why can't I import CSS?
 
-By default, the vendor bundle includes `react` and `react-dom`.
+### How do I deploy my code to a branch like `hey-pages`?
+
+### How do I access siteBasePath in my code?
+
+### Why not use `NODE_ENV`?
+
+Underreact discourages setting of `NODE_ENV` manually, as a number of libraries depend on its value and a wrong value could result in unoptimized builds. You should instead use the cli `mode` option to signal optimization of your bundle. (Internally it would set `NODE_ENV` for your app.)
+
+**If you are used to using `NODE_ENV` to target different deployment environments, you should instead use `DEPLOY_ENV`.**
+
+### How do I use Underreact without React?
+
+### How do I use Mapbox Assembly?
+
+### How do I use a CSS preprocessor like SCSS, LESS?
+
+### How do I upgrade to newer Underreact versions ?
+
+Upgrading to Underreact is as simple as updating a regular node module. The Underreact API should remain relatively stable, but in case of any breaking change we provide you with ways to migrate.
+
+### How do I setup Eslint and Prettier?
+
+### How do I setup testing with Jest?
+
+### How do I use this new fancy ES2030 feature?
+
+### How do I code split?
+
+### Lodash is a bloat, how do I reduce my build size?
+
+### How do I use Flow?
+
+### How do I use images, fonts and files?
+
+### How do I add a client side Router?
+
+### How do I use Service Worker?
+
+Underreact currently doesn't support Service Workers, but we plan to support it in future.
