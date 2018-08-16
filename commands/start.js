@@ -39,7 +39,6 @@ function main(urc) {
       })
       .then(() => startServer(urc))
       .then(() => {
-        watchHtml(urc);
         watchCss(urc);
         watchPublicDir(urc);
       })
@@ -83,17 +82,6 @@ function watchWebpack(urc, onFirstRun) {
   };
 
   compiler.watch({ ignored: [/node_modules/] }, onCompilation);
-}
-
-function watchHtml(urc) {
-  const watcherHtml = chokidar.watch(urc.htmlSource, {
-    ignoreInitial: true
-  });
-
-  watcherHtml.on('all', () => {
-    writeHtml(urc).catch(logger.error);
-  });
-  watcherHtml.on('error', logger.error);
 }
 
 function watchCss(urc) {

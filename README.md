@@ -11,6 +11,7 @@ It's a pretty thin wrapper around Babel, Webpack, and PostCSS, and will never ac
 - [Installation](#installation)
   - [Getting started](#getting-started)
 - [Usage](#usage)
+  - [Underreact configuration file](#underreact-configuration-file)
   - [Defining your HTML](#defining-your-html)
 - [Babel](#babel)
   - [Exposing .babelrc](#exposing-babelrc)
@@ -19,7 +20,6 @@ It's a pretty thin wrapper around Babel, Webpack, and PostCSS, and will never ac
   - [Targeting multiple deployment environments](#targeting-multiple-deployment-environments)
   - [Why not use NODE_ENV?](#why-not-use-node_env)
   - [Using environment variables inside underreact.config.js](#using-environment-variables-inside-underreactconfigjs)
-- [Underreact configuration file](#underreact-configuration-file)
 - [Configuration object properties](#configuration-object-properties)
   - [browserslist](#browserslist)
   - [clientEnvPrefix](#clientenvprefix)
@@ -127,67 +127,123 @@ The CLI provides the following commands:
 - `build`: Build for deployment.
 - `serve-static`: Serve the files that you built for deployment.
 
-All commands look for `underreact.config.js` in the current working directory.
+### Underreact configuration file
+
+To configure Underreact, it expects an `underreact.config.js` file to exist at the root of your project.
+
+Please note that **no configuration is necessary to get started.** On most production projects you'll want to set at least a few of the [`configuration object`](#configuration-object-properties) properties.
+
+Your `underreact.config.js` can look like either of the below:
+
+**Exporting an object**: You can also directly export the [`configuration object`](#configuration-object-properties). This is a great way to start tweaking Underreact's configuration. For example in the code below we simply want to modify the `siteBasePath`:
+
+```javascript
+// underreact.config.js
+module.exports = {
+   siteBasePath: 'fancy'
+}
+```
+
+**Exporting a function**: You can also export a function which would then be used as a factory method for your [`configuration object`](#configuration-object-properties). 
+
+This function is called with the following parameter properties of an object:
+
+```javascript
+// underreact.config.js
+/**
+ * @param {Object} opts 
+ * @param {Webpack} opts.webpack - The webpack dependency injection, so that your project is not dependent on webpack module. This is useful for using a bunch of plugins scoped to the Webpack object eg. PrefetchPlugin, IgnorePlugin, SourceMapDevToolPlugin etc. 
+ * @param {'start'|'build'|'serve-static'} opts.command - The current command Underreact is following.
+ * @param {'production'|'development'} opts.mode - The current mode of Underreact.
+ * @returns {Promise<Object> | Object} 
+ */
+module.exports = function underreactConfig({ webpack, command, mode }) {
+  return {/*Underreact configuration object*/}
+}
+```
+
+This approach is quite powerful as you can also use an **async function** to generate complex configurations. Let us look at a hypothetical use case:
+
+```javascript
+// underreact.config.js
+const path = require('path');
+const downloadAssets = require('./scripts/fetchAssets');
+
+module.exports = async function underreactConfig({ webpack, command, mode }) {
+  const publicAssetsPath = 'public';
+  await downloadAssets(path.resolve(publicAssetsPath));
+
+  return {
+    publicAssetsPath,
+    webpackPlugins : [
+        command === 'build' ? new webpack.ProgressPlugin(): null
+    ],
+  }
+}
+```
 
 ### Defining your HTML
 
-Underreact is intended for single-page apps, so you only need one HTML page. Your JavaScript needs to use `react-dom` to render your application component into the HTML.
+Underreact is intended for single-page apps, so you only need one HTML page. If you are building a React application, you can also use it to define a `div` element for `react-dom` to mount your React component tree on.
 
 You have 2 choices:
 
-- **Preferred:** Write a JS module exporting a function that returns an HTML string or a Promise that resolves with an HTML string. Put it at `src/html.js` (the default) or point to it with the [`htmlSource`](#htmlsource) configuration option.
-- Provide no HTML-rendering module and let Underreact create a default document. *You should only do this for prototyping and early development*: for production projects, you'll definitely want to define your own HTML at some point, if only for the `<title>`.
+- **Preferred:** Provide a function for [`htmlSource`](#htmlsource) that returns an HTML string or a Promise that resolves with an HTML string.
+- Provide no HTML-rendering function and let Underreact use the default HTML document. *You should only do this for prototyping and early development*: for production projects, you'll definitely want to define your own HTML at some point, if only for the `<title>`.
 
-In your JS module, you can use JS template literals to interpolate expressions, and you can use any async I/O you need to put together the page. For example, you could read JS files and inject their code directly into `<script>` tags, or inject CSS into `<style>` tags. Or you could make an HTTP call to fetch dynamic data and inject it into the page with a `<script>` tag, so it's available to your React app.
+In your function, you can use JS template literals to interpolate expressions, and you can use any async I/O you need to put together the page. For example, you could read JS files and inject their code directly into `<script>` tags, or inject CSS into `<style>` tags. Or you could make an HTTP call to fetch dynamic data and inject it into the page with a `<script>` tag, so it's available to your React app.
 
 The function exported by your JS module will be passed a context object with the following properties:
 
-- `renderJsBundles`: **You must use this function to add JS to the page.** Typically you'll invoke it at the end of your `<body>`. It adds the `<script>` tags that pull in Webpack bundles.
-- `renderCssLinks`: **You must use this function to add CSS to the page,** unless your only sources of CSS are `<link>`s and `<style>`s that you write directly into your HTML. It will add CSS compiled from the [`stylesheets`](#stylesheets) option and also any CSS that was created through other Webpack plugins you added.
-- `siteBasePath`: The [`siteBasePath`](#sitebasepath) you set in your configuration (or the default).
-- `publicAssetsPath`: The [`publicAssetsPath`](#publicassetspath) you set in your configuration (or the default).
-- `production`: Whether or not the HTML is being built in production mode. You may want to use this, for example, to decide whether or not to minify JS or CSS you are inlining into the HTML.
+- `renderJsBundles`: **You must use this callback function to add JS to the page.** Typically you'll invoke it at the end of your `<body>`. It adds the `<script>` tags that pull in Webpack bundles.
+- `renderCssLinks`: **You must use this callback function to add CSS to the page,** unless your only sources of CSS are `<link>`s and `<style>`s that you write directly into your HTML. It will add CSS compiled from the [`stylesheets`](#stylesheets) option and also any CSS that was created through other Webpack plugins you added.
 
-Here's an example of what an HTML-rendering module might look like:
+In the example below, we are defining our custom `htmlSource` function in a separate file and requiring it in `underreact.config.js`:
 
 ```js
-'use strict';
+// underreact.config.js
+const htmlSource = require('./html-source');
 
+module.exports = function underreactConfig({ webpack, command, mode }) {
+  return {
+    htmlSource: htmlSource(mode)
+  };
+};
+
+// html-source.js
 const fs = require('fs');
-const path = require('path');
+const { promisify } = require('util');
 const minimizeJs = require('./minimize-js');
 
-module.exports = ({ renderJsBundles, renderCssLinks, production }) => {
-  let inlineJs = fs.readFileSync(path.join(__dirname, './path/to/some-script.js'));
-  if (production) {
-    inlineJs = minimizeJs(inlineJs);
-  }
+module.exports = mode => async ({ renderJsBundles, renderCssLinks }) => {
+    // read an external script, which we will inline
+    let inlineJs = await promisify(fs.readFile)(
+     './path/to/some-script.js'
+    );
 
-  const html = `
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-      <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-      <title>Words that rhyme with fish</title>
-      <meta name="description" content="A website about words that rhyme with fish, like plish">
-      <link href="https://api.mapbox.com/mapbox-assembly/v0.21.2/assembly.min.css" rel="stylesheet">
-      ${renderCssLinks()}
-      <script async defer src="https://api.mapbox.com/mapbox-assembly/v0.21.2/assembly.js"></script>
-      <script>${inlineJs}</script>
-    </head>
-    <body>
-      <div id="app">
-        <!-- React app will be rendered into this div -->
-      </div>
-      ${renderJsBundles()}
-    </body>
+    if (mode === 'production') {
+      inlineJs = minimizeJs(inlineJs);
+    }
 
-    </html>
-  `;
-
-  return html;
-};
+    return `
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <meta charset="utf-8">
+        <title>Words that rhyme with fish</title>
+        <meta name="description" content="A website about words that rhyme with fish, like plish">
+        ${renderCssLinks()}
+        <script>${inlineJs}</script>
+      </head>
+      <body>
+        <div id="app">
+          <!-- React app will be rendered into this div -->
+        </div>
+        ${renderJsBundles()}
+      </body>
+      </html>
+    `;
+}
 ```
 
 ## Babel
@@ -327,61 +383,6 @@ module.exports = {
 };
 ```
 
-## Underreact configuration file
-
-To configure Underreact, it expects an `underreact.config.js` file to exist at the root of your project.
-
-Please note that **no configuration is necessary to get started.** On most production projects you'll want to set at least a few of the [`configuration object`](#configuration-object-properties) properties.
-
-Your `underreact.config.js` can look like either of the below:
-
-**Exporting an object**: You can also directly export the [`configuration object`](#configuration-object-properties). This is a great way to start tweaking Underreact's configuration. For example in the code below we simply want to modify the `siteBasePath`:
-
-```javascript
-// underreact.config.js
-module.exports = {
-   siteBasePath: 'fancy'
-}
-```
-
-**Exporting a function**: You can also export a function which would then be used as a factory method for your [`configuration object`](#configuration-object-properties). 
-
-This function is called with the following parameter properties of an object:
-
-```javascript
-// underreact.config.js
-/**
- * @param {Object} opts 
- * @param {Webpack} opts.webpack - The webpack dependency injection, so that your project is not dependent on webpack module. This is useful for using a bunch of plugins scoped to the Webpack object eg. PrefetchPlugin, IgnorePlugin, SourceMapDevToolPlugin etc. 
- * @param {'start'|'build'|'serve-static'} opts.command - The current command Underreact is following.
- * @param {'production'|'development'} opts.mode - The current mode of Underreact.
- * @returns {Promise<Object> | Object} 
- */
-module.exports = function({ webpack, command, mode }) {
-  return {/*Underreact configuration object*/}
-}
-```
-
-This approach is quite powerful as the function is called with parameters which can then be used to create complex configurations. Let us look at a hypothetical use case:
-
-```javascript
-// underreact.config.js
-const path = require('path');
-const downloadAssets = require('./scripts/fetchAssets');
-
-module.exports = async function({ webpack, command, mode }) {
-  const publicAssetsPath = 'public';
-  await downloadAssets(path.resolve(publicAssetsPath));
-
-  return {
-    publicAssetsPath,
-    webpackPlugins : [
-        command === 'build' ? new webpack.ProgressPlugin(): null
-    ],
-  }
-}
-```
-
 ## Configuration object properties
 
 ### browserslist
@@ -443,9 +444,11 @@ Set to `true` if you want to use HTML5 History for client-side routing (as oppos
 
 ### htmlSource
 
-Type: `string`. Absolute path, please. Default: `${project-root}/src/html.js`.
+Type: `Function`.  Default: `[Default HTML](https://github.com/mapbox/underreact/blob/next/lib/default-html.js)`.
 
-The path to your HTML source file. For more information, read [`Defining your HTML`](#defining-your-html).
+The function to generate HTML template for your app. Read [`Defining your HTML`](#defining-your-html) for more details.
+
+**Tip**: It is recommended that you keep this function in a separate module, and then require it from your Underreact config module.
 
 ### jsEntry
 
