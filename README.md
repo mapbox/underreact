@@ -54,7 +54,7 @@ If you are building a React application, you also need to install React dependen
 npm install react react-dom
 ```
 
-Add `_underreact*` to your `.gitignore`, and maybe other ignore files (e.g. `.eslintignore`). That way you'll ignore files that Underreact generates. (If you set the [outputDirectory](#outputdirectory) option, you'll want to do this for your custom value.)
+Add `_underreact*` to your `.gitignore`, and maybe other ignore files (e.g. `.eslintignore`). That way you'll ignore files that Underreact generates. (If you set the [`outputDirectory`](#outputdirectory) option, you'll want to do this for your custom value.)
 
 ### Getting started
 
@@ -123,7 +123,7 @@ Underreact is intended for single-page apps, so you only need one HTML page. You
 
 You have 2 choices:
 
-- **Preferred:** Write a JS module exporting a function that returns an HTML string or a Promise that resolves with an HTML string. Put it at `src/html.js` (the default) or point to it with the [htmlSource](#htmlsource) configuration option.
+- **Preferred:** Write a JS module exporting a function that returns an HTML string or a Promise that resolves with an HTML string. Put it at `src/html.js` (the default) or point to it with the [`htmlSource`](#htmlsource) configuration option.
 - Provide no HTML-rendering module and let Underreact create a default document. *You should only do this for prototyping and early development*: for production projects, you'll definitely want to define your own HTML at some point, if only for the `<title>`.
 
 In your JS module, you can use JS template literals to interpolate expressions, and you can use any async I/O you need to put together the page. For example, you could read JS files and inject their code directly into `<script>` tags, or inject CSS into `<style>` tags. Or you could make an HTTP call to fetch dynamic data and inject it into the page with a `<script>` tag, so it's available to your React app.
@@ -132,8 +132,8 @@ The function exported by your JS module will be passed a context object with the
 
 - `renderJsBundles`: **You must use this function to add JS to the page.** Typically you'll invoke it at the end of your `<body>`. It adds the `<script>` tags that pull in Webpack bundles.
 - `renderCssLinks`: **You must use this function to add CSS to the page,** unless your only sources of CSS are `<link>`s and `<style>`s that you write directly into your HTML. It will add CSS compiled from the [`stylesheets`](#stylesheets) option and also any CSS that was created through other Webpack plugins you added.
-- `siteBasePath`: The [siteBasePath](#sitebasepath) you set in your configuration (or the default).
-- `publicAssetsPath`: The [publicAssetsPath](#publicassetspath) you set in your configuration (or the default).
+- `siteBasePath`: The [`siteBasePath`](#sitebasepath) you set in your configuration (or the default).
+- `publicAssetsPath`: The [`publicAssetsPath`](#publicassetspath) you set in your configuration (or the default).
 - `production`: Whether or not the HTML is being built in production mode. You may want to use this, for example, to decide whether or not to minify JS or CSS you are inlining into the HTML.
 
 Here's an example of what an HTML-rendering module might look like:
@@ -256,7 +256,7 @@ Underreact allows your app to target different environments with the help of `DE
 - If `DEPLOY_ENV` is not set it will default to `development` in development mode and `production` in production mode.
 - It is recommended that you do not change the default value of `DEPLOY_ENV` when running in development mode.
 - `DEPLOY_ENV` is generally recommended to be set to `staging` or `production` for production mode, but you can set it to any value you wish to better align with your target environments.
-- `DEPLOY_ENV` is not the same as `NODE_ENV`, refer to [Why not use NODE_ENV](#why-not-use-node_env).
+- `DEPLOY_ENV` is not the same as `NODE_ENV`, refer to [`Why not use NODE_ENV`](#why-not-use-node_env).
 - Do not set `DEPLOY_ENV` in any of `.env` files, as it is expected to be already available in your environment.
 
 Underreact allows you to have multiple `.env` files for different deployment targets. It can read the following type of `.env` files
@@ -317,31 +317,56 @@ module.exports = {
 
 ## Underreact configuration file
 
-Underreact expects a `underreact.config.js` file to exist at the root of your project. Please note that **No configuration is necessary to get started.** On most production projects you'll want to set at least a few of the [configuration object](#configuration-object-properties) properties.
+To configure Underreact, it expects an `underreact.config.js` file to exist at the root of your project.
+
+Please note that **no configuration is necessary to get started.** On most production projects you'll want to set at least a few of the [`configuration object`](#configuration-object-properties) properties.
 
 Your `underreact.config.js` can look like either of the below:
 
-- **Exporting a Function (Preferred)**: You can export a function which would then be used as a factory method for your [configuration object](#configuration-object-properties). This function is called the following parameter properties of an object:
+**Exporting an object**: You can also directly export the [`configuration object`](#configuration-object-properties). This is a great way to start tweaking Underreact's configuration. For example in the code below we simply want to modify the `siteBasePath`:
+
+```javascript
+// underreact.config.js
+module.exports = {
+   siteBasePath: 'fancy'
+}
+```
+
+**Exporting a function**: You can also export a function which would then be used as a factory method for your [`configuration object`](#configuration-object-properties). 
+
+This function is called with the following parameter properties of an object:
 
 ```javascript
 // underreact.config.js
 /**
  * @param {Object} opts 
- * @param {Webpack} opts.webpack - The Webpack object.
+ * @param {Webpack} opts.webpack - The webpack dependency injection, so that your project is not dependent on webpack module. This is useful for using a bunch of plugins scoped to the Webpack object eg. PrefetchPlugin, IgnorePlugin, SourceMapDevToolPlugin etc. 
  * @param {'start'|'build'|'serve-static'} opts.command - The current command Underreact is following.
  * @param {'production'|'development'} opts.mode - The current mode of Underreact.
+ * @returns {Promise<Object> | Object} 
  */
 module.exports = function({ webpack, command, mode }) {
   return {/*Underreact configuration object*/}
 }
 ```
 
-- **Exporting an Object**: You can also directly export the [configuration object](#configuration-object-properties). This is a great way to start experimenting with Underreact's configuration. For example in the code below we simply want to modify the `siteBasePath`:
+This approach is quite powerful as the function is called with parameters which can then be used to create complex configurations. Let us look at a hypothetical use case:
 
 ```javascript
 // underreact.config.js
-module.exports = {
-   siteBasePath: 'fancy'
+const path = require('path');
+const downloadAssets = require('./scripts/fetchAssets');
+
+module.exports = async function({ webpack, command, mode }) {
+  const publicAssetsPath = 'public';
+  await downloadAssets(path.resolve(publicAssetsPath));
+
+  return {
+    publicAssetsPath,
+    webpackPlugins : [
+        command === 'build' ? new webpack.ProgressPlugin(): null
+    ],
+  }
 }
 ```
 
@@ -383,36 +408,36 @@ This is `false` by default because it should only be *intentionally* turned on, 
 
 ### htmlSource
 
-Type: `string`. Absolute path, please. Default: `${project-directory}/src/html.js`.
+Type: `string`. Absolute path, please. Default: `${project-root}/src/html.js`.
 
-The path to your HTML source file. For more information, read [Defining your HTML](#defining-your-html).
+The path to your HTML source file. For more information, read [`Defining your HTML`](#defining-your-html).
 
 ### jsEntry
 
-Type: `string`. Absolute path, please. Default: `${project-directory}/src/index.js`.
+Type: `string`. Absolute path, please. Default: `${project-root}/src/index.js`.
 
 The entry JS file for your app. Typically this is the file where you'll use `react-dom` to render your app on an element.
 
-In the default value, `project-directory` refers to the directory of your `underreact.config.js` file, or the current working directory.
+In the default value, `project-root` refers to the directory of your `underreact.config.js` file.
 
 ### outputDirectory
 
-Type `string`. Absolute path, please. Default: `${project-directory}/_underreact-site/`.
+Type `string`. Absolute path, please. Default: `${project-root}/_underreact-site/`.
 
 The directory where files should be written.
 
 You'll want to ignore this directory with `.gitignore`, `.eslintignore`, etc.
 
-In the default value, `project-directory` refers to the directory of your `underreact.config.js` file, or the current working directory.
+In the default value, `project-root` refers to the directory of your `underreact.config.js` file.
 
 ### publicDirectory
 
-Type `string`. Absolute path, please. Default: `${project-directory}/src/public/`.
+Type `string`. Absolute path, please. Default: `${project-root}/src/public/`.
 
-Any files you put into this directory will be copied, without processing, into the [outputDirectory](#outputdirectory).
-You can put images, favicons, data files, anything else you want in here.
+Any files you put into this directory will be copied, without processing, into the [`outputDirectory`](#outputdirectory).
+You can put images, favicons, data files, and anything else you want in here.
 
-In the default value, `project-directory` refers to the directory of your `underreact.config.js` file, or the current working directory.
+In the default value, `project-root` refers to the directory of your `underreact.config.js` file.
 
 ### publicAssetsPath
 
@@ -446,7 +471,7 @@ Root-relative path to the base directory on the domain where the site will be de
 
 There's a good chance your app isn't at the root of your domain. So this option represents the path of your site *within* that domain.
 
-For example, if your app is at `https://www.special.com/ketchup/*`, you should set `siteBasePath: ketchup`.
+For example, if your app is at `https://www.special.com/ketchup/*`, you should set `siteBasePath: 'ketchup'`.
 
 ### stylesheets
 
@@ -454,9 +479,9 @@ Type: `Array<string>`. Absolute paths, please. Default: `[]`.
 
 An array of filenames pointing to stylesheets that you want to include in your site.
 
-These will be processed by PostCSS with [Autoprefixer](https://github.com/postcss/autoprefixer) and any other [postcssPlugins](#postcssplugins) that you specify; concatenated in the order specified; and added to the `<head>` of your document.
+These will be processed by PostCSS with [Autoprefixer](https://github.com/postcss/autoprefixer) and any other [`postcssPlugins`](#postcssplugins) that you specify; concatenated in the order specified; and added to your code with the help of `renderCssLinks` (read [`Defining your HTML`](#defining-your-html)).
 
-Assets referenced by your stylesheets will be hashed and copied to the [outputDirectory](#outputdirectory), unless they are absolute URLs.
+Assets referenced by your stylesheets will be hashed and copied to the [`outputDirectory`](#outputdirectory), unless they are absolute URLs.
 
 ### webpackLoaders
 
@@ -464,7 +489,7 @@ Type: `Array<Rule>`.
 
 [Webpack `Rule`s](https://webpack.js.org/configuration/module/#rule) specifying additional loaders that you'd like to add your Webpack configuration.
 
-If you need more fine-grained control over the Webpack configuration, use [webpackConfigTransform](#webpackconfigtransform).
+If you need more fine-grained control over the Webpack configuration, use [`webpackConfigTransform`](#webpackconfigtransform).
 
 ### webpackPlugins
 
@@ -492,3 +517,12 @@ Type: `config => transformedConfig`. Default `x => x` (identify function).
 
 If you want to make changes to the Webpack configuration beyond what's available in the above options, you can use this, the nuclear option.
 Your function receives the Webpack configuration that Underreact generates and returns a new Webpack configuration, representing your heart's desires.
+
+### vendorModules
+
+Type: `Array<string>`. Default: `[]`.
+
+Identifiers of npm modules that you want to be added to the vendor bundle.
+The purpose of the vendor bundle is to deliberately group dependencies that change relatively infrequently — so this bundle will stay cached for longer than the others.
+
+By default, the vendor bundle includes `react` and `react-dom`.
