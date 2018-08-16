@@ -15,10 +15,10 @@ const getCliOpts = require('../lib/utils/get-cli-opts');
 const middlewares = [
   argv => {
     if (!process.env.NODE_ENV) {
-      process.env.NODE_ENV = argv.mode;
+      process.env.NODE_ENV = argv.mode || 'production';
     }
     if (!process.env.DEPLOY_ENV) {
-      process.env.DEPLOY_ENV = argv.mode;
+      process.env.DEPLOY_ENV = argv.mode || 'production';
     }
 
     // if the user specified a nonexistent path, tell them if it doesn't exist

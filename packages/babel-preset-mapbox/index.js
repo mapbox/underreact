@@ -1,7 +1,8 @@
 'use strict';
+const isPlainObj = require('is-plain-obj');
 
 module.exports = function preset(context, opts) {
-  opts = opts || [];
+  opts = opts || {};
   // see https://github.com/facebook/create-react-app/blob/590df7eead1a2526828aa36ceff41397e82bd4dd/packages/babel-preset-react-app/index.js#L52
   const env = process.env.BABEL_ENV || process.env.NODE_ENV;
   if (
@@ -19,16 +20,22 @@ module.exports = function preset(context, opts) {
     );
   }
 
-  if (!Array.isArray(opts)) {
+  if (!isPlainObj(opts)) {
     throw new Error(
-      '`@mapbox/babel-preset-mapbox` expects an array as an option.'
+      '`@mapbox/babel-preset-mapbox` expects an object as an option.'
+    );
+  }
+  // prevent ambiguity if user is using both
+  if (
+    (process.env.BROWSERSLIST && opts['babel-preset-env']) ||
+    (process.env.BROWSERSLIST && opts['env'])
+  ) {
+    throw new Error(
+      'Please do not use process.env.BROWSERSLIST and `babel-preset-env` together.'
     );
   }
 
-  // a shorthand if you want to override one property
-  if (opts.length === 2 && typeof opts[0] === 'string') {
-    opts = [opts];
-  }
+  opts = Object.assign({}, opts);
 
   const isEnvDevelopment = env === 'development' || env === undefined;
   const isEnvProduction = env === 'production';
@@ -80,14 +87,21 @@ module.exports = function preset(context, opts) {
       }
     );
   } else {
+    const presetEnv = {
+      name: 'babel-preset-env',
+      options: {
+        // Do not transform modules to CJS
+        modules: false
+      }
+    };
+    if (process.env.BROWSERSLIST) {
+      presetEnv.options.targets = {
+        browsers: process.env.BROWSERSLIST
+      };
+    }
+
     payload.push(
-      {
-        name: 'babel-preset-env',
-        options: {
-          // Do not transform modules to CJS
-          modules: false
-        }
-      },
+      presetEnv,
       // Adds syntax support for import()
       { name: 'babel-plugin-syntax-dynamic-import' }
     );
@@ -122,8 +136,7 @@ module.exports = function preset(context, opts) {
 };
 
 function findProperty(data, name) {
-  const found = data.find(r => typeof r[0] === 'string' && r[0] === name);
-  return found && found[1];
+  return data[name] || data[name.replace(/^babel-(preset|plugin)-/, '')];
 }
 
 function filterOutPlugins(payload) {

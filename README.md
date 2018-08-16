@@ -20,7 +20,8 @@ It's a pretty thin wrapper around Babel, Webpack, and PostCSS, and will never ac
   - [Why not use NODE_ENV?](#why-not-use-node_env)
   - [Using environment variables inside underreact.config.js](#using-environment-variables-inside-underreactconfigjs)
 - [Underreact configuration file](#underreact-configuration-file)
-- [Configuration Object Properties](#configuration-object-properties)
+- [Configuration object properties](#configuration-object-properties)
+  - [browserslist](#browserslist)
   - [devServerHistoryFallback](#devserverhistoryfallback)
   - [htmlSource](#htmlsource)
   - [jsEntry](#jsentry)
@@ -34,7 +35,6 @@ It's a pretty thin wrapper around Babel, Webpack, and PostCSS, and will never ac
   - [webpackLoaders](#webpackloaders)
   - [webpackPlugins](#webpackplugins)
   - [webpackConfigTransform](#webpackconfigtransform)
-  - [vendorModules](#vendormodules)
 
 ## Installation
 
@@ -345,7 +345,33 @@ module.exports = {
 }
 ```
 
-## Configuration Object Properties
+## Configuration object properties
+
+### browserslist
+
+Type: `Array<string>` \| `Object`. A valid [Browserslist](https://github.com/browserslist/browserslist) value. Default:`['> 0.5%', 'last 2 versions', 'Firefox ESR', 'not dead']`.
+
+This value is used by Autoprefixer to set vendor prefixes in the CSS of your stylesheets, and is used to determine Babel compilation via [babel-preset-env](#babel).
+
+The default value uses Browserslist's default, which is `> 0.5%, last 2 versions, Firefox ESR, not dead`.
+
+You can also target different settings for different Underreact modes, by sending an object:
+
+```javascript
+// underreact.config.js
+module.exports = {
+  browserslist: {
+    production: [
+      '> 1%',
+      'ie 10'
+    ],
+    development: [
+      'last 1 chrome version',
+      'last 1 firefox version'
+    ]
+  }
+}
+```
 
 ### devServerHistoryFallback
 
@@ -466,12 +492,3 @@ Type: `config => transformedConfig`. Default `x => x` (identify function).
 
 If you want to make changes to the Webpack configuration beyond what's available in the above options, you can use this, the nuclear option.
 Your function receives the Webpack configuration that Underreact generates and returns a new Webpack configuration, representing your heart's desires.
-
-### vendorModules
-
-Type: `Array<string>`. Default: `[]`.
-
-Identifiers of npm modules that you want to be added to the vendor bundle.
-The purpose of the vendor bundle is to deliberately group dependencies that change relatively infrequently — so this bundle will stay cached for longer than the others.
-
-By default, the vendor bundle includes `react` and `react-dom`.

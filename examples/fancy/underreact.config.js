@@ -41,6 +41,16 @@ module.exports = ({ webpack, production }) => {
     webpackConfigTransform: config => {
       config.devtool = false;
       return config;
+    },
+    "browserslist": {
+      "production": [
+        "> 1%",
+        "ie 10"
+      ],
+      "development": [
+        "last 1 chrome version",
+        "last 1 firefox version"
+      ]
     }
   };
 };
