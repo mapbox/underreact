@@ -20,7 +20,8 @@ It's a pretty thin wrapper around Babel, Webpack, and PostCSS, and will never ac
   - [Why not use NODE_ENV?](#why-not-use-node_env)
   - [Using environment variables inside underreact.config.js](#using-environment-variables-inside-underreactconfigjs)
 - [Underreact configuration file](#underreact-configuration-file)
-- [Configuration Object Properties](#configuration-object-properties)
+- [Configuration object properties](#configuration-object-properties)
+  - [browserslist](#browserslist)
   - [devServerHistoryFallback](#devserverhistoryfallback)
   - [htmlSource](#htmlsource)
   - [jsEntry](#jsentry)
@@ -28,7 +29,12 @@ It's a pretty thin wrapper around Babel, Webpack, and PostCSS, and will never ac
   - [publicDirectory](#publicdirectory)
   - [publicAssetsPath](#publicassetspath)
   - [port](#port)
-  - [browserslist](#browserslist)
+  - [postcssPlugins](#postcssplugins)
+  - [siteBasePath](#sitebasepath)
+  - [stylesheets](#stylesheets)
+  - [webpackLoaders](#webpackloaders)
+  - [webpackPlugins](#webpackplugins)
+  - [webpackConfigTransform](#webpackconfigtransform)
 
 ## Installation
 
@@ -339,7 +345,7 @@ module.exports = {
 }
 ```
 
-## Configuration Object Properties
+## Configuration object properties
 
 ### browserslist
 
@@ -353,19 +359,17 @@ You can also target different settings for different Underreact modes, by sendin
 
 ```javascript
 // underreact.config.js
-{
 module.exports = {
-browserslist: {
-production: [
-'> 1%',
-'ie 10'
-],
-development: [
-'last 1 chrome version',
-'last 1 firefox version'
-]
-}
-}
+  browserslist: {
+    production: [
+      '> 1%',
+      'ie 10'
+    ],
+    development: [
+      'last 1 chrome version',
+      'last 1 firefox version'
+    ]
+  }
 }
 ```
 
@@ -488,73 +492,3 @@ Type: `config => transformedConfig`. Default `x => x` (identify function).
 
 If you want to make changes to the Webpack configuration beyond what's available in the above options, you can use this, the nuclear option.
 Your function receives the Webpack configuration that Underreact generates and returns a new Webpack configuration, representing your heart's desires.
-
-### jsEntry
-
-Type: `string`. Absolute path, please. Default: `${project-directory}/src/index.js`.
-
-The entry JS file for your app. Typically this is the file where you'll use `react-dom` to render your app on an element.
-
-In the default value, `project-directory` refers to the directory of your `underreact.config.js` file, or the current working directory.
-
-### outputDirectory
-
-Type `string`. Absolute path, please. Default: `${project-directory}/_underreact-site/`.
-
-The directory where files should be written.
-
-You'll want to ignore this directory with `.gitignore`, `.eslintignore`, etc.
-
-In the default value, `project-directory` refers to the directory of your `underreact.config.js` file, or the current working directory.
-
-### publicDirectory
-
-Type `string`. Absolute path, please. Default: `${project-directory}/src/public/`.
-
-Any files you put into this directory will be copied, without processing, into the [outputDirectory](#outputdirectory).
-You can put images, favicons, data files, anything else you want in here.
-
-In the default value, `project-directory` refers to the directory of your `underreact.config.js` file, or the current working directory.
-
-### publicAssetsPath
-
-Type: `string`. Default: `underreact-assets`.
-
-The directory where Underreact assets will be placed, relative to the site's root.
-
-By default, for example, the main JS chunk will be written to `underreact-assets/main.chunk.js`.
-
-It's important to know about this value so you can set up caching and other asset configuration on your server.
-
-### port
-
-Type: `number`. Default: `8080`.
-
-Preferred port for development servers.
-If the specified port is unavailable, another port is used.
-
-### browserslist
-
-Type: `Array<string>` \| `Object`. A valid [Browserslist](https://github.com/browserslist/browserslist) value. Default:`['> 0.5%', 'last 2 versions', 'Firefox ESR', 'not dead']`.
-
-This value is used by Autoprefixer to set vendor prefixes in the CSS of your stylesheets, and is used to determine Babel compilation via [babel-preset-env](#babel).
-
-You can also target different settings for different Underreact modes, by sending an object:
-
-```javascript
-// underreact.config.js
-{
-  module.exports = {
-    browserslist: {
-      production: [
-        '> 1%',
-        'ie 10'
-      ],
-      development: [
-        'last 1 chrome version',
-        'last 1 firefox version'
-      ]
-    }
-  }
-}
-```
