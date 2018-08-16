@@ -25,10 +25,7 @@ const htmlSource = ({ renderCssLinks, renderJsBundles }) => {
 
 module.exports = ({ webpack }) => {
   return {
-    polyfills: {
-      promise: true,
-      fetch: true
-    },
+    polyfill: path.join(__dirname, 'polyfill.js'),
     siteBasePath: 'fancy',
     publicAssetsPath: 'cacheable-things',
     stylesheets: [
@@ -59,14 +56,14 @@ module.exports = ({ webpack }) => {
       config.devtool = false;
       return config;
     },
-    "browserslist": {
-      "production": [
-        "> 1%",
-        "ie 10"
+    browserslist: {
+      development: [
+        '> 1%',
+        'ie 10'
       ],
-      "development": [
-        "last 1 chrome version",
-        "last 1 firefox version"
+      development: [
+        'last 1 chrome version',
+        'last 1 firefox version'
       ]
     }
   };
