@@ -17,11 +17,11 @@ It's a pretty thin wrapper around Babel, Webpack, and PostCSS, and will never ac
 - [Deployment environments](#deployment-environments)
   - [Using environment variables](#using-environment-variables)
   - [Targeting multiple deployment environments](#targeting-multiple-deployment-environments)
+  - [Why not use NODE_ENV?](#why-not-use-node_env)
   - [Using environment variables inside underreact.config.js](#using-environment-variables-inside-underreactconfigjs)
 - [Underreact configuration file](#underreact-configuration-file)
 - [Configuration object properties](#configuration-object-properties)
   - [browserslist](#browserslist)
-- [Configuration Object Properties](#configuration-object-properties-1)
   - [clientEnvPrefix](#clientenvprefix)
   - [devServerHistoryFallback](#devserverhistoryfallback)
   - [htmlSource](#htmlsource)
@@ -39,22 +39,14 @@ It's a pretty thin wrapper around Babel, Webpack, and PostCSS, and will never ac
   - [webpackConfigTransform](#webpackconfigtransform)
 - [FAQs](#faqs)
   - [Why can't I import CSS?](#why-cant-i-import-css)
-  - [How do I deploy my code to a branch like hey-pages?](#how-do-i-deploy-my-code-to-a-branch-like-hey-pages)
   - [How do I access siteBasePath in my code?](#how-do-i-access-sitebasepath-in-my-code)
-  - [Why not use NODE_ENV?](#why-not-use-node_env)
   - [How do I use Underreact without React?](#how-do-i-use-underreact-without-react)
-  - [How do I use Mapbox Assembly?](#how-do-i-use-mapbox-assembly)
-  - [How do I use a CSS preprocessor like SCSS, LESS?](#how-do-i-use-a-css-preprocessor-like-scss-less)
-  - [How do I upgrade to newer Underreact versions ?](#how-do-i-upgrade-to-newer-underreact-versions-)
-  - [How do I setup Eslint and Prettier?](#how-do-i-setup-eslint-and-prettier)
-  - [How do I setup testing with Jest?](#how-do-i-setup-testing-with-jest)
-  - [How do I use this new fancy ES2030 feature?](#how-do-i-use-this-new-fancy-es2030-feature)
+  - [How do I make Jest use Underreact's Babel configuration?](#how-do-i-make-jest-use-underreacts-babel-configuration)
+  - [How do I use latest Javascript features?](#how-do-i-use-latest-javascript-features)
   - [How do I code split?](#how-do-i-code-split)
-  - [Lodash is a bloat, how do I reduce my build size?](#lodash-is-a-bloat-how-do-i-reduce-my-build-size)
-  - [How do I use Flow?](#how-do-i-use-flow)
-  - [How do I use images, fonts and files?](#how-do-i-use-images-fonts-and-files)
-  - [How do I add a client side Router?](#how-do-i-add-a-client-side-router)
-  - [How do I use Service Worker?](#how-do-i-use-service-worker)
+  - [How do I reduce my build size?](#how-do-i-reduce-my-build-size)
+  - [How do I include SVGs, images, and videos?](#how-do-i-include-svgs-images-and-videos)
+  - [How do I add a client-side router?](#how-do-i-add-a-client-side-router)
 
 ## Installation
 
@@ -318,6 +310,12 @@ console.log(process.env.TOKEN) // abcd
 console.log(process.env.ANALYTICS) // undefined
 ```
 
+### Why not use `NODE_ENV`?
+
+Underreact discourages setting of `NODE_ENV` manually, as a number of libraries depend on its value and a wrong value could result in unoptimized builds. You should instead use the cli `mode` option to signal optimization of your bundle. (Internally it would set `NODE_ENV` for your app.)
+
+**If you are used to using `NODE_ENV` to target different deployment environments, you should instead use `DEPLOY_ENV`.**
+
 ### Using environment variables inside `underreact.config.js`
 
 You can also use env variables in your `underreact.config.js`. This can allow you to have different config options for different deployment targets.
@@ -411,8 +409,6 @@ module.exports = {
   }
 }
 ```
-
-## Configuration Object Properties
 
 ### clientEnvPrefix
 
@@ -529,7 +525,7 @@ The purpose of the vendor bundle is to deliberately group dependencies that chan
 
 By default, the vendor bundle includes `react` and `react-dom`.
 
-**Tip:** It is good idea to include big stable libraries your project depends on, for eg. `redux`, `moment.js`, `lodash` etc.
+**Tip:** It is good idea to include big stable libraries your project depends on; for example `redux`, `moment.js`, `lodash` etc.
 
 ### webpackLoaders
 
@@ -539,7 +535,7 @@ Type: `Array<Rule>`.
 
 If you need more fine-grained control over the Webpack configuration, use [`webpackConfigTransform`](#webpackconfigtransform).
 
-**Tip**: You should be careful before adding support for a new resource s(`scss`, `less`, `ts`) as it is not officially supported by ECMAScript and would make your application dependant on Webpack and its ecosystem.
+**Tip**: You should be careful before adding support for a new source type (for example, `scss`, `less`, `ts`) as it is not officially supported by ECMAScript and would make your application dependant on Webpack and its ecosystem.
 
 ### webpackPlugins
 
@@ -574,42 +570,18 @@ Your function receives the Webpack configuration that Underreact generates and r
 
 ### Why can't I import CSS?
 
-### How do I deploy my code to a branch like `hey-pages`?
-
-### How do I access siteBasePath in my code?
-
-### Why not use `NODE_ENV`?
-
-Underreact discourages setting of `NODE_ENV` manually, as a number of libraries depend on its value and a wrong value could result in unoptimized builds. You should instead use the cli `mode` option to signal optimization of your bundle. (Internally it would set `NODE_ENV` for your app.)
-
-**If you are used to using `NODE_ENV` to target different deployment environments, you should instead use `DEPLOY_ENV`.**
+### How do I access `siteBasePath` in my code?
 
 ### How do I use Underreact without React?
 
-### How do I use Mapbox Assembly?
+### How do I make Jest use Underreact's Babel configuration?
 
-### How do I use a CSS preprocessor like SCSS, LESS?
-
-### How do I upgrade to newer Underreact versions ?
-
-Upgrading to Underreact is as simple as updating a regular node module. The Underreact API should remain relatively stable, but in case of any breaking change we provide you with ways to migrate.
-
-### How do I setup Eslint and Prettier?
-
-### How do I setup testing with Jest?
-
-### How do I use this new fancy ES2030 feature?
+### How do I use latest Javascript features?
 
 ### How do I code split?
 
-### Lodash is a bloat, how do I reduce my build size?
+### How do I reduce my build size?
 
-### How do I use Flow?
+### How do I include SVGs, images, and videos?
 
-### How do I use images, fonts and files?
-
-### How do I add a client side Router?
-
-### How do I use Service Worker?
-
-Underreact currently doesn't support Service Workers, but we plan to support it in future.
+### How do I add a client-side router?
