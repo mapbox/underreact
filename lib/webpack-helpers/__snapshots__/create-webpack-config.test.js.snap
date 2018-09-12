@@ -5,11 +5,8 @@ Object {
   "bail": false,
   "devtool": false,
   "entry": Object {
-    "main": Array [
-      "<PROJECT_ROOT>/lib/polyfills/promise.js",
-      "<PROJECT_ROOT>/lib/polyfills/fetch.js",
-      "<PROJECT_ROOT>/src/entry.js",
-    ],
+    "main": "<PROJECT_ROOT>/src/entry.js",
+    "polyfill": "<PROJECT_ROOT>/polyfill/index.js",
     "vendor": Array [
       "<PROJECT_ROOT>/node_modules/react",
       "<PROJECT_ROOT>/node_modules/react-dom",

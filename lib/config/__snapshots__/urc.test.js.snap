@@ -23,12 +23,9 @@ Urc {
   "htmlSource": [Function],
   "jsEntry": "/fake-volume/src/entry.js",
   "mode": "development",
+  "modernBrowserTest": "'fetch' in window && 'assign' in Object",
   "outputDirectory": "/fake-volume/_underreact-site",
-  "polyfills": Object {
-    "fetch": false,
-    "objectAssign": false,
-    "promise": false,
-  },
+  "polyfill": "<PROJECT_ROOT>/polyfill/index.js",
   "port": 8080,
   "postcssPlugins": Array [],
   "production": false,
@@ -53,12 +50,9 @@ Urc {
   "htmlSource": [Function],
   "jsEntry": "/fake-volume/src/entry.js",
   "mode": "development",
+  "modernBrowserTest": "'fetch' in window && 'assign' in Object",
   "outputDirectory": "/fake-volume/_underreact-site",
-  "polyfills": Object {
-    "fetch": true,
-    "objectAssign": false,
-    "promise": true,
-  },
+  "polyfill": "<PROJECT_ROOT>/polyfill/index.js",
   "port": 8080,
   "postcssPlugins": Array [],
   "production": false,
@@ -87,3 +81,5 @@ Urc {
   ],
 }
 `;
+
+exports[`not setting polyfill fallbacks to default path 1`] = `"<PROJECT_ROOT>/polyfill/index.js"`;

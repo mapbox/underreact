@@ -91,7 +91,8 @@ module.exports = function preset(context, opts) {
       name: 'babel-preset-env',
       options: {
         // Do not transform modules to CJS
-        modules: false
+        modules: false,
+        useBuiltIns: true
       }
     };
     if (process.env.BROWSERSLIST) {
