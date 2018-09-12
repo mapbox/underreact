@@ -3,7 +3,27 @@
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const path = require('path');
 
-module.exports = ({ webpack, production }) => {
+const htmlSource = ({ renderCssLinks, renderJsBundles }) => {
+  return `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Fancy examples</title>
+      <link href="https://api.mapbox.com/mapbox-assembly/v0.21.2/assembly.min.css" rel="stylesheet">
+      <script async defer src="https://api.mapbox.com/mapbox-assembly/v0.21.2/assembly.js"></script>
+      ${renderCssLinks()}
+    </head>
+    <body>
+      <div id="app"></div>
+      ${renderJsBundles()}
+    </body>
+    </html>
+  `;
+};
+
+module.exports = ({ webpack }) => {
   return {
     polyfills: {
       promise: true,
@@ -14,7 +34,7 @@ module.exports = ({ webpack, production }) => {
     stylesheets: [
       path.join(__dirname, './src/bg.css'),
     ],
-    htmlSource: path.join(__dirname, './src/html.js'),
+    htmlSource,
     clientEnvPrefix: 'UNDERREACT_APP_',
     webpackLoaders: [
       {

@@ -18,10 +18,9 @@ Object {
 
 exports[`normalizes empty configuration 1`] = `
 Urc {
-  "babelPresets": Array [],
   "clientEnvPrefix": "",
   "devServerHistoryFallback": false,
-  "htmlSource": "<PROJECT_ROOT>/lib/default-html.js",
+  "htmlSource": [Function],
   "jsEntry": "/fake-volume/src/entry.js",
   "mode": "development",
   "outputDirectory": "/fake-volume/_underreact-site",
@@ -49,10 +48,9 @@ Urc {
 
 exports[`normalizes fancy configuration 1`] = `
 Urc {
-  "babelPresets": Array [],
   "clientEnvPrefix": "",
   "devServerHistoryFallback": false,
-  "htmlSource": "<PROJECT_ROOT>/lib/config/src/index.html",
+  "htmlSource": [Function],
   "jsEntry": "/fake-volume/src/entry.js",
   "mode": "development",
   "outputDirectory": "/fake-volume/_underreact-site",
