@@ -269,6 +269,26 @@ npm install --save-dev @mapbox/babel-preset-mapbox
 
 While you are free to use any Babel presets & plugins, we strongly recommend you to use `@mapbox/babel-preset-mapbox` as it provides a good combination of presets and plugins that are necessary for any Underreact application to work properly. For more advanced configuration visit [`@mapbox/babel-preset-mapbox`](https://github.com/mapbox/underreact/tree/next/packages/babel-preset-mapbox).
 
+## Browser support and Polyfills
+
+One of the founding principles of Internet is its ability to support a multitude of devices. With the ever changing Javascript ecosystem, new features of language coming yearly and it has become difficult to use them while also supporting older browsers. 
+
+### Transpiling of Javascript and prefixing CSS
+
+In Underreact you can use the [Browserslist](https://github.com/browserslist/browserslist) notation to provide a list of minimum browser versions to support. Let us look at an example:
+
+```javascript
+// underreact.config.js
+module.exports = {
+  // The % refers to the global coverage of users from browserslist
+  "browserslist": [ ">0.25%", "not ie 11"] 
+}
+```
+
+In the example below we are setting the [`browserslist`](#browserslist) to target all the browsers with greater than `0.25%` market share but not IE 11. This information would then be passed to [Autoprefixer](https://github.com/postcss/autoprefixer) to add vendor prefixes and also to [Babel](https://babeljs.io/docs/en) so that it can transpile your Javascript which can be read by all the browsers you wish to support.
+
+### Polyfills
+
 ## Deployment environments
 
 ### Using environment variables

@@ -37,6 +37,7 @@ Array [
       "targets": Object {
         "browsers": ">0.25%,not ie 11,not op_mini all",
       },
+      "useBuiltIns": true,
     },
   ],
 ]
@@ -130,6 +131,7 @@ Object {
       "babel-preset-env",
       Object {
         "modules": false,
+        "useBuiltIns": true,
       },
     ],
   ],
@@ -170,6 +172,7 @@ Object {
       "babel-preset-env",
       Object {
         "modules": false,
+        "useBuiltIns": true,
       },
     ],
   ],
