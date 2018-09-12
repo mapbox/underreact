@@ -16,9 +16,6 @@ module.exports = ({ webpack, production }) => {
     ],
     htmlSource: path.join(__dirname, './src/html.js'),
     clientEnvPrefix: 'UNDERREACT_APP_',
-    babelPlugins: [
-      require.resolve('babel-plugin-lodash')
-    ],
     webpackLoaders: [
       {
         test: /\.less$/,

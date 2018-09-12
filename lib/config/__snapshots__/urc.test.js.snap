@@ -18,7 +18,6 @@ Object {
 
 exports[`normalizes empty configuration 1`] = `
 Urc {
-  "babelPlugins": Array [],
   "babelPresets": Array [],
   "clientEnvPrefix": "",
   "devServerHistoryFallback": false,
@@ -50,9 +49,6 @@ Urc {
 
 exports[`normalizes fancy configuration 1`] = `
 Urc {
-  "babelPlugins": Array [
-    "/babel-plugin-lodash",
-  ],
   "babelPresets": Array [],
   "clientEnvPrefix": "",
   "devServerHistoryFallback": false,

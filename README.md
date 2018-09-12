@@ -57,7 +57,7 @@ Requirements:
 Install Underreact as a developer dependency of your project:
 
 ```
-npm install ---save-dev @mapbox/underreact
+npm install --save-dev @mapbox/underreact
 ```
 
 If you are building a React application, you also need to install React dependencies:
