@@ -8,6 +8,7 @@ const tempy = require('tempy');
 const del = require('del');
 const fastGlob = require('fast-glob');
 const got = require('got');
+const revHash = require('rev-hash');
 const PostcssConcatenator = require('..');
 
 const DIR_FIXTURES = path.join(__dirname, 'fixtures');
@@ -180,4 +181,22 @@ test('errors if no stylesheets are provided', () => {
       output: 'output.css'
     })
   ).rejects.toThrow('No stylesheets');
+});
+
+test('hashes output css correctly', () => {
+  const tmp = tempy.directory();
+  const outputPath = path.join(tmp, 'output.css');
+  return PostcssConcatenator.concatToFile({
+    urlCache: cache,
+    stylesheets: [fixture('a.css'), fixture('nested/c.css'), fixture('b.css')],
+    output: outputPath,
+    hash: true,
+    sourceMap: 'file'
+  })
+    .then(output => {
+      const hash = revHash(fs.readFileSync(output, 'utf-8'));
+      expect(outputPath.replace(/\.css$/, `-${hash}.css`)).toBe(output);
+      expect(fs.existsSync(`${output}.map`)).toBe(true);
+    })
+    .then(() => del(tmp, { force: true }));
 });
