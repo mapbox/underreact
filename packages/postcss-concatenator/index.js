@@ -6,6 +6,7 @@ const got = require('got');
 const postcss = require('postcss');
 const isAbsoluteUrl = require('is-absolute-url');
 const postcssUrl = require('postcss-url');
+const revHash = require('rev-hash');
 
 const SOURCE_MAP_INLINE = 'inline';
 const SOURCE_MAP_FILE = 'file';
@@ -38,7 +39,8 @@ function concatToFile({
   output,
   sourceMap = SOURCE_MAP_INLINE,
   plugins = [],
-  urlCache
+  urlCache,
+  hash
 }) {
   if (stylesheets.length === 0) {
     return Promise.reject(new Error('No stylesheets provided'));
@@ -67,13 +69,17 @@ function concatToFile({
         }
       })
       .then(result => {
+        if (hash) {
+          const fileHash = revHash(result.css);
+          output = output.replace(/\.css$/, `-${fileHash}.css`);
+        }
+
         const promises = [promisify(fs.writeFile)(output, result.css)];
         if (sourceMap === SOURCE_MAP_FILE) {
           promises.push(promisify(fs.writeFile)(`${output}.map`, result.map));
         }
-        return Promise.all(promises);
-      })
-      .then(() => undefined);
+        return Promise.all(promises).then(() => output);
+      });
   };
 
   return concatToRoot({ stylesheets, urlCache }).then(writeOutput);
