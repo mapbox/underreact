@@ -4,7 +4,10 @@ const del = require('del');
 const chalk = require('chalk');
 const chokidar = require('chokidar');
 const webpack = require('webpack');
+const path = require('path');
 
+const { WEBPACK_ASSETS_BASENAME } = require('../lib/constants');
+const Assets = require('../lib/assets');
 const startServer = require('../lib/start-server');
 const { writeHtml } = require('../lib/html-compiler');
 const { writeCss } = require('../lib/css-compiler');
@@ -23,32 +26,55 @@ function main(urc) {
   logger.log(
     `Starting underreact in ${urc.mode} mode. ${chalk.yellow('Wait ...')}`
   );
-  return (
-    del(urc.outputDirectory, { force: true })
-      // webpack needs to run first as others depend on the assets
-      .then(() => new Promise(resolve => watchWebpack(urc, resolve)))
-      .then(() => {
-        Promise.all([
-          writeHtml(urc),
-          writeCss(urc),
-          autoCopy.copy({
-            sourceDir: urc.publicDirectory,
-            destDir: urc.outputDirectory
-          })
-        ]);
-      })
-      .then(() => startServer(urc))
-      .then(() => {
-        watchCss(urc);
-        watchPublicDir(urc);
-      })
+
+  return del(urc.outputDirectory, { force: true }).then(() =>
+    watch(urc, () => startServer(urc))
   );
 }
 
-function watchWebpack(urc, onFirstRun) {
+function watch(urc, onFirstWrite) {
+  let cssOutput;
+  let webpackAssets;
+  let isFirst = true;
+  const htmlCachedWrite = writeHtml(urc);
+  const hasStylesheets = urc.stylesheets.length > 0;
+  const htmlWriter = () => {
+    if (isFirst) {
+      onFirstWrite();
+      isFirst = false;
+    }
+    htmlCachedWrite(
+      new Assets({
+        urc,
+        cssOutput,
+        webpackAssets
+      })
+    );
+  };
+
+  watchPublicDir(urc);
+
+  if (hasStylesheets) {
+    watchCss(urc, output => {
+      cssOutput = output;
+      if (webpackAssets) {
+        htmlWriter();
+      }
+    });
+  }
+
+  watchWebpack(urc, output => {
+    webpackAssets = output;
+    if ((hasStylesheets && cssOutput) || !hasStylesheets) {
+      htmlWriter();
+    }
+  });
+}
+
+function watchWebpack(urc, callback) {
   const webpackConfig = createWebpackConfig(urc);
   const compiler = webpack(webpackConfig);
-  let isFirstRun = true;
+  const webpackAssets = path.join(urc.outputDirectory, WEBPACK_ASSETS_BASENAME);
   let lastHash;
 
   const onCompilation = (compilationError, stats) => {
@@ -68,12 +94,9 @@ function watchWebpack(urc, onFirstRun) {
       return;
     }
 
-    if (isFirstRun) {
-      isFirstRun = false;
-      onFirstRun();
-    }
+    callback(webpackAssets);
 
-    logger.log('Compiled JS.');
+    logger.log('Compiled JS');
 
     if (urc.stats) {
       writeWebpackStats(urc.stats, stats);
@@ -84,19 +107,44 @@ function watchWebpack(urc, onFirstRun) {
   compiler.watch({ ignored: [/node_modules/] }, onCompilation);
 }
 
-function watchCss(urc) {
+function watchCss(urc, callback) {
+  let previousPath;
+  const cssHandler = () => {
+    const { compilation, output } = writeCss(urc);
+    compilation.catch(logger.error);
+    output
+      .then(path => {
+        if (previousPath && previousPath !== path) {
+          return Promise.all([
+            del(previousPath),
+            del(previousPath + '.map')
+          ]).then(() => path);
+        }
+        return path;
+      })
+      .then(path => {
+        previousPath = path;
+        logger.log(`Writing CSS`);
+        callback(path);
+      });
+  };
+
+  cssHandler();
+
   const watchStyleSheets = chokidar.watch(urc.stylesheets, {
     ignoreInitial: true
   });
 
-  watchStyleSheets.on('all', () => {
-    writeCss(urc).catch(logger.error);
-  });
-
+  watchStyleSheets.on('all', cssHandler);
   watchStyleSheets.on('error', logger.error);
 }
 
 function watchPublicDir(urc) {
+  autoCopy.copy({
+    sourceDir: urc.publicDirectory,
+    destDir: urc.outputDirectory
+  });
+
   const watcher = mirrorDir({
     sourceDir: urc.publicDirectory,
     destDir: urc.outputDirectory
@@ -104,12 +152,12 @@ function watchPublicDir(urc) {
 
   watcher.on('copy', ({ filename, commit }) => {
     logger.log(`Copying ${filename}`);
-    return commit();
+    commit();
   });
 
   watcher.on('delete', ({ filename, commit }) => {
     logger.log(`Deleting ${filename}`);
-    return commit();
+    commit();
   });
   watcher.on('error', logger.error);
 }

@@ -1,5 +1,87 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`No Config Test builds the correct output with development mode 1`] = `
+Object {
+  "children": Array [
+    Object {
+      "extension": ".html",
+      "name": "index.html",
+      "path": "<TEMP_DIR>/_underreact-site/index.html",
+      "size": 2256,
+      "type": "file",
+    },
+    Object {
+      "children": Array [
+        Object {
+          "extension": ".js",
+          "name": "main.chunk.js",
+          "path": "<TEMP_DIR>/_underreact-site/underreact-assets/main.chunk.js",
+          "size": 4392,
+          "type": "file",
+        },
+        Object {
+          "extension": ".map",
+          "name": "main.chunk.js.map",
+          "path": "<TEMP_DIR>/_underreact-site/underreact-assets/main.chunk.js.map",
+          "size": 685,
+          "type": "file",
+        },
+        Object {
+          "extension": ".js",
+          "name": "polyfill.chunk.js",
+          "path": "<TEMP_DIR>/_underreact-site/underreact-assets/polyfill.chunk.js",
+          "size": 97853,
+          "type": "file",
+        },
+        Object {
+          "extension": ".map",
+          "name": "polyfill.chunk.js.map",
+          "path": "<TEMP_DIR>/_underreact-site/underreact-assets/polyfill.chunk.js.map",
+          "size": 67028,
+          "type": "file",
+        },
+        Object {
+          "extension": ".js",
+          "name": "runtime.js",
+          "path": "<TEMP_DIR>/_underreact-site/underreact-assets/runtime.js",
+          "size": 6241,
+          "type": "file",
+        },
+        Object {
+          "extension": ".map",
+          "name": "runtime.js.map",
+          "path": "<TEMP_DIR>/_underreact-site/underreact-assets/runtime.js.map",
+          "size": 6135,
+          "type": "file",
+        },
+        Object {
+          "extension": ".js",
+          "name": "vendor.chunk.js",
+          "path": "<TEMP_DIR>/_underreact-site/underreact-assets/vendor.chunk.js",
+          "size": 1353,
+          "type": "file",
+        },
+        Object {
+          "extension": ".map",
+          "name": "vendor.chunk.js.map",
+          "path": "<TEMP_DIR>/_underreact-site/underreact-assets/vendor.chunk.js.map",
+          "size": 287,
+          "type": "file",
+        },
+      ],
+      "name": "underreact-assets",
+      "path": "<TEMP_DIR>/_underreact-site/underreact-assets",
+      "size": 183974,
+      "type": "directory",
+    },
+  ],
+  "name": "_underreact-site",
+  "path": "<TEMP_DIR>/_underreact-site",
+  "size": 186230,
+  "type": "directory",
+}
+`;
+
 exports[`No Config Test builds the correct output without any configuration 1`] = `
 Object {
   "children": Array [
