@@ -8,7 +8,7 @@ const Assets = require('../lib/assets');
 const logger = require('../lib/logger');
 const autoCopy = require('../lib/utils/auto-copy');
 const { WEBPACK_ASSETS_BASENAME } = require('../lib/constants');
-const { writeHtml } = require('../lib/html-compiler');
+const { htmlCompiler } = require('../lib/html-compiler');
 const { writeCss } = require('../lib/css-compiler');
 const {
   createWebpackConfig,
@@ -37,12 +37,11 @@ function build(urc) {
 
         return Promise.all([css, webpack, copy]);
       })
-
       .then(([cssOutput]) =>
-        writeHtml(urc)(
+        htmlCompiler(urc)(
           new Assets({
             urc,
-            cssOutput: cssOutput,
+            cssOutput,
             webpackAssets: path.join(
               urc.outputDirectory,
               WEBPACK_ASSETS_BASENAME

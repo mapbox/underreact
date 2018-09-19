@@ -6,10 +6,10 @@ const chokidar = require('chokidar');
 const webpack = require('webpack');
 const path = require('path');
 
-const { WEBPACK_ASSETS_BASENAME } = require('../lib/constants');
-const Assets = require('../lib/assets');
 const startServer = require('../lib/start-server');
-const { writeHtml } = require('../lib/html-compiler');
+const Assets = require('../lib/assets');
+const { WEBPACK_ASSETS_BASENAME, CSS_BASENAME } = require('../lib/constants');
+const { htmlCompiler } = require('../lib/html-compiler');
 const { writeCss } = require('../lib/css-compiler');
 const autoCopy = require('../lib/utils/auto-copy');
 const mirrorDir = require('../lib/utils/mirror-dir');
@@ -26,55 +26,50 @@ function main(urc) {
   logger.log(
     `Starting underreact in ${urc.mode} mode. ${chalk.yellow('Wait ...')}`
   );
+  const writeHtml = htmlCompiler(urc);
+  const webpackAssets = path.join(urc.outputDirectory, WEBPACK_ASSETS_BASENAME);
+  let isWebpackFirstCompile = true;
+  let lastCssOutput;
 
-  return del(urc.outputDirectory, { force: true }).then(() =>
-    watch(urc, () => startServer(urc))
-  );
-}
+  del.sync(urc.outputDirectory, { force: true });
 
-function watch(urc, onFirstWrite) {
-  let cssOutput;
-  let webpackAssets;
-  let isFirst = true;
-  const htmlCachedWrite = writeHtml(urc);
-  const hasStylesheets = urc.stylesheets.length > 0;
-  const htmlWriter = () => {
-    if (isFirst) {
-      onFirstWrite();
-      isFirst = false;
+  const onWrite = cssOutput => {
+    if (isWebpackFirstCompile) {
+      isWebpackFirstCompile = false;
+      // Note: We can run `watchCss` independent  of webpack compile, but that would
+      // unnecessarily complicate code and wouldn't provide any appreciable
+      // performance gain.
+      watchCss(urc, output => onWrite(output));
+      startServer(urc);
+      return;
     }
-    htmlCachedWrite(
+
+    if (cssOutput) {
+      lastCssOutput = cssOutput;
+    }
+
+    // If cssOutput is undefined, it can mean either of the two things:
+    // 1. The callback is coming from `watchWebpack`.
+    // 2. The callback is coming from `watchCss`, but the user did not
+    //    provide any stylesheets in their Underreact configuration.
+    // In either of the above case it is safe to use `lastCssOutput`.
+    writeHtml(
       new Assets({
         urc,
-        cssOutput,
-        webpackAssets
+        webpackAssets,
+        cssOutput: lastCssOutput
       })
     );
   };
 
   watchPublicDir(urc);
-
-  if (hasStylesheets) {
-    watchCss(urc, output => {
-      cssOutput = output;
-      if (webpackAssets) {
-        htmlWriter();
-      }
-    });
-  }
-
-  watchWebpack(urc, output => {
-    webpackAssets = output;
-    if ((hasStylesheets && cssOutput) || !hasStylesheets) {
-      htmlWriter();
-    }
-  });
+  watchWebpack(urc, () => onWrite());
 }
 
 function watchWebpack(urc, callback) {
+  const webpackAssets = path.join(urc.outputDirectory, WEBPACK_ASSETS_BASENAME);
   const webpackConfig = createWebpackConfig(urc);
   const compiler = webpack(webpackConfig);
-  const webpackAssets = path.join(urc.outputDirectory, WEBPACK_ASSETS_BASENAME);
   let lastHash;
 
   const onCompilation = (compilationError, stats) => {
@@ -96,7 +91,7 @@ function watchWebpack(urc, callback) {
 
     callback(webpackAssets);
 
-    logger.log('Compiled JS');
+    logger.log('Compiled JS.');
 
     if (urc.stats) {
       writeWebpackStats(urc.stats, stats);
@@ -110,23 +105,33 @@ function watchWebpack(urc, callback) {
 function watchCss(urc, callback) {
   let previousPath;
   const cssHandler = () => {
-    const { compilation, output } = writeCss(urc);
-    compilation.catch(logger.error);
-    output
+    const compilation = writeCss(urc);
+
+    // Optimization: we do not need to await the compilation result
+    // in development mode, since the output path of css is always static.
+    if (!urc.production) {
+      callback(
+        path.join(urc.outputDirectory, urc.publicAssetsPath, CSS_BASENAME)
+      );
+    }
+
+    compilation
       .then(path => {
+        // This clears any previously generated css files.
         if (previousPath && previousPath !== path) {
-          return Promise.all([
-            del(previousPath),
-            del(previousPath + '.map')
-          ]).then(() => path);
+          return del([previousPath, previousPath + '.map']).then(() => path);
         }
         return path;
       })
       .then(path => {
         previousPath = path;
-        logger.log(`Writing CSS`);
-        callback(path);
-      });
+        logger.log(`Compiled CSS`);
+        // Since it would already by called in development mode
+        if (urc.production) {
+          callback(path);
+        }
+      })
+      .catch(logger.error);
   };
 
   cssHandler();
