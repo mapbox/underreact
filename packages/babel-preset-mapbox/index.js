@@ -5,10 +5,15 @@ module.exports = function(api, opts) {
   const { plugins, presets } = preset.call(this, api, opts);
 
   // this is done in order to easily test this module
-  const requireModule = entity =>
-    Array.isArray(entity)
-      ? [require(entity[0]).default, entity[1]]
-      : require(entity).default;
+  const requireModule = entity => {
+    const esmInterop = obj =>
+      obj.hasOwnProperty('default') ? obj.default : obj;
+
+    if (Array.isArray(entity)) {
+      return [esmInterop(require(entity[0])), entity[1]];
+    }
+    return esmInterop(require(entity));
+  };
 
   return {
     plugins: plugins.map(requireModule),
@@ -59,8 +64,8 @@ function preset(api, opts) {
         // Adds component stack to warning messages
         // Adds __self attribute to JSX which React will use for some warnings
         development: isEnvDevelopment || isEnvTest,
-        // Will use the native built-in instead of trying to polyfill
-        // behavior for any plugins that require one.
+        // Will use the native Object.assign instead of trying to polyfill
+        // it.
         useBuiltIns: true
       }
     },

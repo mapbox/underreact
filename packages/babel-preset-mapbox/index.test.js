@@ -89,7 +89,7 @@ test('Throws error when both BROWSERSLIST and babel/preset-env are provided ', (
   ).toThrowError();
 });
 
-test('BROWSERSLIST works when importing babel polyfill ', () => {
+test.only('BROWSERSLIST works when importing babel polyfill ', () => {
   process.env.BABEL_ENV = 'development';
   process.env.BROWSERSLIST = ['chrome 57'].join(',');
   expect(
