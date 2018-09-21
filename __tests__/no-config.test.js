@@ -43,6 +43,19 @@ describe('No Config Test', () => {
     expect(result.status).toBe(0);
   });
 
+  test('builds the correct output with development mode', () => {
+    const result = commandBuild(['--mode=development'], { cwd: dirPath });
+
+    const tree = removePath({
+      object: dirTree(path.join(dirPath, '_underreact-site')),
+      path: dirPath,
+      replaceWith: '<TEMP_DIR>'
+    });
+
+    expect(tree).toMatchSnapshot();
+    expect(result.status).toBe(0);
+  });
+
   test('exits with statusCode 1 when config is not found', () => {
     const result = commandBuild(
       [`--config=${path.join(dirPath, 'not-exists.config.js')}`],

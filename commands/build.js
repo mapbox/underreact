@@ -4,10 +4,11 @@ const path = require('path');
 const del = require('del');
 const chalk = require('chalk');
 
+const Assets = require('../lib/assets');
 const logger = require('../lib/logger');
 const autoCopy = require('../lib/utils/auto-copy');
 const { WEBPACK_ASSETS_BASENAME } = require('../lib/constants');
-const { writeHtml } = require('../lib/html-compiler');
+const { htmlCompiler } = require('../lib/html-compiler');
 const { writeCss } = require('../lib/css-compiler');
 const {
   createWebpackConfig,
@@ -16,25 +17,37 @@ const {
 } = require('../lib/webpack-helpers');
 
 function build(urc) {
-  logger.log(`Building your site in ${urc.mode} mode ...`);
-
+  logger.log(`Building your site in ${urc.mode} mode...`);
   const webpackConfig = createWebpackConfig(urc);
   // force is needed to get test fixtures passing
   return (
     del(urc.outputDirectory, { force: true })
-      .then(() => webpackPromise(webpackConfig))
-      .then(stats => {
-        if (urc.stats) {
-          return writeWebpackStats(urc.stats, stats);
-        }
-      })
-      .then(() => writeCss(urc))
-      .then(cssFilename => writeHtml(urc, cssFilename))
-      .then(() =>
-        autoCopy.copy({
+      .then(() => {
+        const webpack = webpackPromise(webpackConfig).then(stats => {
+          if (urc.stats) {
+            logger.log('Writing Webpack statistics ..');
+            return writeWebpackStats(urc.stats, stats);
+          }
+        });
+        const css = writeCss(urc).compilation;
+        const copy = autoCopy.copy({
           sourceDir: urc.publicDirectory,
           destDir: urc.outputDirectory
-        })
+        });
+
+        return Promise.all([css, webpack, copy]);
+      })
+      .then(([cssOutput]) =>
+        htmlCompiler(urc)(
+          new Assets({
+            urc,
+            cssOutput,
+            webpackAssets: path.join(
+              urc.outputDirectory,
+              WEBPACK_ASSETS_BASENAME
+            )
+          })
+        )
       )
       // Clean up files you won't need to deploy.
       .then(() =>
