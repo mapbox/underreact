@@ -25,8 +25,9 @@ Object {
             "loader": "<PROJECT_ROOT>/node_modules/babel-loader/lib/index.js",
             "options": Object {
               "babelrc": false,
+              "cacheCompression": false,
               "cacheDirectory": true,
-              "cacheIdentifier": "{\\"babel-loader\\":\\"7.1.5\\",\\"babel-core\\":\\"6.26.3\\",\\"babelrc\\":\\"\\",\\"env\\":\\"test\\"}",
+              "cacheIdentifier": "{\\"babel-loader\\":\\"8.0.2\\",\\"babel-core\\":\\"6.26.3\\",\\"babelrc\\":\\"\\",\\"env\\":\\"test\\"}",
               "compact": false,
               "presets": Array [
                 "<PROJECT_ROOT>/packages/babel-preset-mapbox/index.js",
@@ -43,6 +44,7 @@ Object {
         ],
       },
     ],
+    "strictExportPresence": false,
   },
   "node": Object {
     "child_process": "empty",
@@ -128,6 +130,11 @@ Object {
     },
     [Function],
   ],
+  "resolve": Object {
+    "alias": Object {
+      "@babel/runtime": "<PROJECT_ROOT>/node_modules/@babel/runtime",
+    },
+  },
   "resolveLoader": Object {
     "modules": Array [
       "<PROJECT_ROOT>/node_modules",

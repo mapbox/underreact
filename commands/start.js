@@ -103,6 +103,13 @@ function watchWebpack(urc, callback) {
 }
 
 function watchCss(urc, callback) {
+  // If we do not have stylesheets, there is no
+  // point in compilation.
+  if (urc.stylesheets.length === 0) {
+    callback();
+    return;
+  }
+
   let previousPath;
   const cssHandler = () => {
     const compilation = writeCss(urc);
