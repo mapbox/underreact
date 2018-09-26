@@ -16,14 +16,14 @@ Object {
           "extension": ".js",
           "name": "main.chunk.js",
           "path": "<TEMP_DIR>/_underreact-site/underreact-assets/main.chunk.js",
-          "size": 4392,
+          "size": 5080,
           "type": "file",
         },
         Object {
           "extension": ".map",
           "name": "main.chunk.js.map",
           "path": "<TEMP_DIR>/_underreact-site/underreact-assets/main.chunk.js.map",
-          "size": 685,
+          "size": 673,
           "type": "file",
         },
         Object {
@@ -37,7 +37,7 @@ Object {
           "extension": ".map",
           "name": "polyfill.chunk.js.map",
           "path": "<TEMP_DIR>/_underreact-site/underreact-assets/polyfill.chunk.js.map",
-          "size": 67028,
+          "size": 67018,
           "type": "file",
         },
         Object {
@@ -71,13 +71,13 @@ Object {
       ],
       "name": "underreact-assets",
       "path": "<TEMP_DIR>/_underreact-site/underreact-assets",
-      "size": 183974,
+      "size": 184640,
       "type": "directory",
     },
   ],
   "name": "_underreact-site",
   "path": "<TEMP_DIR>/_underreact-site",
-  "size": 186230,
+  "size": 186896,
   "type": "directory",
 }
 `;
@@ -96,15 +96,15 @@ Object {
       "children": Array [
         Object {
           "extension": ".js",
-          "name": "main-3b9eb6636b.chunk.js",
-          "path": "<TEMP_DIR>/_underreact-site/underreact-assets/main-3b9eb6636b.chunk.js",
-          "size": 1268,
+          "name": "main-c958353419.chunk.js",
+          "path": "<TEMP_DIR>/_underreact-site/underreact-assets/main-c958353419.chunk.js",
+          "size": 1591,
           "type": "file",
         },
         Object {
           "extension": ".js",
-          "name": "polyfill-52d63dac2e.chunk.js",
-          "path": "<TEMP_DIR>/_underreact-site/underreact-assets/polyfill-52d63dac2e.chunk.js",
+          "name": "polyfill-13e55ae24b.chunk.js",
+          "path": "<TEMP_DIR>/_underreact-site/underreact-assets/polyfill-13e55ae24b.chunk.js",
           "size": 17925,
           "type": "file",
         },
@@ -125,13 +125,13 @@ Object {
       ],
       "name": "underreact-assets",
       "path": "<TEMP_DIR>/_underreact-site/underreact-assets",
-      "size": 20843,
+      "size": 21166,
       "type": "directory",
     },
   ],
   "name": "_underreact-site",
   "path": "<TEMP_DIR>/_underreact-site",
-  "size": 23126,
+  "size": 23449,
   "type": "directory",
 }
 `;
