@@ -30,7 +30,7 @@ Object {
               "cacheIdentifier": "{\\"babel-loader\\":\\"8.0.2\\",\\"babel-core\\":\\"6.26.3\\",\\"babelrc\\":\\"\\",\\"env\\":\\"test\\"}",
               "compact": false,
               "presets": Array [
-                "<PROJECT_ROOT>/packages/babel-preset-mapbox/index.js",
+                [Function],
               ],
             },
           },
