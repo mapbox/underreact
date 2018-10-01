@@ -7,13 +7,13 @@
     "babel-plugin-lodash": "^3.3.4",
     "babel-polyfill": "^6.26.0",
     "core-js": "^2.5.7",
-    "css-loader": "^0.28.11",
-    "less": "^3.0.4",
-    "less-loader": "^4.1.0",
     "lodash": "^4.17.10",
-    "mini-css-extract-plugin": "^0.4.0",
     "p-finally": "^1.0.0",
     "react": "^16.0.0",
     "react-dom": "^16.0.0"
+  },
+  "devDependencies": {
+    "less": "^3.0.4",
+    "less-loader": "^4.1.0"
   }
 }

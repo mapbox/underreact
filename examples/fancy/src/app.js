@@ -1,6 +1,7 @@
 import React from 'react';
 import _ from 'lodash';
 import pFinally from 'p-finally';
+import './bg.css';
 import './styles.less';
 
 export default class App extends React.Component {

@@ -28,9 +28,6 @@ module.exports = ({ webpack }) => {
     polyfill: path.join(__dirname, 'polyfill.js'),
     siteBasePath: 'fancy',
     publicAssetsPath: 'cacheable-things',
-    stylesheets: [
-      path.join(__dirname, './src/bg.css'),
-    ],
     htmlSource,
     clientEnvPrefix: 'UNDERREACT_APP_',
     webpackLoaders: [
@@ -38,16 +35,12 @@ module.exports = ({ webpack }) => {
         test: /\.less$/,
         use: [
           MiniCssExtractPlugin.loader,
-          'css-loader',
-          'less-loader',
+         'css-loader',
+         'less-loader',
         ]
       }
     ],
     webpackPlugins: [
-      new MiniCssExtractPlugin({
-        filename: "[name]-[chunkhash].css",
-        chunkFilename: "[id]-[chunkhash].css"
-      }),
       new webpack.DefinePlugin({
         DEFINE_WORKED: '"Yes"'
       })
