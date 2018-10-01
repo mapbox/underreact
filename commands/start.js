@@ -2,15 +2,9 @@
 
 const del = require('del');
 const chalk = require('chalk');
-const chokidar = require('chokidar');
 const webpack = require('webpack');
-const path = require('path');
 
 const startServer = require('../lib/start-server');
-const Assets = require('../lib/assets');
-const { WEBPACK_ASSETS_BASENAME, CSS_BASENAME } = require('../lib/constants');
-const { htmlCompiler } = require('../lib/html-compiler');
-const { writeCss } = require('../lib/css-compiler');
 const autoCopy = require('../lib/utils/auto-copy');
 const mirrorDir = require('../lib/utils/mirror-dir');
 const logger = require('../lib/logger');
@@ -26,48 +20,15 @@ function main(urc) {
   logger.log(
     `Starting underreact in ${urc.mode} mode. ${chalk.yellow('Wait ...')}`
   );
-  const writeHtml = htmlCompiler(urc);
-  const webpackAssets = path.join(urc.outputDirectory, WEBPACK_ASSETS_BASENAME);
-  let isWebpackFirstCompile = true;
-  let lastCssOutput;
-
   del.sync(urc.outputDirectory, { force: true });
-
-  const onWrite = cssOutput => {
-    if (isWebpackFirstCompile) {
-      isWebpackFirstCompile = false;
-      // Note: We can run `watchCss` independent  of webpack compile, but that would
-      // unnecessarily complicate code and wouldn't provide any appreciable
-      // performance gain.
-      watchCss(urc, output => onWrite(output));
-      startServer(urc);
-      return;
-    }
-
-    if (cssOutput) {
-      lastCssOutput = cssOutput;
-    }
-
-    // If cssOutput is undefined, it can mean either of the two things:
-    // 1. The callback is coming from `watchWebpack`.
-    // 2. The callback is coming from `watchCss`, but the user did not
-    //    provide any stylesheets in their Underreact configuration.
-    // In either of the above case it is safe to use `lastCssOutput`.
-    writeHtml(
-      new Assets({
-        urc,
-        webpackAssets,
-        cssOutput: lastCssOutput
-      })
-    );
-  };
-
   watchPublicDir(urc);
-  watchWebpack(urc, () => onWrite());
+
+  return new Promise(res => watchWebpack(urc, res)).then(() => {
+    return startServer(urc);
+  });
 }
 
 function watchWebpack(urc, callback) {
-  const webpackAssets = path.join(urc.outputDirectory, WEBPACK_ASSETS_BASENAME);
   const webpackConfig = createWebpackConfig(urc);
   const compiler = webpack(webpackConfig);
   let lastHash;
@@ -89,7 +50,7 @@ function watchWebpack(urc, callback) {
       return;
     }
 
-    callback(webpackAssets);
+    callback();
 
     logger.log('Compiled JS.');
 
@@ -100,55 +61,6 @@ function watchWebpack(urc, callback) {
   };
 
   compiler.watch({ ignored: [/node_modules/] }, onCompilation);
-}
-
-function watchCss(urc, callback) {
-  // If we do not have stylesheets, there is no
-  // point in compilation.
-  if (urc.stylesheets.length === 0) {
-    callback();
-    return;
-  }
-
-  let previousPath;
-  const cssHandler = () => {
-    const compilation = writeCss(urc);
-
-    // Optimization: we do not need to await the compilation result
-    // in development mode, since the output path of css is always static.
-    if (!urc.production) {
-      callback(
-        path.join(urc.outputDirectory, urc.publicAssetsPath, CSS_BASENAME)
-      );
-    }
-
-    compilation
-      .then(path => {
-        // This clears any previously generated css files.
-        if (previousPath && previousPath !== path) {
-          return del([previousPath, previousPath + '.map']).then(() => path);
-        }
-        return path;
-      })
-      .then(path => {
-        previousPath = path;
-        logger.log(`Compiled CSS`);
-        // Since it would already by called in development mode
-        if (urc.production) {
-          callback(path);
-        }
-      })
-      .catch(logger.error);
-  };
-
-  cssHandler();
-
-  const watchStyleSheets = chokidar.watch(urc.stylesheets, {
-    ignoreInitial: true
-  });
-
-  watchStyleSheets.on('all', cssHandler);
-  watchStyleSheets.on('error', logger.error);
 }
 
 function watchPublicDir(urc) {

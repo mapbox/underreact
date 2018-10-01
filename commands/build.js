@@ -4,12 +4,9 @@ const path = require('path');
 const del = require('del');
 const chalk = require('chalk');
 
-const Assets = require('../lib/assets');
 const logger = require('../lib/logger');
 const autoCopy = require('../lib/utils/auto-copy');
 const { WEBPACK_ASSETS_BASENAME } = require('../lib/constants');
-const { htmlCompiler } = require('../lib/html-compiler');
-const { writeCss } = require('../lib/css-compiler');
 const {
   createWebpackConfig,
   webpackPromise,
@@ -29,26 +26,13 @@ function build(urc) {
             return writeWebpackStats(urc.stats, stats);
           }
         });
-        const css = writeCss(urc).compilation;
         const copy = autoCopy.copy({
           sourceDir: urc.publicDirectory,
           destDir: urc.outputDirectory
         });
 
-        return Promise.all([css, webpack, copy]);
+        return Promise.all([copy, webpack]);
       })
-      .then(([cssOutput]) =>
-        htmlCompiler(urc)(
-          new Assets({
-            urc,
-            cssOutput,
-            webpackAssets: path.join(
-              urc.outputDirectory,
-              WEBPACK_ASSETS_BASENAME
-            )
-          })
-        )
-      )
       // Clean up files you won't need to deploy.
       .then(() =>
         del(path.join(urc.outputDirectory, WEBPACK_ASSETS_BASENAME), {
