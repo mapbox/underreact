@@ -56,7 +56,6 @@
     "get-port": "^3.2.0",
     "got": "^8.3.2",
     "html-webpack-plugin": "^3.2.0",
-    "inline-manifest-webpack-plugin": "^4.0.2",
     "is-absolute-url": "^2.1.0",
     "live-server": "^1.2.0",
     "lodash": "^4.17.10",
