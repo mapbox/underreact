@@ -3,16 +3,12 @@
 const del = require('del');
 const chalk = require('chalk');
 const webpack = require('webpack');
+const WebpackDevServer = require('webpack-dev-server');
 
-const startServer = require('../lib/start-server');
 const autoCopy = require('../lib/utils/auto-copy');
 const mirrorDir = require('../lib/utils/mirror-dir');
 const logger = require('../lib/logger');
-const {
-  createWebpackConfig,
-  renderWebpackErrors,
-  writeWebpackStats
-} = require('../lib/webpack-helpers');
+const { createWebpackConfig } = require('../lib/webpack-helpers');
 
 module.exports = main;
 
@@ -23,44 +19,30 @@ function main(urc) {
   del.sync(urc.outputDirectory, { force: true });
   watchPublicDir(urc);
 
-  return new Promise(res => watchWebpack(urc, res)).then(() => {
-    return startServer(urc);
-  });
+  return new Promise(res => watchWebpack(urc, res));
 }
 
 function watchWebpack(urc, callback) {
   const webpackConfig = createWebpackConfig(urc);
   const compiler = webpack(webpackConfig);
-  let lastHash;
 
-  const onCompilation = (compilationError, stats) => {
-    // Don't do anything if the compilation is just repetition.
-    // There's often a series of many compilations with the same output.
-    if (stats.hash === lastHash) return;
-    lastHash = stats.hash;
+  const server = new WebpackDevServer(compiler, {
+    publicPath: urc.siteBasePath,
+    // TOFIX implement out own webpack dev server output
+    // logging to fully replace live-reload.
+    clientLogLevel: 'none',
+    contentBase: urc.publicDirectory,
+    historyApiFallback: urc.devServerHistoryFallback && {
+      index: urc.siteBasePath
+    },
+    port: urc.port,
+    compress: urc.production
+  });
 
-    if (compilationError) {
-      logger.error(compilationError);
-      return;
-    }
-
-    const renderedErrors = renderWebpackErrors(stats);
-    if (renderedErrors) {
-      logger.error(new Error(renderedErrors));
-      return;
-    }
-
+  server.listen(urc.port, '127.0.0.1', () => {
+    console.log('Starting server on http://localhost:8080');
     callback();
-
-    logger.log('Compiled JS.');
-
-    if (urc.stats) {
-      writeWebpackStats(urc.stats, stats);
-      return;
-    }
-  };
-
-  compiler.watch({ ignored: [/node_modules/] }, onCompilation);
+  });
 }
 
 function watchPublicDir(urc) {
