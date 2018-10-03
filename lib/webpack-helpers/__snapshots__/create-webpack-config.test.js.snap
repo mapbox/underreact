@@ -145,6 +145,11 @@ Object {
   },
   "performance": false,
   "plugins": Array [
+    ModuleNotFoundPlugin {
+      "appPath": "<PROJECT_ROOT>",
+      "getRelativePath": [Function],
+      "prettierError": [Function],
+    },
     AssetsWebpackPlugin {
       "options": Object {
         "filename": "assets.json",

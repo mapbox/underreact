@@ -7,20 +7,22 @@ const chalk = require('chalk');
 const logger = require('../lib/logger');
 const autoCopy = require('../lib/utils/auto-copy');
 const { WEBPACK_ASSETS_BASENAME } = require('../lib/constants');
-const {
-  createWebpackConfig,
-  webpackPromise,
-  writeWebpackStats
-} = require('../lib/webpack-helpers');
+const { webpackPromise, writeWebpackStats } = require('../lib/webpack-helpers');
 
 function build(urc) {
   logger.log(`Building your site in ${urc.mode} mode...`);
-  const webpackConfig = createWebpackConfig(urc);
+
+  try {
+    require.resolve(urc.jsEntry);
+  } catch (error) {
+    throw new Error(`Could not find the entry Javascript file ${urc.jsEntry}.`);
+  }
+
   // force is needed to get test fixtures passing
   return (
     del(urc.outputDirectory, { force: true })
       .then(() => {
-        const webpack = webpackPromise(webpackConfig).then(stats => {
+        const webpack = webpackPromise(urc).then(stats => {
           if (urc.stats) {
             logger.log('Writing Webpack statistics ..');
             return writeWebpackStats(urc.stats, stats);
@@ -41,9 +43,7 @@ function build(urc) {
       )
       .then(() => {
         logger.log(chalk.green.bold('Finished building your site.'));
-        return true;
       })
-      .catch(logger.error)
   );
 }
 
