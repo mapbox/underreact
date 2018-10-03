@@ -44,8 +44,9 @@ describe('Env vars with clientEnvPrefix set', () => {
           path.join(dirPath, '_underreact-site', 'underreact-assets')
         );
 
-        const mainFilename = tree.children.find(t => t.name.startsWith('main'))
-          .path;
+        const mainFilename = tree.children
+          .find(t => t.name === 'js')
+          .children.find(t => t.name.startsWith('main')).path;
 
         mainFileContent = fs.readFileSync(mainFilename, 'utf-8');
       }));
@@ -90,8 +91,9 @@ describe('Setting DEPLOY_ENV should read the correct .env files', () => {
           path.join(dirPath, '_underreact-site', 'underreact-assets')
         );
 
-        const mainFilename = tree.children.find(t => t.name.startsWith('main'))
-          .path;
+        const mainFilename = tree.children
+          .find(t => t.name === 'js')
+          .children.find(t => t.name.startsWith('main')).path;
 
         mainFileContent = fs.readFileSync(mainFilename, 'utf-8');
       }));

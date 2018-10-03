@@ -5,7 +5,9 @@ Object {
   "bail": false,
   "devtool": false,
   "entry": Object {
-    "main": "<PROJECT_ROOT>/src/entry.js",
+    "main": Array [
+      "<PROJECT_ROOT>/src/entry.js",
+    ],
     "polyfill": "<PROJECT_ROOT>/polyfill/index.js",
     "vendor": Array [
       "<PROJECT_ROOT>/node_modules/react",
@@ -16,31 +18,68 @@ Object {
   "module": Object {
     "rules": Array [
       Object {
-        "exclude": Array [
-          /\\[\\\\/\\\\\\\\\\\\\\\\\\]node_modules\\[\\\\/\\\\\\\\\\\\\\\\\\]/,
-        ],
-        "test": /\\\\\\.jsx\\?\\$/,
-        "use": Array [
+        "oneOf": Array [
           Object {
-            "loader": "<PROJECT_ROOT>/node_modules/babel-loader/lib/index.js",
+            "exclude": Array [
+              /\\[\\\\/\\\\\\\\\\\\\\\\\\]node_modules\\[\\\\/\\\\\\\\\\\\\\\\\\]/,
+            ],
+            "test": /\\\\\\.jsx\\?\\$/,
+            "use": Array [
+              Object {
+                "loader": "<PROJECT_ROOT>/node_modules/babel-loader/lib/index.js",
+                "options": Object {
+                  "babelrc": false,
+                  "cacheCompression": false,
+                  "cacheDirectory": true,
+                  "cacheIdentifier": "{\\"babel-loader\\":\\"8.0.2\\",\\"babel-core\\":\\"6.26.3\\",\\"babelrc\\":\\"\\",\\"env\\":\\"test\\"}",
+                  "compact": false,
+                  "presets": Array [
+                    [Function],
+                  ],
+                },
+              },
+            ],
+          },
+          Object {
+            "test": /\\\\\\.css\\$/,
+            "use": Array [
+              "<PROJECT_ROOT>/node_modules/style-loader/index.js",
+              Object {
+                "loader": "<PROJECT_ROOT>/node_modules/css-loader/index.js",
+                "options": Object {
+                  "importLoaders": 1,
+                },
+              },
+              Object {
+                "loader": "<PROJECT_ROOT>/node_modules/postcss-loader/src/index.js",
+                "options": Object {
+                  "ident": "postcss",
+                  "plugins": Array [
+                    [Function],
+                  ],
+                },
+              },
+            ],
+          },
+          Object {
+            "test": /\\\\\\.less\\$/,
+            "use": Array [
+              "css-loader",
+              "less-loader",
+            ],
+          },
+          Object {
+            "exclude": Array [
+              /\\\\\\.\\(js\\|jsx\\)\\$/,
+              /\\\\\\.template\\$/,
+              /\\\\\\.json\\$/,
+              /\\\\\\.ejs\\$/,
+            ],
+            "loader": "<PROJECT_ROOT>/node_modules/file-loader/dist/cjs.js",
             "options": Object {
-              "babelrc": false,
-              "cacheCompression": false,
-              "cacheDirectory": true,
-              "cacheIdentifier": "{\\"babel-loader\\":\\"8.0.2\\",\\"babel-core\\":\\"6.26.3\\",\\"babelrc\\":\\"\\",\\"env\\":\\"test\\"}",
-              "compact": false,
-              "presets": Array [
-                [Function],
-              ],
+              "name": "cacheable-things/media/[name].[hash:8].[ext]",
             },
           },
-        ],
-      },
-      Object {
-        "test": /\\\\\\.less\\$/,
-        "use": Array [
-          "css-loader",
-          "less-loader",
         ],
       },
     ],
@@ -62,7 +101,7 @@ Object {
           "extractComments": false,
           "include": undefined,
           "parallel": true,
-          "sourceMap": false,
+          "sourceMap": true,
           "test": /\\\\\\.js\\(\\\\\\?\\.\\*\\)\\?\\$/i,
           "uglifyOptions": Object {
             "compress": Object {
@@ -99,10 +138,10 @@ Object {
     },
   },
   "output": Object {
-    "chunkFilename": "[name].chunk.js",
-    "filename": "[name].js",
-    "path": "<PROJECT_ROOT>/_underreact-site/cacheable-things",
-    "publicPath": "/fancy/cacheable-things",
+    "chunkFilename": "cacheable-things/js/[name].chunk.js",
+    "filename": "cacheable-things/js/[name].js",
+    "path": "<PROJECT_ROOT>/_underreact-site",
+    "publicPath": "/fancy/",
   },
   "performance": false,
   "plugins": Array [
@@ -127,6 +166,36 @@ Object {
         "NODE_ENV",
         "DEPLOY_ENV",
       ],
+    },
+    MiniCssExtractPlugin {
+      "options": Object {
+        "chunkFilename": "cacheable-things/css/[name]-[contenthash:8].css",
+        "filename": "cacheable-things/css/[name]-[contenthash:8].css",
+      },
+    },
+    HtmlWebpackPlugin {
+      "options": Object {
+        "cache": true,
+        "chunks": "all",
+        "chunksSortMode": "auto",
+        "compile": true,
+        "excludeChunks": Array [
+          "polyfill",
+          "runtime",
+        ],
+        "favicon": false,
+        "filename": "index.html",
+        "hash": false,
+        "inject": true,
+        "meta": Object {},
+        "minify": Object {},
+        "showErrors": true,
+        "template": "<PROJECT_ROOT>/node_modules/html-webpack-plugin/default_index.ejs",
+        "templateContent": [Function],
+        "templateParameters": [Function],
+        "title": "Webpack App",
+        "xhtml": false,
+      },
     },
     [Function],
   ],
