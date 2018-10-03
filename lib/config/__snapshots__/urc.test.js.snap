@@ -20,8 +20,10 @@ exports[`normalizes empty configuration 1`] = `
 Urc {
   "clientEnvPrefix": "",
   "devServerHistoryFallback": false,
+  "hot": false,
   "htmlSource": [Function],
   "jsEntry": "/fake-volume/src/entry.js",
+  "liveReload": false,
   "mode": "development",
   "modernBrowserTest": "'fetch' in window && 'assign' in Object",
   "outputDirectory": "/fake-volume/_underreact-site",
@@ -47,8 +49,10 @@ exports[`normalizes fancy configuration 1`] = `
 Urc {
   "clientEnvPrefix": "",
   "devServerHistoryFallback": false,
+  "hot": false,
   "htmlSource": [Function],
   "jsEntry": "/fake-volume/src/entry.js",
+  "liveReload": false,
   "mode": "development",
   "modernBrowserTest": "'fetch' in window && 'assign' in Object",
   "outputDirectory": "/fake-volume/_underreact-site",
