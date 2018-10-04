@@ -7,7 +7,10 @@ const chalk = require('chalk');
 const logger = require('../lib/logger');
 const autoCopy = require('../lib/utils/auto-copy');
 const { WEBPACK_ASSETS_BASENAME } = require('../lib/constants');
-const { webpackPromise, writeWebpackStats } = require('../lib/webpack-helpers');
+const {
+  webpackPromise,
+  writeWebpackStats
+} = require('../lib/webpack-compiler');
 
 function build(urc) {
   logger.log(`Building your site in ${urc.mode} mode...`);

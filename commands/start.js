@@ -12,7 +12,7 @@ const logger = require('../lib/logger');
 const {
   createWebpackCompiler,
   normalizeWebpackError
-} = require('../lib/webpack-helpers');
+} = require('../lib/webpack-compiler');
 
 module.exports = main;
 

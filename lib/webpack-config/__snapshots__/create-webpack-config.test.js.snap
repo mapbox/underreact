@@ -83,7 +83,6 @@ Object {
         ],
       },
     ],
-    "strictExportPresence": true,
   },
   "node": Object {
     "child_process": "empty",
