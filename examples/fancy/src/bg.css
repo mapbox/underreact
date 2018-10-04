@@ -1,8 +1,10 @@
 @font-face {
   font-family: 'Open Sans';
   font-weight: bold;
-  src: url('https://api.mapbox.com/mapbox-assembly/fonts/opensans-regular.v1.woff2') format('woff2'),
-    url('https://api.mapbox.com/mapbox-assembly/fonts/opensans-regular.v1.woff') format('woff');
+  src: url('https://api.mapbox.com/mapbox-assembly/fonts/opensans-regular.v1.woff2')
+      format('woff2'),
+    url('https://api.mapbox.com/mapbox-assembly/fonts/opensans-regular.v1.woff')
+      format('woff');
 }
 
 body {

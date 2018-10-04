@@ -55,7 +55,8 @@ function watchWebpack(urc, callback) {
       index: urc.siteBasePath
     },
     port: urc.port,
-    compress: urc.production
+    compress: urc.production,
+    hot: urc.hot
   });
 
   server.listen(urc.port, '127.0.0.1', () => {

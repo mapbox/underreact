@@ -1,6 +1,6 @@
 'use strict';
 
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const path = require('path');
 
 const htmlSource = ({ renderCssLinks, renderJsBundles }) => {
@@ -25,6 +25,7 @@ const htmlSource = ({ renderCssLinks, renderJsBundles }) => {
 
 module.exports = ({ webpack }) => {
   return {
+    hot: true,
     polyfill: path.join(__dirname, 'polyfill.js'),
     siteBasePath: 'fancy',
     publicAssetsPath: 'cacheable-things',
@@ -33,11 +34,7 @@ module.exports = ({ webpack }) => {
     webpackLoaders: [
       {
         test: /\.less$/,
-        use: [
-          MiniCssExtractPlugin.loader,
-          'css-loader',
-          'less-loader',
-        ]
+        use: [MiniCssExtractPlugin.loader, 'css-loader', 'less-loader']
       }
     ],
     webpackPlugins: [
@@ -50,14 +47,8 @@ module.exports = ({ webpack }) => {
       return config;
     },
     browserslist: {
-      development: [
-        '> 1%',
-        'ie 10'
-      ],
-      development: [
-        'last 1 chrome version',
-        'last 1 firefox version'
-      ]
+      development: ['> 1%', 'ie 10'],
+      production: ['last 1 chrome version', 'last 1 firefox version']
     }
   };
 };
