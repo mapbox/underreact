@@ -13,6 +13,7 @@ const {
   createWebpackCompiler,
   normalizeWebpackError
 } = require('../lib/webpack-compiler');
+const webpackConfig = require('../lib/webpack-config');
 
 module.exports = main;
 
@@ -37,7 +38,7 @@ function watchWebpack(urc, callback) {
   let compiler;
 
   try {
-    compiler = createWebpackCompiler(urc);
+    compiler = createWebpackCompiler(webpackConfig(urc));
   } catch (error) {
     callback(error);
     return;

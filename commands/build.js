@@ -8,9 +8,10 @@ const logger = require('../lib/logger');
 const autoCopy = require('../lib/utils/auto-copy');
 const { WEBPACK_ASSETS_BASENAME } = require('../lib/constants');
 const {
-  webpackPromise,
+  webpackRunPromise,
   writeWebpackStats
 } = require('../lib/webpack-compiler');
+const webpackConfig = require('../lib/webpack-config');
 
 function build(urc) {
   logger.log(`Building your site in ${urc.mode} mode...`);
@@ -25,7 +26,7 @@ function build(urc) {
   return (
     del(urc.outputDirectory, { force: true })
       .then(() => {
-        const webpack = webpackPromise(urc).then(stats => {
+        const webpack = webpackRunPromise(webpackConfig(urc)).then(stats => {
           if (urc.stats) {
             logger.log('Writing Webpack statistics ..');
             return writeWebpackStats(urc.stats, stats);
