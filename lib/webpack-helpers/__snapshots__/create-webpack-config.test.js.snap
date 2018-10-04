@@ -83,7 +83,7 @@ Object {
         ],
       },
     ],
-    "strictExportPresence": false,
+    "strictExportPresence": true,
   },
   "node": Object {
     "child_process": "empty",
@@ -203,6 +203,11 @@ Object {
       },
     },
     [Function],
+    ExcludeChunksPlugin {
+      "excludeChunks": Array [
+        "runtime",
+      ],
+    },
   ],
   "resolve": Object {
     "alias": Object {
