@@ -10,7 +10,8 @@
     "lodash": "^4.17.10",
     "p-finally": "^1.0.0",
     "react": "^16.0.0",
-    "react-dom": "^16.0.0"
+    "react-dom": "^16.0.0",
+    "react-hot-loader": "^4.3.11"
   },
   "devDependencies": {
     "less": "^3.0.4",
