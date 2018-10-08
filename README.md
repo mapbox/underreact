@@ -193,9 +193,9 @@ You have 2 choices:
 - **Preferred:** Provide [`htmlSource`](#htmlsource) which is an HTML string or a Promise that resolves to an HTML string.
 - Provide no HTML-rendering function and let Underreact use the default HTML document. *You should only do this for prototyping and early development*: for production projects, you'll definitely want to define your own HTML at some point, if only for the `<title>`.
 
-If you use provide a promise, you can use any async I/O you need to put together the page. For example, you could read JS files and inject their code directly into `<script>` tags, or inject CSS into `<style>` tags. Or you could make an HTTP call to fetch dynamic data and inject it into the page with a `<script>` tag, so it's available to your React app.
+If you provide a promise, you can use any async I/O you need to put together the page. For example, you could read JS files and inject their code directly into `<script>` tags, or inject CSS into `<style>` tags. Or you could make an HTTP call to fetch dynamic data and inject it into the page with a `<script>` tag, so it's available to your React app.
 
-**Note: Underreact would automatically inject build outputs `script` and `link` tags to your HTML template.**
+**Note: Underreact would automatically inject output `script` and `link` tags to your HTML template.**
 
 In the example below, we are defining `htmlSource` in a separate file and requiring it in `underreact.config.js`:
 

@@ -7,7 +7,7 @@ Object {
       "extension": ".html",
       "name": "index.html",
       "path": "<TEMP_DIR>/_underreact-site/index.html",
-      "size": 7004,
+      "size": 6983,
       "type": "file",
     },
     Object {
@@ -71,7 +71,7 @@ Object {
   ],
   "name": "_underreact-site",
   "path": "<TEMP_DIR>/_underreact-site",
-  "size": 179083,
+  "size": 179062,
   "type": "directory",
 }
 `;
