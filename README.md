@@ -15,6 +15,9 @@ It's a pretty thin wrapper around Babel, Webpack, and PostCSS, and will never ac
   - [Defining your HTML](#defining-your-html)
 - [Babel](#babel)
   - [Exposing .babelrc](#exposing-babelrc)
+- [Browser support and Polyfills](#browser-support-and-polyfills)
+  - [Transpiling of Javascript and prefixing CSS](#transpiling-of-javascript-and-prefixing-css)
+  - [Polyfills](#polyfills)
 - [Deployment environments](#deployment-environments)
   - [Using environment variables](#using-environment-variables)
   - [Targeting multiple deployment environments](#targeting-multiple-deployment-environments)
@@ -32,7 +35,6 @@ It's a pretty thin wrapper around Babel, Webpack, and PostCSS, and will never ac
   - [port](#port)
   - [postcssPlugins](#postcssplugins)
   - [siteBasePath](#sitebasepath)
-  - [stylesheets](#stylesheets)
   - [vendorModules](#vendormodules)
   - [webpackLoaders](#webpackloaders)
   - [webpackPlugins](#webpackplugins)
@@ -196,7 +198,7 @@ In your function, you can use JS template literals to interpolate expressions, a
 The function exported by your JS module will be passed a context object with the following properties:
 
 - `renderJsBundles`: **You must use this callback function to add JS to the page.** Typically you'll invoke it at the end of your `<body>`. It adds the `<script>` tags that pull in Webpack bundles.
-- `renderCssLinks`: **You must use this callback function to add CSS to the page,** unless your only sources of CSS are `<link>`s and `<style>`s that you write directly into your HTML. It will add CSS compiled from the [`stylesheets`](#stylesheets) option and also any CSS that was created through other Webpack plugins you added.
+- `renderCssLinks`: **You must use this callback function to add CSS to the page,** unless your only sources of CSS are `<link>`s and `<style>`s that you write directly into your HTML.
 
 In the example below, we are defining our custom `htmlSource` function in a separate file and requiring it in `underreact.config.js`:
 
@@ -518,7 +520,7 @@ If the specified port is unavailable, another port is used.
 
 Type: `Array<Function>`. Default: \[].
 
-All of the CSS you load via [`stylesheets`](#stylesheets) is run through [PostCSS](http://postcss.org/), so you can apply any [PostCSS plugins](https://github.com/postcss/postcss/blob/master/docs/plugins.md) to it.
+All of the CSS that you import is run through [PostCSS](http://postcss.org/), so you can apply any [PostCSS plugins](https://github.com/postcss/postcss/blob/master/docs/plugins.md) to it.
 By default we already include [Autoprefixer](https://github.com/postcss/autoprefixer) for you.
 
 ### siteBasePath
@@ -528,16 +530,6 @@ Type: `string`. Default: `''`.
 Root-relative path to the base directory on the domain where the site will be deployed.
 
 **Tip**: There's a good chance your app isn't at the root of your domain. So this option represents the path of your site *within* that domain. For example, if your app is at `https://www.special.com/ketchup/*`, you should set `siteBasePath: 'ketchup'`.
-
-### stylesheets
-
-Type: `Array<string>`. Absolute paths, please. Default: `[]`.
-
-An array of filenames pointing to stylesheets that you want to include in your site.
-
-These will be processed by PostCSS with [Autoprefixer](https://github.com/postcss/autoprefixer) and any other [`postcssPlugins`](#postcssplugins) that you specify; concatenated in the order specified; and added to your code with the help of `renderCssLinks` (read [`Defining your HTML`](#defining-your-html)).
-
-Assets referenced by your stylesheets will be hashed and copied to the [`outputDirectory`](#outputdirectory), unless they are absolute URLs.
 
 ### vendorModules
 
