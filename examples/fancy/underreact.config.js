@@ -3,8 +3,7 @@
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const path = require('path');
 
-const htmlSource = ({ renderCssLinks, renderJsBundles }) => {
-  return `
+const htmlSource = `
     <!DOCTYPE html>
     <html lang="en">
     <head>
@@ -13,15 +12,13 @@ const htmlSource = ({ renderCssLinks, renderJsBundles }) => {
       <title>Fancy examples</title>
       <link href="https://api.mapbox.com/mapbox-assembly/v0.21.2/assembly.min.css" rel="stylesheet">
       <script async defer src="https://api.mapbox.com/mapbox-assembly/v0.21.2/assembly.js"></script>
-      ${renderCssLinks()}
     </head>
     <body>
       <div id="app"></div>
-      ${renderJsBundles()}
     </body>
     </html>
   `;
-};
+
 
 module.exports = ({ webpack }) => {
   return {

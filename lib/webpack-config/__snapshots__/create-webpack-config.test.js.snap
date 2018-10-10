@@ -145,7 +145,7 @@ Object {
   "performance": false,
   "plugins": Array [
     ModuleNotFoundPlugin {
-      "appPath": "<PROJECT_ROOT>",
+      "appPath": "<PROJECT_ROOT>/src",
       "getRelativePath": [Function],
       "prettierError": [Function],
     },
@@ -173,7 +173,7 @@ Object {
     },
     MiniCssExtractPlugin {
       "options": Object {
-        "chunkFilename": "cacheable-things/css/[name]-[contenthash:8].css",
+        "chunkFilename": "cacheable-things/css/[name]-[contenthash:8].chunk.css",
         "filename": "cacheable-things/css/[name]-[contenthash:8].css",
       },
     },

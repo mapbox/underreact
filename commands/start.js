@@ -6,8 +6,6 @@ const WebpackDevServer = require('webpack-dev-server');
 const promisify = require('util.promisify');
 const urlJoin = require('url-join');
 
-const autoCopy = require('../lib/utils/auto-copy');
-const mirrorDir = require('../lib/utils/mirror-dir');
 const logger = require('../lib/logger');
 const {
   createWebpackCompiler,
@@ -15,9 +13,7 @@ const {
 } = require('../lib/webpack-compiler');
 const webpackConfig = require('../lib/webpack-config');
 
-module.exports = main;
-
-function main(urc) {
+module.exports = function main(urc) {
   logger.log(
     `Starting underreact in ${urc.mode} mode. ${chalk.yellow('Wait ...')}`
   );
@@ -29,10 +25,9 @@ function main(urc) {
   }
 
   del.sync(urc.outputDirectory, { force: true });
-  watchPublicDir(urc);
 
   return promisify(watchWebpack)(urc);
-}
+};
 
 function watchWebpack(urc, callback) {
   let compiler;
@@ -55,7 +50,7 @@ function watchWebpack(urc, callback) {
       index: urc.siteBasePath
     },
     port: urc.port,
-    compress: urc.production,
+    compress: urc.isProductionMode,
     hot: urc.hot
   });
 
@@ -94,29 +89,6 @@ function watchWebpack(urc, callback) {
 
     logger.error(webpackError);
   });
-}
-
-function watchPublicDir(urc) {
-  autoCopy.copy({
-    sourceDir: urc.publicDirectory,
-    destDir: urc.outputDirectory
-  });
-
-  const watcher = mirrorDir({
-    sourceDir: urc.publicDirectory,
-    destDir: urc.outputDirectory
-  });
-
-  watcher.on('copy', ({ filename, commit }) => {
-    logger.log(`Copying ${filename}`);
-    commit();
-  });
-
-  watcher.on('delete', ({ filename, commit }) => {
-    logger.log(`Deleting ${filename}`);
-    commit();
-  });
-  watcher.on('error', logger.error);
 }
 
 function getReadyMessage(urc) {

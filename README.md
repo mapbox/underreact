@@ -15,6 +15,9 @@ It's a pretty thin wrapper around Babel, Webpack, and PostCSS, and will never ac
   - [Defining your HTML](#defining-your-html)
 - [Babel](#babel)
   - [Exposing .babelrc](#exposing-babelrc)
+- [Browser support and Polyfills](#browser-support-and-polyfills)
+  - [Transpiling of Javascript and prefixing CSS](#transpiling-of-javascript-and-prefixing-css)
+  - [Polyfills](#polyfills)
 - [Deployment environments](#deployment-environments)
   - [Using environment variables](#using-environment-variables)
   - [Targeting multiple deployment environments](#targeting-multiple-deployment-environments)
@@ -32,7 +35,6 @@ It's a pretty thin wrapper around Babel, Webpack, and PostCSS, and will never ac
   - [port](#port)
   - [postcssPlugins](#postcssplugins)
   - [siteBasePath](#sitebasepath)
-  - [stylesheets](#stylesheets)
   - [vendorModules](#vendormodules)
   - [webpackLoaders](#webpackloaders)
   - [webpackPlugins](#webpackplugins)
@@ -188,17 +190,14 @@ Underreact is intended for single-page apps, so you only need one HTML page. If 
 
 You have 2 choices:
 
-- **Preferred:** Provide a function for [`htmlSource`](#htmlsource) that returns an HTML string or a Promise that resolves with an HTML string.
+- **Preferred:** Provide [`htmlSource`](#htmlsource) which is an HTML string or a Promise that resolves to an HTML string.
 - Provide no HTML-rendering function and let Underreact use the default HTML document. *You should only do this for prototyping and early development*: for production projects, you'll definitely want to define your own HTML at some point, if only for the `<title>`.
 
-In your function, you can use JS template literals to interpolate expressions, and you can use any async I/O you need to put together the page. For example, you could read JS files and inject their code directly into `<script>` tags, or inject CSS into `<style>` tags. Or you could make an HTTP call to fetch dynamic data and inject it into the page with a `<script>` tag, so it's available to your React app.
+If you provide a promise, you can use any async I/O you need to put together the page. For example, you could read JS files and inject their code directly into `<script>` tags, or inject CSS into `<style>` tags. Or you could make an HTTP call to fetch dynamic data and inject it into the page with a `<script>` tag, so it's available to your React app.
 
-The function exported by your JS module will be passed a context object with the following properties:
+**Note: Underreact would automatically inject output `script` and `link` tags to your HTML template.**
 
-- `renderJsBundles`: **You must use this callback function to add JS to the page.** Typically you'll invoke it at the end of your `<body>`. It adds the `<script>` tags that pull in Webpack bundles.
-- `renderCssLinks`: **You must use this callback function to add CSS to the page,** unless your only sources of CSS are `<link>`s and `<style>`s that you write directly into your HTML. It will add CSS compiled from the [`stylesheets`](#stylesheets) option and also any CSS that was created through other Webpack plugins you added.
-
-In the example below, we are defining our custom `htmlSource` function in a separate file and requiring it in `underreact.config.js`:
+In the example below, we are defining `htmlSource` in a separate file and requiring it in `underreact.config.js`:
 
 ```js
 // underreact.config.js
@@ -215,7 +214,7 @@ const fs = require('fs');
 const { promisify } = require('util');
 const minimizeJs = require('./minimize-js');
 
-module.exports = mode => async ({ renderJsBundles, renderCssLinks }) => {
+module.exports = async mode => {
     // read an external script, which we will inline
     let inlineJs = await promisify(fs.readFile)(
      './path/to/some-script.js'
@@ -232,14 +231,12 @@ module.exports = mode => async ({ renderJsBundles, renderCssLinks }) => {
         <meta charset="utf-8">
         <title>Words that rhyme with fish</title>
         <meta name="description" content="A website about words that rhyme with fish, like plish">
-        ${renderCssLinks()}
         <script>${inlineJs}</script>
       </head>
       <body>
         <div id="app">
           <!-- React app will be rendered into this div -->
         </div>
-        ${renderJsBundles()}
       </body>
       </html>
     `;
@@ -464,11 +461,9 @@ Set to `true` if you want to use HTML5 History for client-side routing (as oppos
 
 ### htmlSource
 
-Type: `Function`.  Default: `[Default HTML](https://github.com/mapbox/underreact/blob/next/lib/default-html.js)`.
+Type: `string`\|`Promise.  Default:`[Default HTML](https://github.com/mapbox/underreact/blob/next/lib/default-html.js)\`.
 
-The function to generate HTML template for your app. Read [`Defining your HTML`](#defining-your-html) for more details.
-
-**Tip**: It is recommended that you keep this function in a separate module, and then require it from your Underreact config module.
+The value to be used to generate HTML template for your app. Read [`Defining your HTML`](#defining-your-html) for more details.
 
 ### jsEntry
 
@@ -518,7 +513,7 @@ If the specified port is unavailable, another port is used.
 
 Type: `Array<Function>`. Default: \[].
 
-All of the CSS you load via [`stylesheets`](#stylesheets) is run through [PostCSS](http://postcss.org/), so you can apply any [PostCSS plugins](https://github.com/postcss/postcss/blob/master/docs/plugins.md) to it.
+All of the CSS that you import is run through [PostCSS](http://postcss.org/), so you can apply any [PostCSS plugins](https://github.com/postcss/postcss/blob/master/docs/plugins.md) to it.
 By default we already include [Autoprefixer](https://github.com/postcss/autoprefixer) for you.
 
 ### siteBasePath
@@ -528,16 +523,6 @@ Type: `string`. Default: `''`.
 Root-relative path to the base directory on the domain where the site will be deployed.
 
 **Tip**: There's a good chance your app isn't at the root of your domain. So this option represents the path of your site *within* that domain. For example, if your app is at `https://www.special.com/ketchup/*`, you should set `siteBasePath: 'ketchup'`.
-
-### stylesheets
-
-Type: `Array<string>`. Absolute paths, please. Default: `[]`.
-
-An array of filenames pointing to stylesheets that you want to include in your site.
-
-These will be processed by PostCSS with [Autoprefixer](https://github.com/postcss/autoprefixer) and any other [`postcssPlugins`](#postcssplugins) that you specify; concatenated in the order specified; and added to your code with the help of `renderCssLinks` (read [`Defining your HTML`](#defining-your-html)).
-
-Assets referenced by your stylesheets will be hashed and copied to the [`outputDirectory`](#outputdirectory), unless they are absolute URLs.
 
 ### vendorModules
 
