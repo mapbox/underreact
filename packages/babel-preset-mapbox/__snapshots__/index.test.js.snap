@@ -12,6 +12,9 @@ Array [
   Array [
     "@babel/preset-env",
     Object {
+      "exclude": Array [
+        "transform-typeof-symbol",
+      ],
       "modules": false,
       "useBuiltIns": "entry",
     },
@@ -35,7 +38,6 @@ import \\"core-js/modules/web.dom.iterable\\";"
 exports[`Right order of configuration in development 1`] = `
 Object {
   "plugins": Array [
-    "@babel/plugin-transform-destructuring",
     Array [
       "@babel/plugin-proposal-class-properties",
       Object {
@@ -51,17 +53,12 @@ Object {
     Array [
       "@babel/plugin-transform-runtime",
       Object {
-        "helpers": false,
+        "helpers": true,
         "regenerator": true,
+        "useESModules": true,
       },
     ],
     "@babel/plugin-syntax-dynamic-import",
-    Array [
-      "@babel/plugin-transform-regenerator",
-      Object {
-        "async": false,
-      },
-    ],
   ],
   "presets": Array [
     Array [
@@ -74,6 +71,9 @@ Object {
     Array [
       "@babel/preset-env",
       Object {
+        "exclude": Array [
+          "transform-typeof-symbol",
+        ],
         "modules": false,
         "useBuiltIns": "entry",
       },
@@ -85,7 +85,6 @@ Object {
 exports[`Right order of configuration in production 1`] = `
 Object {
   "plugins": Array [
-    "@babel/plugin-transform-destructuring",
     Array [
       "@babel/plugin-proposal-class-properties",
       Object {
@@ -101,17 +100,12 @@ Object {
     Array [
       "@babel/plugin-transform-runtime",
       Object {
-        "helpers": false,
+        "helpers": true,
         "regenerator": true,
+        "useESModules": true,
       },
     ],
     "@babel/plugin-syntax-dynamic-import",
-    Array [
-      "@babel/plugin-transform-regenerator",
-      Object {
-        "async": false,
-      },
-    ],
     Array [
       "babel-plugin-transform-react-remove-prop-types",
       Object {
@@ -130,6 +124,9 @@ Object {
     Array [
       "@babel/preset-env",
       Object {
+        "exclude": Array [
+          "transform-typeof-symbol",
+        ],
         "modules": false,
         "useBuiltIns": "entry",
       },
@@ -141,7 +138,6 @@ Object {
 exports[`Right order of configuration in test 1`] = `
 Object {
   "plugins": Array [
-    "@babel/plugin-transform-destructuring",
     Array [
       "@babel/plugin-proposal-class-properties",
       Object {
@@ -157,8 +153,9 @@ Object {
     Array [
       "@babel/plugin-transform-runtime",
       Object {
-        "helpers": false,
+        "helpers": true,
         "regenerator": true,
+        "useESModules": false,
       },
     ],
     "@babel/plugin-syntax-dynamic-import",

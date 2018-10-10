@@ -98,3 +98,41 @@ test('BROWSERSLIST works when importing babel polyfill ', () => {
     `)
   ).toMatchSnapshot();
 });
+
+test('Override is able to change options correctly', () => {
+  const config = preset(null, {
+    'babel-plugin-transform-dynamic-import': { xyz: '123' },
+    override: ({ name, options }) => {
+      if (name === 'babel-plugin-transform-dynamic-import') {
+        return Object.assign({}, options, { a: '1' });
+      }
+      return options;
+    }
+  });
+
+  expect(
+    config.plugins.find(p => p[0] === 'babel-plugin-transform-dynamic-import')
+  ).toMatchInlineSnapshot(`
+Array [
+  "babel-plugin-transform-dynamic-import",
+  Object {
+    "a": "1",
+    "xyz": "123",
+  },
+]
+`);
+});
+
+test('Override can disable a plugin or preset', () => {
+  const config = preset(null, {
+    '@babel/preset-react': { xyz: '123' },
+    override: ({ name, options }) => {
+      if (name === '@babel/preset-react') {
+        return;
+      }
+      return options;
+    }
+  });
+
+  expect(config.presets.find(p => p[0] === '@babel/preset-react')).toEqual();
+});
