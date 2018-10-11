@@ -1,10 +1,14 @@
 'use strict';
 const isPlainObj = require('is-plain-obj');
 
+const MINIMUM_BABEL_VERSION = 7;
+
 module.exports = function(api, opts) {
+  api.assertVersion(MINIMUM_BABEL_VERSION);
+
   const { plugins, presets } = preset.call(this, api, opts);
 
-  // this is done in order to easily test this module
+  // this is done in order to easily snapshot this module
   const requireModule = entity => {
     const esmInterop = obj =>
       obj.hasOwnProperty('default') ? obj.default : obj;
@@ -24,9 +28,15 @@ module.exports = function(api, opts) {
 module.exports.babelPresetMapbox = preset;
 
 function preset(api, opts) {
-  const env = process.env.BABEL_ENV || process.env.NODE_ENV || 'development';
-
   opts = opts || {};
+
+  if (opts.override && typeof opts.override !== 'function') {
+    throw new Error(
+      '`@mapbox/babel-preset-mapbox` expects `override` option to be a function.'
+    );
+  }
+
+  const env = process.env.BABEL_ENV || process.env.NODE_ENV || 'development';
 
   const isEnvDevelopment = env === 'development';
   const isEnvProduction = env === 'production';
@@ -69,37 +79,42 @@ function preset(api, opts) {
         useBuiltIns: true
       }
     },
-    {
+    isEnvTest && {
       name: '@babel/preset-env',
-      conditional: [
-        isEnvTest && {
-          targets: {
-            node: 'current'
-          }
-        },
-        (isEnvProduction || isEnvDevelopment) && {
-          // `entry` transforms `@babel/polyfill` into individual requires for
-          // the targeted browsers. This is safer than `usage` which performs
-          // static code analysis to determine what's required.
-          // This is probably a fine default to help trim down bundles when
-          // end-users inevitably import '@babel/polyfill'.
-          useBuiltIns: 'entry',
-          // Do not transform modules to CJS
-          modules: false
+      options: {
+        targets: {
+          node: 'current'
         }
-      ]
+      }
+    },
+    (isEnvProduction || isEnvDevelopment) && {
+      name: '@babel/preset-env',
+      options: {
+        // `entry` transforms `@babel/polyfill` into individual requires for
+        // the targeted browsers. This is safer than `usage` which performs
+        // static code analysis to determine what's required.
+        // This is probably a fine default to help trim down bundles when
+        // end-users inevitably import '@babel/polyfill'.
+        useBuiltIns: 'entry',
+        // Do not transform modules to CJS
+        modules: false,
+        // mapboxgl doesn't work without this.
+        exclude: ['transform-typeof-symbol']
+      }
     }
   ]
-    .filter(entity => filterConditionals(entity, env))
-    .map(entity => toBabelFormat(entity, opts));
+    .map(entity =>
+      toBabelFormat({
+        entity,
+        opts,
+        isEnvDevelopment,
+        isEnvProduction,
+        isEnvTest
+      })
+    )
+    .filter(Boolean);
 
   const plugins = [
-    {
-      // Necessary to include regardless of the environment because
-      // in practice some other transforms (such as object-rest-spread)
-      // don't work without it: https://github.com/babel/babel/issues/7215
-      name: '@babel/plugin-transform-destructuring'
-    },
     {
       // Enable loose mode to use assignment instead of defineProperty
       // See discussion in https://github.com/facebook/create-react-app/issues/4263
@@ -117,39 +132,45 @@ function preset(api, opts) {
       // Polyfills the runtime needed for async/await and generators
       name: '@babel/plugin-transform-runtime',
       options: {
-        helpers: false,
-        regenerator: true
+        // By default babel will add helpers to every file,
+        // this is redundant, this option keeps them at one location.
+        // https://babeljs.io/docs/en/babel-plugin-transform-runtime#helpers
+        helpers: true,
+        // Support for async/await/yield
+        regenerator: true,
+        // Webpack fully supports ESM, hence it allows for smaller
+        // build size. We are disabling this for testing since Node's
+        // ESM support is 🐥.
+        useESModules: isEnvDevelopment || isEnvProduction
       }
     },
     {
       name: '@babel/plugin-syntax-dynamic-import'
     },
-
-    {
-      name: 'babel-plugin-transform-dynamic-import',
-      conditional: [isEnvTest]
+    isEnvTest && {
+      name: 'babel-plugin-transform-dynamic-import'
     },
-    {
-      // Transpiles generator functions to babel regenerator
-      name: '@babel/plugin-transform-regenerator',
-      conditional: [
-        !isEnvTest && {
-          // Async functions are converted to generators by @babel/preset-env
-          async: false
-        }
-      ]
-    },
-    {
+    isEnvProduction && {
       name: 'babel-plugin-transform-react-remove-prop-types',
-      conditional: [
-        isEnvProduction && {
-          removeImport: true
-        }
-      ]
+      options: {
+        removeImport: true
+      }
     }
   ]
-    .filter(entity => filterConditionals(entity, env))
-    .map(entity => toBabelFormat(entity, opts));
+    .map(entity =>
+      toBabelFormat({
+        entity,
+        opts,
+        isEnvDevelopment,
+        isEnvProduction,
+        isEnvTest
+      })
+    )
+    .filter(Boolean);
+
+  if (opts.debug) {
+    console.log(JSON.stringify({ plugins, presets }, null, 2));
+  }
 
   return {
     plugins,
@@ -157,38 +178,36 @@ function preset(api, opts) {
   };
 }
 
-function filterConditionals(entity, env) {
-  // let any entity which doesn't have conditional property
-  // be passed through.
-  if (!entity.hasOwnProperty('conditional')) {
-    return true;
+function toBabelFormat({
+  entity,
+  opts,
+  isEnvDevelopment,
+  isEnvProduction,
+  isEnvTest
+}) {
+  if (!entity) {
+    return;
   }
+  const userOptions = opts[entity.name] || {};
+  const entityOptions = entity.options;
 
-  const conditional = entity.conditional.filter(Boolean);
+  // apply user options
+  let options = Object.assign({}, entityOptions, userOptions);
 
-  if (conditional.length > 1) {
-    throw new Error(`Duplicate of ${entity.name} found for environment ${env}`);
+  // apply user provided override
+  if (opts.override) {
+    options = opts.override({
+      name: entity.name,
+      options,
+      isEnvDevelopment,
+      isEnvProduction,
+      isEnvTest
+    });
+    // user wanted to disable it
+    if (!options) {
+      return;
+    }
   }
-
-  // The babel entity is supposed to be not used in this particular env.
-  if (conditional.length === 0) {
-    return false;
-  }
-
-  return true;
-}
-
-function toBabelFormat(entity, opts) {
-  const userOptions = opts[entity.name];
-  let entityOptions = entity.options;
-
-  // use the env conditional option
-  if (entity.hasOwnProperty('conditional')) {
-    entityOptions = entity.conditional.filter(Boolean)[0];
-  }
-
-  // apply user overrides
-  const options = Object.assign({}, entityOptions, userOptions);
 
   if (Object.keys(options).length === 0) {
     return entity.name;
