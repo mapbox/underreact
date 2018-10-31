@@ -27,6 +27,7 @@ Urc {
     </body>
     </html>
   ",
+  "inclusiveWebpackLoaders": Array [],
   "isDevelopmentMode": true,
   "isProductionMode": false,
   "jsEntry": "/fake-volume/src/entry.js",
@@ -76,6 +77,7 @@ Urc {
     </body>
     </html>
   ",
+  "inclusiveWebpackLoaders": Array [],
   "isDevelopmentMode": false,
   "isProductionMode": true,
   "jsEntry": "/fake-volume/src/entry.js",
@@ -125,6 +127,7 @@ Urc {
     </body>
     </html>
   ",
+  "inclusiveWebpackLoaders": Array [],
   "isDevelopmentMode": true,
   "isProductionMode": false,
   "jsEntry": "/fake-volume/src/entry.js",
@@ -174,6 +177,7 @@ Urc {
     </body>
     </html>
   ",
+  "inclusiveWebpackLoaders": Array [],
   "isDevelopmentMode": false,
   "isProductionMode": true,
   "jsEntry": "/fake-volume/src/entry.js",
@@ -223,6 +227,7 @@ Urc {
     </body>
     </html>
   ",
+  "inclusiveWebpackLoaders": Array [],
   "isDevelopmentMode": true,
   "isProductionMode": false,
   "jsEntry": "/fake-volume/src/entry.js",

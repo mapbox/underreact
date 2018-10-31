@@ -108,7 +108,7 @@ describe('Setting DEPLOY_ENV should read the correct .env files', () => {
         mainFileContent = fs.readFileSync(mainFilename, 'utf-8');
       }));
 
-  test('.env.abc overrides .env file vars', () => {
+  test('.env.abc override .env file vars', () => {
     expect(mainFileContent.includes(dotenvObj.TOKEN_B)).toBe(false);
     expect(mainFileContent.includes(dotenvAbcObj.TOKEN_B)).toBe(true);
   });
