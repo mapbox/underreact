@@ -5,14 +5,14 @@ const dirTree = require('directory-tree');
 
 const removePath = require('./test-utils/remove-path');
 const commandBuild = require('./test-utils/command-build');
-const generateTree = require('./test-utils/generate-tree');
+const generateFixture = require('./test-utils/generate-fixture');
 const stubNodeModule = require('./test-utils/create-stub-node-module');
 
 jest.setTimeout(15 * 1000);
 
 describe('No Config Test', () => {
   let dirPath;
-  const fixture = generateTree({
+  const fixture = generateFixture({
     src: {
       'entry.js': `
         import React from 'react';

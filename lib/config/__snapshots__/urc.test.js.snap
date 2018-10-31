@@ -3,10 +3,15 @@
 exports[`Urc is correctly initialized when command=build and mode=development 1`] = `
 Urc {
   "appDir": "/fake-volume/src",
-  "browserslist": undefined,
+  "browserslist": Array [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all",
+  ],
   "clientEnvPrefix": "",
   "command": "build",
-  "compileNodeModules": false,
+  "compileNodeModules": true,
   "devServerHistoryFallback": false,
   "hot": false,
   "htmlSource": "
@@ -47,10 +52,15 @@ Urc {
 exports[`Urc is correctly initialized when command=build and mode=production 1`] = `
 Urc {
   "appDir": "/fake-volume/src",
-  "browserslist": undefined,
+  "browserslist": Array [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all",
+  ],
   "clientEnvPrefix": "",
   "command": "build",
-  "compileNodeModules": false,
+  "compileNodeModules": true,
   "devServerHistoryFallback": false,
   "hot": false,
   "htmlSource": "
@@ -91,10 +101,15 @@ Urc {
 exports[`Urc is correctly initialized when command=start and mode=development 1`] = `
 Urc {
   "appDir": "/fake-volume/src",
-  "browserslist": undefined,
+  "browserslist": Array [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all",
+  ],
   "clientEnvPrefix": "",
   "command": "start",
-  "compileNodeModules": false,
+  "compileNodeModules": true,
   "devServerHistoryFallback": false,
   "hot": true,
   "htmlSource": "
@@ -135,10 +150,15 @@ Urc {
 exports[`Urc is correctly initialized when command=start and mode=production 1`] = `
 Urc {
   "appDir": "/fake-volume/src",
-  "browserslist": undefined,
+  "browserslist": Array [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all",
+  ],
   "clientEnvPrefix": "",
   "command": "start",
-  "compileNodeModules": false,
+  "compileNodeModules": true,
   "devServerHistoryFallback": false,
   "hot": false,
   "htmlSource": "
@@ -179,10 +199,15 @@ Urc {
 exports[`normalizes fancy configuration 1`] = `
 Urc {
   "appDir": "/fake-volume/src",
-  "browserslist": undefined,
+  "browserslist": Array [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all",
+  ],
   "clientEnvPrefix": "",
   "command": "build",
-  "compileNodeModules": false,
+  "compileNodeModules": true,
   "devServerHistoryFallback": false,
   "hot": false,
   "htmlSource": "
