@@ -82,7 +82,7 @@ describe('No Config Test', () => {
   });
 
   test('exits with statusCode 1 when config is not found', () => {
-    expect(
+    return expect(
       commandBuild({
         args: [`--config=${path.join(dirPath, 'not-exists.config.js')}`],
         cwd: dirPath
