@@ -23,22 +23,42 @@ Object {
             "exclude": Array [
               /\\[\\\\/\\\\\\\\\\\\\\\\\\]node_modules\\[\\\\/\\\\\\\\\\\\\\\\\\]/,
             ],
+            "loader": "<PROJECT_ROOT>/node_modules/babel-loader/lib/index.js",
+            "options": Object {
+              "babelrc": false,
+              "cacheCompression": false,
+              "cacheDirectory": true,
+              "cacheIdentifier": "{\\"babel-loader\\":\\"8.0.2\\",\\"@babel/core\\":\\"7.1.0\\",\\"babelConfig\\":\\"\\",\\"env\\":\\"test\\",\\"browserslist\\":[\\"and_chr 67\\",\\"and_uc 11.8\\",\\"android 4.4.3-4.4.4\\",\\"android 4.4\\",\\"chrome 68\\",\\"chrome 67\\",\\"chrome 66\\",\\"chrome 65\\",\\"chrome 63\\",\\"chrome 55\\",\\"chrome 49\\",\\"chrome 29\\",\\"edge 17\\",\\"edge 16\\",\\"firefox 61\\",\\"firefox 60\\",\\"firefox 52\\",\\"ie 11\\",\\"ios_saf 11.3-11.4\\",\\"ios_saf 11.0-11.2\\",\\"ios_saf 10.3\\",\\"ios_saf 10.0-10.2\\",\\"ios_saf 9.3\\",\\"opera 53\\",\\"safari 11.1\\",\\"safari 11\\",\\"safari 10.1\\",\\"samsung 6.2\\",\\"samsung 4\\"]}",
+              "compact": false,
+              "configFile": false,
+              "presets": Array [
+                [Function],
+              ],
+            },
             "test": /\\\\\\.jsx\\?\\$/,
-            "use": Array [
-              Object {
-                "loader": "<PROJECT_ROOT>/node_modules/babel-loader/lib/index.js",
-                "options": Object {
-                  "babelrc": false,
-                  "cacheCompression": false,
-                  "cacheDirectory": true,
-                  "cacheIdentifier": "{\\"babel-loader\\":\\"8.0.2\\",\\"babel-core\\":\\"6.26.3\\",\\"babelrc\\":\\"\\",\\"env\\":\\"test\\"}",
-                  "compact": false,
-                  "presets": Array [
-                    [Function],
-                  ],
-                },
-              },
-            ],
+          },
+          Object {
+            "exclude": /@babel\\(\\?:\\\\/\\|\\\\\\\\\\{1,2\\}\\)runtime/,
+            "loader": "<PROJECT_ROOT>/node_modules/babel-loader/lib/index.js",
+            "options": Object {
+              "babelrc": false,
+              "cacheCompression": false,
+              "cacheDirectory": true,
+              "cacheIdentifier": "{\\"babel-loader\\":\\"8.0.2\\",\\"@babel/core\\":\\"7.1.0\\",\\"babelConfig\\":\\"\\",\\"env\\":\\"test\\",\\"browserslist\\":[\\"and_chr 67\\",\\"and_uc 11.8\\",\\"android 4.4.3-4.4.4\\",\\"android 4.4\\",\\"chrome 68\\",\\"chrome 67\\",\\"chrome 66\\",\\"chrome 65\\",\\"chrome 63\\",\\"chrome 55\\",\\"chrome 49\\",\\"chrome 29\\",\\"edge 17\\",\\"edge 16\\",\\"firefox 61\\",\\"firefox 60\\",\\"firefox 52\\",\\"ie 11\\",\\"ios_saf 11.3-11.4\\",\\"ios_saf 11.0-11.2\\",\\"ios_saf 10.3\\",\\"ios_saf 10.0-10.2\\",\\"ios_saf 9.3\\",\\"opera 53\\",\\"safari 11.1\\",\\"safari 11\\",\\"safari 10.1\\",\\"samsung 6.2\\",\\"samsung 4\\"]}",
+              "compact": false,
+              "configFile": false,
+              "presets": Array [
+                Array [
+                  [Function],
+                  Object {
+                    "override": [Function],
+                  },
+                ],
+              ],
+              "sourceMaps": false,
+              "sourceType": "unambiguous",
+            },
+            "test": /\\\\\\.js\\$/,
           },
           Object {
             "test": /\\\\\\.css\\$/,

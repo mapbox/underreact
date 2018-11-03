@@ -6,14 +6,14 @@ const dirTree = require('directory-tree');
 const dotenv = require('dotenv');
 
 const commandBuild = require('./test-utils/command-build');
-const generateTree = require('./test-utils/generate-tree');
+const generateFixture = require('./test-utils/generate-fixture');
 
 jest.setTimeout(15 * 1000);
 
 describe('Env vars with clientEnvPrefix set', () => {
   let mainFileContent;
   let envObj;
-  const fixture = generateTree({
+  const fixture = generateFixture({
     'underreact.config.js': `
       'use strict';
       module.exports = () => ({
@@ -61,7 +61,7 @@ describe('Env vars with clientEnvPrefix set', () => {
 });
 
 describe('Setting DEPLOY_ENV should read the correct .env files', () => {
-  const fixture = generateTree({
+  const fixture = generateFixture({
     src: {
       'entry.js': `
         console.log(process.env.TOKEN_A);

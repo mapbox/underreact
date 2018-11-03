@@ -14,7 +14,7 @@ It's a pretty thin wrapper around Babel, Webpack, and PostCSS, and will never ac
   - [Underreact configuration file](#underreact-configuration-file)
   - [Defining your HTML](#defining-your-html)
 - [Babel](#babel)
-  - [Exposing .babelrc](#exposing-babelrc)
+  - [Exposing babel.config.js](#exposing-babelconfigjs)
 - [Browser support and Polyfills](#browser-support-and-polyfills)
   - [Transpiling of Javascript and prefixing CSS](#transpiling-of-javascript-and-prefixing-css)
   - [Polyfills](#polyfills)
@@ -84,8 +84,8 @@ console.log('hello world!');
 - Run it with `underreact`
 
 ```bash
-npx underreact start 
-# or 
+npx underreact start
+# or
 node node_modules/.bin/underreact start
 ```
 
@@ -121,7 +121,7 @@ npx underreact start
 
 ## Usage
 
-You should not install the Underreact CLI globally. Instead, install it as a dependency of your project and use the `underreact` command via  `npx`, npm `"scripts"`, or `node_modules/.bin/underreact`. The easiest way is probably to set up npm scripts in `package.json`, so you can use `npm run start`, `npm run build`, etc., as needed.
+You should not install the Underreact CLI globally. Instead, install it as a dependency of your project and use the `underreact` command via `npx`, npm `"scripts"`, or `node_modules/.bin/underreact`. The easiest way is probably to set up npm scripts in `package.json`, so you can use `npm run start`, `npm run build`, etc., as needed.
 
 The CLI provides the following commands:
 
@@ -142,26 +142,28 @@ Your `underreact.config.js` can look like either of the below:
 ```javascript
 // underreact.config.js
 module.exports = {
-   siteBasePath: 'fancy'
-}
+  siteBasePath: 'fancy'
+};
 ```
 
-**Exporting a function**: You can also export a function which would then be used as a factory method for your [`configuration object`](#configuration-object-properties). 
+**Exporting a function**: You can also export a function which would then be used as a factory method for your [`configuration object`](#configuration-object-properties).
 
 This function is called with the following parameter properties of an object:
 
 ```javascript
 // underreact.config.js
 /**
- * @param {Object} opts 
- * @param {Webpack} opts.webpack - The webpack dependency injection, so that your project is not dependent on webpack module. This is useful for using a bunch of plugins scoped to the Webpack object eg. PrefetchPlugin, IgnorePlugin, SourceMapDevToolPlugin etc. 
+ * @param {Object} opts
+ * @param {Webpack} opts.webpack - The webpack dependency injection, so that your project is not dependent on webpack module. This is useful for using a bunch of plugins scoped to the Webpack object eg. PrefetchPlugin, IgnorePlugin, SourceMapDevToolPlugin etc.
  * @param {'start'|'build'|'serve-static'} opts.command - The current command Underreact is following.
  * @param {'production'|'development'} opts.mode - The current mode of Underreact.
- * @returns {Promise<Object> | Object} 
+ * @returns {Promise<Object> | Object}
  */
 module.exports = function underreactConfig({ webpack, command, mode }) {
-  return {/*Underreact configuration object*/}
-}
+  return {
+    /*Underreact configuration object*/
+  };
+};
 ```
 
 This approach is quite powerful as you can also use an **async function** to generate complex configurations. Let us look at a hypothetical use case:
@@ -177,11 +179,9 @@ module.exports = async function underreactConfig({ webpack, command, mode }) {
 
   return {
     publicAssetsPath,
-    webpackPlugins : [
-        command === 'build' ? new webpack.ProgressPlugin(): null
-    ],
-  }
-}
+    webpackPlugins: [command === 'build' ? new webpack.ProgressPlugin() : null]
+  };
+};
 ```
 
 ### Defining your HTML
@@ -215,16 +215,14 @@ const { promisify } = require('util');
 const minimizeJs = require('./minimize-js');
 
 module.exports = async mode => {
-    // read an external script, which we will inline
-    let inlineJs = await promisify(fs.readFile)(
-     './path/to/some-script.js'
-    );
+  // read an external script, which we will inline
+  let inlineJs = await promisify(fs.readFile)('./path/to/some-script.js');
 
-    if (mode === 'production') {
-      inlineJs = minimizeJs(inlineJs);
-    }
+  if (mode === 'production') {
+    inlineJs = minimizeJs(inlineJs);
+  }
 
-    return `
+  return `
       <!DOCTYPE html>
       <html lang="en">
       <head>
@@ -240,35 +238,35 @@ module.exports = async mode => {
       </body>
       </html>
     `;
-}
+};
 ```
 
 ## Babel
 
-Out of the box Underreact doesn't require you to setup a `.babelrc` file. It uses [`@mapbox/babel-preset-mapbox`](https://github.com/mapbox/underreact/tree/next/packages/babel-preset-mapbox) internally to provide a set of default configuration for your application.
+Out of the box Underreact doesn't require you to setup a `babel.config.js` file. It uses [`@mapbox/babel-preset-mapbox`](https://github.com/mapbox/underreact/tree/next/packages/babel-preset-mapbox) internally to provide a set of default configuration for your application.
 
-### Exposing `.babelrc`
+### Exposing `babel.config.js`
 
-There are certain libraries that expect `.babelrc` to exist at the root your project. In this case it is best to create a `.babelrc` at the root of your project:
+There are certain libraries that expect `babel.config.js` to exist at the root your project. In this case it is best to create a `babel.config.js` at the root of your project:
 
 ```npm
 npm install --save-dev @mapbox/babel-preset-mapbox
 ```
 
 ```json5
-// .babelrc
-{
-    "presets": [
-        "@mapbox/babel-preset-mapbox"
-    ]
+// babel.config.js
+module.exports = {
+  presets: ['@mapbox/babel-preset-mapbox']
 }
 ```
 
 While you are free to use any Babel presets & plugins, we strongly recommend you to use `@mapbox/babel-preset-mapbox` as it provides a good combination of presets and plugins that are necessary for any Underreact application to work properly. For more advanced configuration visit [`@mapbox/babel-preset-mapbox`](https://github.com/mapbox/underreact/tree/next/packages/babel-preset-mapbox).
 
+**Note:** Underreact doesn't support `.babelrc` as of now, please instead use `babel.config.js` (Read more [here](https://babeljs.io/docs/en/config-files)).
+
 ## Browser support and Polyfills
 
-One of the founding principles of Internet is its ability to support a multitude of devices. With the ever changing Javascript ecosystem, new features of language coming yearly and it has become difficult to use them while also supporting older browsers. 
+One of the founding principles of Internet is its ability to support a multitude of devices. With the ever changing Javascript ecosystem, new features of language coming yearly and it has become difficult to use them while also supporting older browsers.
 
 ### Transpiling of Javascript and prefixing CSS
 
@@ -278,8 +276,8 @@ In Underreact you can use the [Browserslist](https://github.com/browserslist/bro
 // underreact.config.js
 module.exports = {
   // The % refers to the global coverage of users from browserslist
-  "browserslist": [ ">0.25%", "not ie 11"] 
-}
+  browserslist: ['>0.25%', 'not ie 11']
+};
 ```
 
 In the example below we are setting the [`browserslist`](#browserslist) to target all the browsers with greater than `0.25%` market share but not IE 11. This information would then be passed to [Autoprefixer](https://github.com/postcss/autoprefixer) to add vendor prefixes and also to [Babel](https://babeljs.io/docs/en) so that it can transpile your Javascript which can be read by all the browsers you wish to support.
@@ -349,7 +347,7 @@ Underreact allows you to have multiple `.env` files for different deployment tar
 - `.env:` Default.
 - `.env.development`, `.env.staging`, `.env.production`: Deployment-specific settings.
 
-The deployment target is defined by the env variable `DEPLOY_ENV`. Underreact would then find the file which matches the `.env.<DEPLOY_ENV>`. For example if your machine has `DEPLOY_ENV=staging`, Underreact would try to find `.env.staging`. 
+The deployment target is defined by the env variable `DEPLOY_ENV`. Underreact would then find the file which matches the `.env.<DEPLOY_ENV>`. For example if your machine has `DEPLOY_ENV=staging`, Underreact would try to find `.env.staging`.
 
 **Note: values in `.env.<DEPLOY_ENV>` will override values in `.env`**. This also means you do not need to keep all the variables in `.env.<DEPLOY_ENV>` but only the ones that are supposed to override values set in `.env`.
 
@@ -370,17 +368,17 @@ ANALYTICS=sentry.com
 The final output of the code built with `DEPLOY_ENV=mapbox npx underreact build`, notice that `SERVER` value was overridden and a new value `ANALYTICS` was set:
 
 ```javascript
-console.log(process.env.SERVER) // mapbox.com
-console.log(process.env.TOKEN) // abcd
-console.log(process.env.ANALYTICS) // sentry.com
+console.log(process.env.SERVER); // mapbox.com
+console.log(process.env.TOKEN); // abcd
+console.log(process.env.ANALYTICS); // sentry.com
 ```
 
 However, if the code is built with just `npx underreact build`, Underreact would not load `.env.mapbox` as no explicit `DEPLOY_ENV` is set and it would default to `DEPLOY_ENV=production` as the mode is production.
 
 ```javascript
-console.log(process.env.SERVER) // example.com
-console.log(process.env.TOKEN) // abcd
-console.log(process.env.ANALYTICS) // undefined
+console.log(process.env.SERVER); // example.com
+console.log(process.env.TOKEN); // abcd
+console.log(process.env.ANALYTICS); // undefined
 ```
 
 ### Why not use `NODE_ENV`?
@@ -396,7 +394,7 @@ You can also use env variables in your `underreact.config.js`. This can allow yo
 ```js
 // underreact.config.js
 module.exports = {
-    siteBasePath: process.env.SITE_BASE_PATH
+  siteBasePath: process.env.SITE_BASE_PATH
 };
 ```
 
@@ -416,16 +414,10 @@ You can also target different settings for different Underreact modes, by sendin
 // underreact.config.js
 module.exports = {
   browserslist: {
-    production: [
-      '> 1%',
-      'ie 10'
-    ],
-    development: [
-      'last 1 chrome version',
-      'last 1 firefox version'
-    ]
+    production: ['> 1%', 'ie 10'],
+    development: ['last 1 chrome version', 'last 1 firefox version']
   }
-}
+};
 ```
 
 ### clientEnvPrefix
@@ -461,7 +453,7 @@ Set to `true` if you want to use HTML5 History for client-side routing (as oppos
 
 ### htmlSource
 
-Type: `string`\|`Promise.  Default:`[Default HTML](https://github.com/mapbox/underreact/blob/next/lib/default-html.js)\`.
+Type: `string`\|`Promise. Default:`[Default HTML](https://github.com/mapbox/underreact/blob/next/lib/default-html.js)\`.
 
 The value to be used to generate HTML template for your app. Read [`Defining your HTML`](#defining-your-html) for more details.
 
