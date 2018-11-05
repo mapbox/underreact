@@ -14,7 +14,7 @@ describe('No Config Test', () => {
   let dirPath;
   const fixture = generateFixture({
     src: {
-      'entry.js': `
+      'index.js': `
         import React from 'react';
         import ReactDOM from 'react-dom';
         import App from './app';

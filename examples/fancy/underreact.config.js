@@ -22,8 +22,9 @@ const htmlSource = `
 
 module.exports = ({ webpack }) => {
   return {
+    jsEntry: path.join(__dirname, 'src', 'entry.js'),
     hot: true,
-    polyfill: path.join(__dirname, 'polyfill.js'),
+    polyfill: false,
     siteBasePath: 'fancy',
     publicAssetsPath: 'cacheable-things',
     htmlSource,

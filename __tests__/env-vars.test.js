@@ -25,7 +25,7 @@ describe('Env vars with clientEnvPrefix set', () => {
       UNDERREACT_APP_TOKEN=a12f8298fe359b16032ae337a49e0c52b22d7d82
     `,
     src: {
-      'entry.js': `
+      'index.js': `
         console.log(process.env.SUPER_SECRET);
         console.log(process.env.UNDERREACT_APP_TOKEN);
       `
@@ -63,7 +63,7 @@ describe('Env vars with clientEnvPrefix set', () => {
 describe('Setting DEPLOY_ENV should read the correct .env files', () => {
   const fixture = generateFixture({
     src: {
-      'entry.js': `
+      'index.js': `
         console.log(process.env.TOKEN_A);
         console.log(process.env.TOKEN_B);
         console.log(process.env.TOKEN_C);
@@ -108,7 +108,7 @@ describe('Setting DEPLOY_ENV should read the correct .env files', () => {
         mainFileContent = fs.readFileSync(mainFilename, 'utf-8');
       }));
 
-  test('.env.abc override .env file vars', () => {
+  test('.env.abc overrides .env file vars', () => {
     expect(mainFileContent.includes(dotenvObj.TOKEN_B)).toBe(false);
     expect(mainFileContent.includes(dotenvAbcObj.TOKEN_B)).toBe(true);
   });

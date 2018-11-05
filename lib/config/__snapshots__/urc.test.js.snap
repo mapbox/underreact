@@ -27,10 +27,9 @@ Urc {
     </body>
     </html>
   ",
-  "inclusiveWebpackLoaders": Array [],
   "isDevelopmentMode": true,
   "isProductionMode": false,
-  "jsEntry": "/fake-volume/src/entry.js",
+  "jsEntry": "/fake-volume/src/index.js",
   "liveReload": false,
   "mode": "development",
   "modernBrowserTest": "'fetch' in window && 'assign' in Object",
@@ -41,7 +40,7 @@ Urc {
   "publicAssetsPath": "underreact-assets",
   "publicDirectory": "/fake-volume/public",
   "rootDirectory": "/fake-volume",
-  "siteBasePath": "",
+  "siteBasePath": "/",
   "stats": false,
   "vendorModules": Array [],
   "webpackConfigTransform": [Function],
@@ -77,10 +76,9 @@ Urc {
     </body>
     </html>
   ",
-  "inclusiveWebpackLoaders": Array [],
   "isDevelopmentMode": false,
   "isProductionMode": true,
-  "jsEntry": "/fake-volume/src/entry.js",
+  "jsEntry": "/fake-volume/src/index.js",
   "liveReload": false,
   "mode": "production",
   "modernBrowserTest": "'fetch' in window && 'assign' in Object",
@@ -91,7 +89,7 @@ Urc {
   "publicAssetsPath": "underreact-assets",
   "publicDirectory": "/fake-volume/public",
   "rootDirectory": "/fake-volume",
-  "siteBasePath": "",
+  "siteBasePath": "/",
   "stats": false,
   "vendorModules": Array [],
   "webpackConfigTransform": [Function],
@@ -127,10 +125,9 @@ Urc {
     </body>
     </html>
   ",
-  "inclusiveWebpackLoaders": Array [],
   "isDevelopmentMode": true,
   "isProductionMode": false,
-  "jsEntry": "/fake-volume/src/entry.js",
+  "jsEntry": "/fake-volume/src/index.js",
   "liveReload": true,
   "mode": "development",
   "modernBrowserTest": "'fetch' in window && 'assign' in Object",
@@ -141,7 +138,7 @@ Urc {
   "publicAssetsPath": "underreact-assets",
   "publicDirectory": "/fake-volume/public",
   "rootDirectory": "/fake-volume",
-  "siteBasePath": "",
+  "siteBasePath": "/",
   "stats": false,
   "vendorModules": Array [],
   "webpackConfigTransform": [Function],
@@ -177,10 +174,9 @@ Urc {
     </body>
     </html>
   ",
-  "inclusiveWebpackLoaders": Array [],
   "isDevelopmentMode": false,
   "isProductionMode": true,
-  "jsEntry": "/fake-volume/src/entry.js",
+  "jsEntry": "/fake-volume/src/index.js",
   "liveReload": true,
   "mode": "production",
   "modernBrowserTest": "'fetch' in window && 'assign' in Object",
@@ -191,7 +187,7 @@ Urc {
   "publicAssetsPath": "underreact-assets",
   "publicDirectory": "/fake-volume/public",
   "rootDirectory": "/fake-volume",
-  "siteBasePath": "",
+  "siteBasePath": "/",
   "stats": false,
   "vendorModules": Array [],
   "webpackConfigTransform": [Function],
@@ -227,10 +223,9 @@ Urc {
     </body>
     </html>
   ",
-  "inclusiveWebpackLoaders": Array [],
   "isDevelopmentMode": true,
   "isProductionMode": false,
-  "jsEntry": "/fake-volume/src/entry.js",
+  "jsEntry": "/fake-volume/src/index.js",
   "liveReload": false,
   "mode": "development",
   "modernBrowserTest": "'fetch' in window && 'assign' in Object",

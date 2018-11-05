@@ -118,6 +118,9 @@ function defineStart(y) {
 }
 
 function runStart(argv) {
+  // Proper setup of env vars is critical to rest of the application.
+  // Underreact's env vars are only set after the yargs middleware is run.
+  // Hence, we cannot keep the require statements below at the top of the file.
   const start = require('../commands/start');
   const config = require('../lib/config');
 
