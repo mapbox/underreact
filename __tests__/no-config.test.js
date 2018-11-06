@@ -64,17 +64,30 @@ describe('No Config Test', () => {
     });
   });
 
-  test('builds the correct output with development mode', () => {
+  test.only('builds the correct output with development mode', () => {
     return commandBuild({
       cwd: dirPath,
       args: ['--mode=development']
     }).then(result => {
+      const fs = require('fs');
       const tree = removePath({
         object: dirTree(path.join(dirPath, '_underreact-site')),
         path: dirPath,
         replaceWith: '<TEMP_DIR>'
       });
 
+      const getFileContent = (tree, startsWith) => {
+        const filename = tree.children
+          .find(t => t.name === 'js')
+          .children.find(t => t.name.startsWith(startsWith)).path;
+        return fs.readFileSync(filename, 'utf-8');
+      };
+
+      const t = getFileContent(
+        dirTree(path.join(dirPath, '_underreact-site', 'underreact-assets')),
+        'main'
+      );
+      console.log(t);
       expect(tree).toMatchSnapshot();
       expect(result).toMatch(/development mode/);
       expect(result).toMatch(/Finished/);
