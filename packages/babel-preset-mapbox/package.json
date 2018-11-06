@@ -1,6 +1,6 @@
 {
   "name": "@mapbox/babel-preset-mapbox",
-  "version": "7.0.0",
+  "version": "7.0.1",
   "description": "A babel preset",
   "main": "index.js",
   "engines": {
