@@ -1,6 +1,14 @@
 {
-  "extends": [
-    "@mapbox/eslint-config-mapbox",
-    "prettier"
-  ]
+  "env": {
+    "es6": true
+  },
+  "overrides": [
+    {
+      "files": ["*.test.js"],
+      "env": {
+        "jest": true
+      }
+    }
+  ],
+  "extends": ["@mapbox/eslint-config-mapbox", "prettier"]
 }

@@ -4,13 +4,46 @@
 const yargs = require('yargs');
 const path = require('path');
 const chalk = require('chalk');
-const webpack = require('webpack');
-const start = require('../commands/start');
-const build = require('../commands/build');
-const serveStatic = require('../commands/serve-static');
-const writeBabelrc = require('../commands/write-babelrc');
-const logger = require('../lib/logger');
-const normalizeConfig = require('../lib/normalize-config');
+const fs = require('fs');
+
+const getCliOpts = require('../lib/utils/get-cli-opts');
+// DO NOT REQUIRE anything here as env vars would not be set yet
+
+// Sets up the config path and env variable as
+// yargs middlewares are run right after parsing the argv
+// https://github.com/yargs/yargs/blob/master/docs/advanced.md#middleware
+const middlewares = [
+  argv => {
+    if (!process.env.NODE_ENV) {
+      process.env.NODE_ENV = argv.mode || 'production';
+    }
+    if (!process.env.DEPLOY_ENV) {
+      process.env.DEPLOY_ENV = argv.mode || 'production';
+    }
+
+    // if the user specified a nonexistent path, tell them if it doesn't exist
+    if (argv.config !== undefined && !fs.existsSync(argv.config)) {
+      errorOut(
+        new Error(
+          `Failed to find the config file at ${chalk.underline(argv.config)}`
+        )
+      );
+    }
+
+    // if the user didn't specify a path use a default
+    if (argv.config === undefined) {
+      const { DEFAULT_CONFIG_NAME } = require('../lib/constants');
+      // Make sure that including paths.js after setting env will read .env variables.
+      delete require.cache[require.resolve('../lib/constants')];
+
+      argv.config = path.join(process.cwd(), DEFAULT_CONFIG_NAME);
+    }
+
+    const setEnv = require('../lib/utils/set-env');
+    const rootDir = path.dirname(path.resolve(argv.config));
+    setEnv(rootDir);
+  }
+];
 
 const configOption = [
   'config',
@@ -43,7 +76,18 @@ const statsOption = [
   }
 ];
 
+const modeOption = defaultMode => [
+  'mode',
+  {
+    description: 'The optimization option for the build.',
+    alias: 'm',
+    choices: ['development', 'production'],
+    default: defaultMode
+  }
+];
+
 yargs
+  .middleware(middlewares)
   .usage('$0 <command>')
   .command(
     'start [options]',
@@ -58,12 +102,6 @@ yargs
     defineServeStatic,
     runServeStatic
   )
-  .command(
-    'write-babelrc [options]',
-    'Write a .babelrc file.',
-    defineWriteBabelrc,
-    runWriteBabelrc
-  )
   .demand(1, 'You must specify a command')
   .example('underreact start')
   .example('underreact build -c conf/clf.js')
@@ -74,41 +112,38 @@ function defineStart(y) {
   y.version(false)
     .option(...configOption)
     .option(...portOption)
-    .option('production', {
-      description: 'Build as though for production.',
-      alias: 'r',
-      type: 'boolean'
-    })
+    .option(...modeOption('development'))
     .option(...statsOption)
     .help();
 }
 
 function runStart(argv) {
-  try {
-    start(getConfig('start', argv));
-  } catch (error) {
-    errorOut(error);
-  }
+  // Proper setup of env vars is critical to rest of the application.
+  // Underreact's env vars are only set after the yargs middleware is run.
+  // Hence, we cannot keep the require statements below at the top of the file.
+  const start = require('../commands/start');
+  const config = require('../lib/config');
+
+  config(getCliOpts('start', argv))
+    .then(urc => start(urc))
+    .catch(errorOut);
 }
 
 function defineBuild(y) {
   y.version(false)
     .option(...configOption)
-    .option('debug', {
-      description: 'Build for debugging, not for production.',
-      alias: 'd',
-      type: 'boolean'
-    })
+    .option(...modeOption('production'))
     .option(...statsOption)
     .help();
 }
 
 function runBuild(argv) {
-  try {
-    build(getConfig('build', argv));
-  } catch (error) {
-    errorOut(error);
-  }
+  const build = require('../commands/build');
+  const config = require('../lib/config');
+
+  config(getCliOpts('build', argv))
+    .then(urc => build(urc))
+    .catch(errorOut);
 }
 
 function defineServeStatic(y) {
@@ -119,91 +154,16 @@ function defineServeStatic(y) {
 }
 
 function runServeStatic(argv) {
-  try {
-    serveStatic(getConfig('serve-static', argv));
-  } catch (error) {
-    errorOut(error);
-  }
-}
+  const serveStatic = require('../commands/serve-static');
+  const config = require('../lib/config');
 
-function defineWriteBabelrc(y) {
-  y.version(false)
-    .option(...configOption)
-    .option('output', {
-      description: 'Directory where .babelrc should be written',
-      alias: 'o',
-      type: 'string',
-      normalize: true,
-      default: '.'
-    })
-    .help();
-}
-
-function runWriteBabelrc(argv) {
-  try {
-    writeBabelrc(getConfig('write-babelrc', argv), argv.output, argv.env);
-  } catch (error) {
-    errorOut(error);
-  }
-}
-
-function getConfig(command, argv) {
-  const configIsNotSpecified = argv.config === undefined;
-  let configPath;
-  if (configIsNotSpecified) {
-    configPath = path.join(process.cwd(), 'underreact.config.js');
-  } else {
-    configPath = path.isAbsolute(argv.config)
-      ? argv.config
-      : path.join(process.cwd(), argv.config);
-  }
-  let production = true;
-  if (command === 'build') {
-    production = !argv.debug;
-  } else if (command === 'start') {
-    production = argv.production;
-  } else if (command === 'write-babelrc' && argv.env === 'prod') {
-    production = true;
-  }
-
-  // This object is passed as the argument to the config module, if it's a
-  // function.
-  const configModuleContext = {
-    webpack,
-    command,
-    production,
-    argv
-  };
-
-  let config = {};
-  // If the user didn't use --config, it's fine if the default does not exist.
-  // But if they did specify a path, tell them if it doesn't work.
-  try {
-    const configModule = require(configPath);
-    config =
-      typeof configModule === 'function'
-        ? configModule(configModuleContext)
-        : configModule;
-  } catch (error) {
-    if (!configIsNotSpecified) {
-      logger.error(
-        `Failed to load configuration module from ${chalk.underline(
-          configPath
-        )}`
-      );
-    }
-  }
-
-  const configWithArgs = Object.assign({}, config, {
-    production,
-    stats: argv.stats,
-    port: argv.port
-  });
-
-  return normalizeConfig(configWithArgs, path.dirname(configPath));
+  config(getCliOpts('serve-static', argv))
+    .then(urc => serveStatic(urc))
+    .catch(errorOut);
 }
 
 function errorOut(error) {
+  const logger = require('../lib/logger');
   logger.error(error);
   process.exit(1);
 }

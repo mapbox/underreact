@@ -1,72 +1,103 @@
 'use strict';
 
-const webpack = require('webpack');
 const del = require('del');
 const chalk = require('chalk');
-const createWebpackConfig = require('../lib/create-webpack-config');
-const renderWebpackErrors = require('../lib/render-webpack-errors');
-const startServer = require('../lib/start-server');
-const publicFilesCopier = require('../lib/public-files-copier');
-const htmlCompiler = require('../lib/html-compiler');
-const cssCompiler = require('../lib/css-compiler');
-const writeWebpackStats = require('../lib/write-webpack-stats');
+const WebpackDevServer = require('webpack-dev-server');
+const urlJoin = require('url-join');
+
 const logger = require('../lib/logger');
+const {
+  createWebpackCompiler,
+  normalizeWebpackError
+} = require('../lib/webpack-compiler');
+const webpackConfig = require('../lib/webpack-config');
 
-function start(urc) {
-  logger.log(`Starting underreact. ${chalk.yellow('Wait ...')}`);
+module.exports = function main(urc) {
+  logger.log(
+    `Starting underreact in ${urc.mode} mode. ${chalk.yellow('Wait ...')}`
+  );
 
-  const webpackConfig = createWebpackConfig(urc);
+  try {
+    require.resolve(urc.jsEntry);
+  } catch (error) {
+    throw new Error(`Could not find the entry Javascript file ${urc.jsEntry}.`);
+  }
 
-  const onFirstCompilation = () => {
-    Promise.all([
-      htmlCompiler.write(urc),
-      cssCompiler.write(urc),
-      publicFilesCopier.copy(urc)
-    ])
-      .then(() => {
-        htmlCompiler.watch(urc);
-        cssCompiler.watch(urc);
-        publicFilesCopier.watch(urc);
-        startServer(urc);
-      })
-      .catch(logger.error);
-  };
+  del.sync(urc.outputDirectory, { force: true });
 
-  del.sync(urc.outputDirectory);
+  return watchWebpack(urc);
+};
 
-  const compiler = webpack(webpackConfig);
-  let hasCompiled = false;
-  let lastHash;
-  const onCompilation = (compilationError, stats) => {
-    // Don't do anything if the compilation is just repetition.
-    // There's often a series of many compilations with the same output.
-    if (stats.hash === lastHash) return;
-    lastHash = stats.hash;
+function watchWebpack(urc) {
+  let compiler;
 
-    if (!hasCompiled) {
-      hasCompiled = true;
-      onFirstCompilation();
-    } else {
-      logger.log('Compiled JS.');
-    }
+  try {
+    compiler = createWebpackCompiler(webpackConfig(urc));
+  } catch (error) {
+    return Promise.reject(error);
+  }
 
-    if (compilationError) {
-      logger.error(compilationError);
+  return new Promise(resolve => {
+    const server = new WebpackDevServer(compiler, {
+      publicPath: urc.siteBasePath,
+      // We have our own custom logging interface,
+      // hence, we can quieten down `WebpackDevServer`.
+      clientLogLevel: 'none',
+      quiet: true,
+      contentBase: urc.publicDirectory,
+      historyApiFallback: urc.devServerHistoryFallback && {
+        index: urc.siteBasePath
+      },
+      port: urc.port,
+      compress: urc.isProductionMode,
+      hot: urc.hot
+    });
+
+    server.listen(urc.port, '127.0.0.1', () => {
+      resolve();
       return;
-    }
+    });
 
-    const renderedErrors = renderWebpackErrors(stats);
-    if (renderedErrors) {
-      logger.error(renderedErrors);
-      return;
-    }
+    let isFirstCompile = true;
 
-    if (urc.stats) {
-      writeWebpackStats(urc.stats, stats);
-    }
-  };
+    // `invalid` event fires when you have changed a file, and Webpack is
+    // recompiling a bundle.
+    compiler.hooks.invalid.tap('invalid', () => {
+      logger.log('Compiling...');
+    });
+    // `failed` is fired when Webpack encounters an error. For some reason
+    // it is fired when `command=start`, `mode=production` and a module required
+    // by user's application is not found. If we do not exit Underreact gets stuck
+    // and does not respond. This might be a bug in webpack-dev-server, needs more investigation.
+    compiler.hooks.failed.tap('failed', error => {
+      console.error(error);
+      process.exit(1);
+    });
+    // `done` event fires when Webpack has finished recompiling the bundle.
+    // Whether or not you have warnings or errors
+    compiler.hooks.done.tap('done', stats => {
+      const webpackError = normalizeWebpackError({ stats });
 
-  compiler.watch({ ignored: [/node_modules/] }, onCompilation);
+      if (!webpackError) {
+        logger.log(chalk.green('Compiled successfully!'));
+        if (isFirstCompile) {
+          logger.log(getReadyMessage(urc));
+          isFirstCompile = false;
+        }
+        return;
+      }
+
+      logger.error(webpackError);
+    });
+  });
 }
 
-module.exports = start;
+function getReadyMessage(urc) {
+  const localUrl = urlJoin(`http://localhost:${urc.port}`, urc.siteBasePath);
+  const chevron = chalk.green.bold('>');
+  let startMsg = chalk.green.bold('Ready!');
+  startMsg += `\n  ${chevron} Access your site at ${chalk.bold.magenta.underline(
+    localUrl
+  )}`;
+  return startMsg;
+}

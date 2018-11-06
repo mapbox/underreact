@@ -1,0 +1,41 @@
+{
+  "name": "@mapbox/babel-preset-mapbox",
+  "version": "7.0.1",
+  "description": "A babel preset",
+  "main": "index.js",
+  "engines": {
+    "node": ">6"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mapbox/babel-preset-mapbox.git"
+  },
+  "author": "Mapbox",
+  "contributors": [
+    "Kushan Joshi <0o3ko0@gmail.com>"
+  ],
+  "license": "BSD 2-Clause",
+  "dependencies": {
+    "@babel/plugin-proposal-class-properties": "^7.1.0",
+    "@babel/plugin-proposal-object-rest-spread": "^7.0.0",
+    "@babel/plugin-syntax-dynamic-import": "^7.0.0",
+    "@babel/plugin-transform-runtime": "^7.1.0",
+    "@babel/preset-env": "^7.1.0",
+    "@babel/preset-react": "^7.0.0",
+    "babel-plugin-transform-dynamic-import": "^2.1.0",
+    "babel-plugin-transform-react-remove-prop-types": "^0.4.19",
+    "is-plain-obj": "^1.1.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.1.2",
+    "@babel/polyfill": "^7.0.0",
+    "@babel/runtime": "^7.1.2",
+    "jest": "^23.6.0"
+  }
+}

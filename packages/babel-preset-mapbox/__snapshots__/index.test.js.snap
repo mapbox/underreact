@@ -1,0 +1,182 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`BROWSERSLIST env var works in non test env  1`] = `
+Array [
+  Array [
+    "@babel/preset-react",
+    Object {
+      "development": true,
+      "useBuiltIns": true,
+    },
+  ],
+  Array [
+    "@babel/preset-env",
+    Object {
+      "exclude": Array [
+        "transform-typeof-symbol",
+      ],
+      "modules": false,
+      "useBuiltIns": "entry",
+    },
+  ],
+]
+`;
+
+exports[`BROWSERSLIST works when importing babel polyfill  1`] = `
+"import \\"core-js/modules/es6.array.sort\\";
+import \\"core-js/modules/es7.object.define-getter\\";
+import \\"core-js/modules/es7.object.define-setter\\";
+import \\"core-js/modules/es7.object.lookup-getter\\";
+import \\"core-js/modules/es7.object.lookup-setter\\";
+import \\"core-js/modules/es7.promise.finally\\";
+import \\"core-js/modules/es7.symbol.async-iterator\\";
+import \\"core-js/modules/web.timers\\";
+import \\"core-js/modules/web.immediate\\";
+import \\"core-js/modules/web.dom.iterable\\";"
+`;
+
+exports[`Right order of configuration in development 1`] = `
+Object {
+  "plugins": Array [
+    Array [
+      "@babel/plugin-proposal-class-properties",
+      Object {
+        "loose": true,
+      },
+    ],
+    Array [
+      "@babel/plugin-proposal-object-rest-spread",
+      Object {
+        "useBuiltIns": true,
+      },
+    ],
+    Array [
+      "@babel/plugin-transform-runtime",
+      Object {
+        "helpers": true,
+        "regenerator": true,
+        "useESModules": true,
+      },
+    ],
+    "@babel/plugin-syntax-dynamic-import",
+  ],
+  "presets": Array [
+    Array [
+      "@babel/preset-react",
+      Object {
+        "development": true,
+        "useBuiltIns": true,
+      },
+    ],
+    Array [
+      "@babel/preset-env",
+      Object {
+        "exclude": Array [
+          "transform-typeof-symbol",
+        ],
+        "modules": false,
+        "useBuiltIns": "entry",
+      },
+    ],
+  ],
+}
+`;
+
+exports[`Right order of configuration in production 1`] = `
+Object {
+  "plugins": Array [
+    Array [
+      "@babel/plugin-proposal-class-properties",
+      Object {
+        "loose": true,
+      },
+    ],
+    Array [
+      "@babel/plugin-proposal-object-rest-spread",
+      Object {
+        "useBuiltIns": true,
+      },
+    ],
+    Array [
+      "@babel/plugin-transform-runtime",
+      Object {
+        "helpers": true,
+        "regenerator": true,
+        "useESModules": true,
+      },
+    ],
+    "@babel/plugin-syntax-dynamic-import",
+    Array [
+      "babel-plugin-transform-react-remove-prop-types",
+      Object {
+        "removeImport": true,
+      },
+    ],
+  ],
+  "presets": Array [
+    Array [
+      "@babel/preset-react",
+      Object {
+        "development": false,
+        "useBuiltIns": true,
+      },
+    ],
+    Array [
+      "@babel/preset-env",
+      Object {
+        "exclude": Array [
+          "transform-typeof-symbol",
+        ],
+        "modules": false,
+        "useBuiltIns": "entry",
+      },
+    ],
+  ],
+}
+`;
+
+exports[`Right order of configuration in test 1`] = `
+Object {
+  "plugins": Array [
+    Array [
+      "@babel/plugin-proposal-class-properties",
+      Object {
+        "loose": true,
+      },
+    ],
+    Array [
+      "@babel/plugin-proposal-object-rest-spread",
+      Object {
+        "useBuiltIns": true,
+      },
+    ],
+    Array [
+      "@babel/plugin-transform-runtime",
+      Object {
+        "helpers": true,
+        "regenerator": true,
+        "useESModules": false,
+      },
+    ],
+    "@babel/plugin-syntax-dynamic-import",
+    "babel-plugin-transform-dynamic-import",
+  ],
+  "presets": Array [
+    Array [
+      "@babel/preset-react",
+      Object {
+        "development": true,
+        "useBuiltIns": true,
+      },
+    ],
+    Array [
+      "@babel/preset-env",
+      Object {
+        "targets": Object {
+          "node": "current",
+        },
+      },
+    ],
+  ],
+}
+`;

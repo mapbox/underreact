@@ -1,0 +1,7 @@
+language: node_js
+node_js:
+  - 8
+env:
+  - TEST_DIR=packages/babel-preset-mapbox
+  - TEST_DIR=.
+script: cd $TEST_DIR && npm ci && npm test

@@ -1,0 +1,274 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Urc is correctly initialized when command=build and mode=development 1`] = `
+Urc {
+  "appDir": "/fake-volume/src",
+  "browserslist": Array [
+    ">0.2%",
+    "not dead",
+    "not ie < 11",
+    "not op_mini all",
+  ],
+  "clientEnvPrefix": "",
+  "command": "build",
+  "compileNodeModules": true,
+  "devServerHistoryFallback": false,
+  "hot": false,
+  "htmlSource": "
+    <!DOCTYPE html>
+    <html lang=\\"en\\">
+    <head>
+      <meta charset=\\"UTF-8\\">
+      <meta name=\\"viewport\\" content=\\"width=device-width, initial-scale=1.0\\">
+      <title>Underreact app</title>
+    </head>
+    <body>
+      <div id=\\"app\\"></div>
+    </body>
+    </html>
+  ",
+  "isDevelopmentMode": true,
+  "isProductionMode": false,
+  "jsEntry": "/fake-volume/src/index.js",
+  "liveReload": false,
+  "mode": "development",
+  "modernBrowserTest": "'fetch' in window && 'assign' in Object",
+  "outputDirectory": "/fake-volume/_underreact-site",
+  "polyfill": "<PROJECT_ROOT>/polyfill/index.js",
+  "port": 8080,
+  "postcssPlugins": Array [],
+  "publicAssetsPath": "underreact-assets",
+  "publicDirectory": "/fake-volume/public",
+  "rootDirectory": "/fake-volume",
+  "siteBasePath": "/",
+  "stats": false,
+  "vendorModules": Array [],
+  "webpackConfigTransform": [Function],
+  "webpackLoaders": Array [],
+  "webpackPlugins": Array [],
+}
+`;
+
+exports[`Urc is correctly initialized when command=build and mode=production 1`] = `
+Urc {
+  "appDir": "/fake-volume/src",
+  "browserslist": Array [
+    ">0.2%",
+    "not dead",
+    "not ie < 11",
+    "not op_mini all",
+  ],
+  "clientEnvPrefix": "",
+  "command": "build",
+  "compileNodeModules": true,
+  "devServerHistoryFallback": false,
+  "hot": false,
+  "htmlSource": "
+    <!DOCTYPE html>
+    <html lang=\\"en\\">
+    <head>
+      <meta charset=\\"UTF-8\\">
+      <meta name=\\"viewport\\" content=\\"width=device-width, initial-scale=1.0\\">
+      <title>Underreact app</title>
+    </head>
+    <body>
+      <div id=\\"app\\"></div>
+    </body>
+    </html>
+  ",
+  "isDevelopmentMode": false,
+  "isProductionMode": true,
+  "jsEntry": "/fake-volume/src/index.js",
+  "liveReload": false,
+  "mode": "production",
+  "modernBrowserTest": "'fetch' in window && 'assign' in Object",
+  "outputDirectory": "/fake-volume/_underreact-site",
+  "polyfill": "<PROJECT_ROOT>/polyfill/index.js",
+  "port": 8080,
+  "postcssPlugins": Array [],
+  "publicAssetsPath": "underreact-assets",
+  "publicDirectory": "/fake-volume/public",
+  "rootDirectory": "/fake-volume",
+  "siteBasePath": "/",
+  "stats": false,
+  "vendorModules": Array [],
+  "webpackConfigTransform": [Function],
+  "webpackLoaders": Array [],
+  "webpackPlugins": Array [],
+}
+`;
+
+exports[`Urc is correctly initialized when command=start and mode=development 1`] = `
+Urc {
+  "appDir": "/fake-volume/src",
+  "browserslist": Array [
+    ">0.2%",
+    "not dead",
+    "not ie < 11",
+    "not op_mini all",
+  ],
+  "clientEnvPrefix": "",
+  "command": "start",
+  "compileNodeModules": true,
+  "devServerHistoryFallback": false,
+  "hot": true,
+  "htmlSource": "
+    <!DOCTYPE html>
+    <html lang=\\"en\\">
+    <head>
+      <meta charset=\\"UTF-8\\">
+      <meta name=\\"viewport\\" content=\\"width=device-width, initial-scale=1.0\\">
+      <title>Underreact app</title>
+    </head>
+    <body>
+      <div id=\\"app\\"></div>
+    </body>
+    </html>
+  ",
+  "isDevelopmentMode": true,
+  "isProductionMode": false,
+  "jsEntry": "/fake-volume/src/index.js",
+  "liveReload": true,
+  "mode": "development",
+  "modernBrowserTest": "'fetch' in window && 'assign' in Object",
+  "outputDirectory": "/fake-volume/_underreact-site",
+  "polyfill": "<PROJECT_ROOT>/polyfill/index.js",
+  "port": 8080,
+  "postcssPlugins": Array [],
+  "publicAssetsPath": "underreact-assets",
+  "publicDirectory": "/fake-volume/public",
+  "rootDirectory": "/fake-volume",
+  "siteBasePath": "/",
+  "stats": false,
+  "vendorModules": Array [],
+  "webpackConfigTransform": [Function],
+  "webpackLoaders": Array [],
+  "webpackPlugins": Array [],
+}
+`;
+
+exports[`Urc is correctly initialized when command=start and mode=production 1`] = `
+Urc {
+  "appDir": "/fake-volume/src",
+  "browserslist": Array [
+    ">0.2%",
+    "not dead",
+    "not ie < 11",
+    "not op_mini all",
+  ],
+  "clientEnvPrefix": "",
+  "command": "start",
+  "compileNodeModules": true,
+  "devServerHistoryFallback": false,
+  "hot": false,
+  "htmlSource": "
+    <!DOCTYPE html>
+    <html lang=\\"en\\">
+    <head>
+      <meta charset=\\"UTF-8\\">
+      <meta name=\\"viewport\\" content=\\"width=device-width, initial-scale=1.0\\">
+      <title>Underreact app</title>
+    </head>
+    <body>
+      <div id=\\"app\\"></div>
+    </body>
+    </html>
+  ",
+  "isDevelopmentMode": false,
+  "isProductionMode": true,
+  "jsEntry": "/fake-volume/src/index.js",
+  "liveReload": true,
+  "mode": "production",
+  "modernBrowserTest": "'fetch' in window && 'assign' in Object",
+  "outputDirectory": "/fake-volume/_underreact-site",
+  "polyfill": "<PROJECT_ROOT>/polyfill/index.js",
+  "port": 8080,
+  "postcssPlugins": Array [],
+  "publicAssetsPath": "underreact-assets",
+  "publicDirectory": "/fake-volume/public",
+  "rootDirectory": "/fake-volume",
+  "siteBasePath": "/",
+  "stats": false,
+  "vendorModules": Array [],
+  "webpackConfigTransform": [Function],
+  "webpackLoaders": Array [],
+  "webpackPlugins": Array [],
+}
+`;
+
+exports[`normalizes fancy configuration 1`] = `
+Urc {
+  "appDir": "/fake-volume/src",
+  "browserslist": Array [
+    ">0.2%",
+    "not dead",
+    "not ie < 11",
+    "not op_mini all",
+  ],
+  "clientEnvPrefix": "",
+  "command": "build",
+  "compileNodeModules": true,
+  "devServerHistoryFallback": false,
+  "hot": false,
+  "htmlSource": "
+    <!DOCTYPE html>
+    <html lang=\\"en\\">
+    <head>
+      <meta charset=\\"UTF-8\\">
+      <meta name=\\"viewport\\" content=\\"width=device-width, initial-scale=1.0\\">
+      <title>Underreact app</title>
+    </head>
+    <body>
+      <div id=\\"app\\"></div>
+    </body>
+    </html>
+  ",
+  "isDevelopmentMode": true,
+  "isProductionMode": false,
+  "jsEntry": "/fake-volume/src/index.js",
+  "liveReload": false,
+  "mode": "development",
+  "modernBrowserTest": "'fetch' in window && 'assign' in Object",
+  "outputDirectory": "/fake-volume/_underreact-site",
+  "polyfill": "<PROJECT_ROOT>/polyfill/index.js",
+  "port": 8080,
+  "postcssPlugins": Array [],
+  "publicAssetsPath": "cacheable-things",
+  "publicDirectory": "/fake-volume/public",
+  "rootDirectory": "/fake-volume",
+  "siteBasePath": "/fancy",
+  "stats": false,
+  "vendorModules": Array [],
+  "webpackConfigTransform": [Function],
+  "webpackLoaders": Array [
+    Object {
+      "test": /\\\\\\.less\\$/,
+      "use": Array [
+        "css-loader",
+        "less-loader",
+      ],
+    },
+  ],
+  "webpackPlugins": Array [
+    [Function],
+  ],
+}
+`;
+
+exports[`not setting polyfill fallbacks to default path 1`] = `"<PROJECT_ROOT>/polyfill/index.js"`;
+
+exports[`readClientEnvVars doesn't leak internal vars 1`] = `
+Object {
+  "DEPLOY_ENV": "test",
+  "NODE_ENV": "test",
+  "VISIBLE_TOKEN": "visible",
+}
+`;
+
+exports[`readClientEnvVars only includes vars which start with urc.clientEnvPrefix  1`] = `
+Object {
+  "DEPLOY_ENV": "test",
+  "MY_APP_TOKEN": "visible",
+  "NODE_ENV": "test",
+}
+`;
