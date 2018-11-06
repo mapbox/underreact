@@ -3,10 +3,11 @@
 exports[`Basic Test 1`] = `
 Object {
   "bail": false,
+  "context": "<PROJECT_ROOT>",
   "devtool": false,
   "entry": Object {
     "main": Array [
-      "<PROJECT_ROOT>/src/entry.js",
+      "<PROJECT_ROOT>/src/index.js",
     ],
     "polyfill": "<PROJECT_ROOT>/polyfill/index.js",
     "vendor": Array [
@@ -19,6 +20,13 @@ Object {
     "rules": Array [
       Object {
         "oneOf": Array [
+          Object {
+            "test": /\\\\\\.less\\$/,
+            "use": Array [
+              "css-loader",
+              "less-loader",
+            ],
+          },
           Object {
             "exclude": Array [
               /\\[\\\\/\\\\\\\\\\\\\\\\\\]node_modules\\[\\\\/\\\\\\\\\\\\\\\\\\]/,
@@ -82,11 +90,13 @@ Object {
             ],
           },
           Object {
-            "test": /\\\\\\.less\\$/,
-            "use": Array [
-              "css-loader",
-              "less-loader",
-            ],
+            "test": /\\\\\\.svg\\$/,
+            "use": Object {
+              "loader": "@mapbox/svg-react-transformer-loader",
+              "options": Object {
+                "template": "fancy",
+              },
+            },
           },
           Object {
             "exclude": Array [
@@ -164,11 +174,6 @@ Object {
   },
   "performance": false,
   "plugins": Array [
-    ModuleNotFoundPlugin {
-      "appPath": "<PROJECT_ROOT>/src",
-      "getRelativePath": [Function],
-      "prettierError": [Function],
-    },
     AssetsWebpackPlugin {
       "options": Object {
         "filename": "assets.json",

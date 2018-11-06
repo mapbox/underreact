@@ -64,7 +64,7 @@ npx babel script.js
 You can also set the `BROWSERSLIST` environment variable in your node application before parsing code with Babel
 
 ```js
-const babel = require('babel-core');
+const babel = require('@babel/core');
 const fs = require('fs');
 
 process.env.BROWSERSLIST = '>0.25%, not ie 11';

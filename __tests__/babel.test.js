@@ -21,7 +21,7 @@ const getFileContent = (tree, startsWith) => {
 test("Doesn't transpile arrow function for newer browser values", () => {
   const fixture = generateFixture({
     src: {
-      'entry.js': `
+      'index.js': `
         window.foo = ()=>'UNDERREACT_TEST_RETURN_VALUE';
       `
     },
@@ -45,7 +45,7 @@ test("Doesn't transpile arrow function for newer browser values", () => {
 test('Transpiles arrow function for older browsers by default', () => {
   const fixture = generateFixture({
     src: {
-      'entry.js': `
+      'index.js': `
         window.foo = () => 'UNDERREACT_TEST_RETURN_VALUE';
       `
     }
@@ -66,7 +66,7 @@ test('Transpiles arrow function for older browsers by default', () => {
 test('Browserslist takes development env value', () => {
   const fixture = generateFixture({
     src: {
-      'entry.js': `
+      'index.js': `
         window.foo = ()=>'UNDERREACT_TEST_RETURN_VALUE';
       `
     },
@@ -97,7 +97,7 @@ test('Browserslist takes development env value', () => {
 test('Reads browserslist from package.json', () => {
   const fixture = generateFixture({
     src: {
-      'entry.js': `
+      'index.js': `
         window.foo = () => 'UNDERREACT_TEST_RETURN_VALUE';
       `
     },
@@ -123,7 +123,7 @@ test('Reads browserslist from package.json', () => {
 test('Throws an error when using flow without flow plugin', () => {
   const build = generateFixture({
     src: {
-      'entry.js': `
+      'index.js': `
         // @flow
         var t: number = 5;
       `
@@ -147,7 +147,7 @@ test('Parses flow when using correct plugin', () => {
   );
   const build = generateFixture({
     src: {
-      'entry.js': `
+      'index.js': `
         // @flow
         var t: number = 5;
       `
@@ -178,7 +178,7 @@ test('Converts es6 in node_modules by default', () => {
       })
     },
     src: {
-      'entry.js': `
+      'index.js': `
         window.react = require('react');
       `
     }
@@ -204,7 +204,7 @@ test("Doesn't convert es6 in node_modules when disabled", () => {
       })
     },
     src: {
-      'entry.js': `
+      'index.js': `
         window.react = require('react');
       `
     },
@@ -247,7 +247,7 @@ test('Selectively converts es6 in node_modules when using compileNodeModules', (
       }
     `,
     src: {
-      'entry.js': `
+      'index.js': `
         require('react');
         require('redux');
       `
