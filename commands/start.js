@@ -3,8 +3,8 @@
 const del = require('del');
 const chalk = require('chalk');
 const WebpackDevServer = require('webpack-dev-server');
-const urlJoin = require('url-join');
 
+const getReadyMessage = require('../lib/utils/get-ready-message');
 const logger = require('../lib/logger');
 const {
   createWebpackCompiler,
@@ -90,14 +90,4 @@ function watchWebpack(urc) {
       logger.error(webpackError);
     });
   });
-}
-
-function getReadyMessage(urc) {
-  const localUrl = urlJoin(`http://localhost:${urc.port}`, urc.siteBasePath);
-  const chevron = chalk.green.bold('>');
-  let startMsg = chalk.green.bold('Ready!');
-  startMsg += `\n  ${chevron} Access your site at ${chalk.bold.magenta.underline(
-    localUrl
-  )}`;
-  return startMsg;
 }
