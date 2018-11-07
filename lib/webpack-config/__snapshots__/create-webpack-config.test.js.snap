@@ -188,7 +188,7 @@ Object {
     },
     EnvironmentPlugin {
       "defaultValues": Object {
-        "DEPLOY_ENV": "test",
+        "DEPLOY_ENV": "development",
         "NODE_ENV": "test",
       },
       "keys": Array [
