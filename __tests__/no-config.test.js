@@ -10,7 +10,7 @@ const stubNodeModule = require('./test-utils/create-stub-node-module');
 
 jest.setTimeout(15 * 1000);
 
-describe('No Config Test', () => {
+describe.skip('No Config Test', () => {
   let dirPath;
   const fixture = generateFixture({
     src: {
