@@ -33,15 +33,8 @@ const middlewares = [
     // if the user didn't specify a path use a default
     if (argv.config === undefined) {
       const { DEFAULT_CONFIG_NAME } = require('../lib/constants');
-      // Make sure that including paths.js after setting env will read .env variables.
-      delete require.cache[require.resolve('../lib/constants')];
-
       argv.config = path.join(process.cwd(), DEFAULT_CONFIG_NAME);
     }
-
-    const setEnv = require('../lib/utils/set-env');
-    const rootDir = path.dirname(path.resolve(argv.config));
-    setEnv(rootDir);
   }
 ];
 

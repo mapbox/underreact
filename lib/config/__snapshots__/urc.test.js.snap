@@ -9,10 +9,10 @@ Urc {
     "not ie < 11",
     "not op_mini all",
   ],
-  "clientEnvPrefix": "",
   "command": "build",
   "compileNodeModules": true,
   "devServerHistoryFallback": false,
+  "environmentVariables": Object {},
   "hot": false,
   "htmlSource": "
     <!DOCTYPE html>
@@ -58,10 +58,10 @@ Urc {
     "not ie < 11",
     "not op_mini all",
   ],
-  "clientEnvPrefix": "",
   "command": "build",
   "compileNodeModules": true,
   "devServerHistoryFallback": false,
+  "environmentVariables": Object {},
   "hot": false,
   "htmlSource": "
     <!DOCTYPE html>
@@ -107,10 +107,10 @@ Urc {
     "not ie < 11",
     "not op_mini all",
   ],
-  "clientEnvPrefix": "",
   "command": "start",
   "compileNodeModules": true,
   "devServerHistoryFallback": false,
+  "environmentVariables": Object {},
   "hot": true,
   "htmlSource": "
     <!DOCTYPE html>
@@ -156,10 +156,10 @@ Urc {
     "not ie < 11",
     "not op_mini all",
   ],
-  "clientEnvPrefix": "",
   "command": "start",
   "compileNodeModules": true,
   "devServerHistoryFallback": false,
+  "environmentVariables": Object {},
   "hot": false,
   "htmlSource": "
     <!DOCTYPE html>
@@ -205,10 +205,10 @@ Urc {
     "not ie < 11",
     "not op_mini all",
   ],
-  "clientEnvPrefix": "",
   "command": "build",
   "compileNodeModules": true,
   "devServerHistoryFallback": false,
+  "environmentVariables": Object {},
   "hot": false,
   "htmlSource": "
     <!DOCTYPE html>
@@ -257,18 +257,11 @@ Urc {
 
 exports[`not setting polyfill fallbacks to default path 1`] = `"<PROJECT_ROOT>/polyfill/index.js"`;
 
-exports[`readClientEnvVars doesn't leak internal vars 1`] = `
+exports[`reads environment variables 1`] = `
 Object {
-  "DEPLOY_ENV": "test",
-  "NODE_ENV": "test",
-  "VISIBLE_TOKEN": "visible",
-}
-`;
-
-exports[`readClientEnvVars only includes vars which start with urc.clientEnvPrefix  1`] = `
-Object {
-  "DEPLOY_ENV": "test",
-  "MY_APP_TOKEN": "visible",
+  "DEPLOY_ENV": "development",
+  "MY_ENV_1": 1,
+  "MY_ENV_2": 2,
   "NODE_ENV": "test",
 }
 `;

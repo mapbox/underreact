@@ -47,8 +47,6 @@
     "cpy": "^7.0.1",
     "css-loader": "^1.0.0",
     "del": "^3.0.0",
-    "dotenv": "^6.0.0",
-    "dotenv-expand": "^4.2.0",
     "fasterror": "^1.1.0",
     "file-loader": "^2.0.0",
     "findup-sync": "^2.0.0",
