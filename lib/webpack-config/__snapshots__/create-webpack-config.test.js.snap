@@ -79,7 +79,7 @@ Object {
                 },
               },
               Object {
-                "loader": "<PROJECT_ROOT>/node_modules/postcss-loader/src/index.js",
+                "loader": "<PROJECT_ROOT>/node_modules/postcss-loader/lib/index.js",
                 "options": Object {
                   "ident": "postcss",
                   "plugins": Array [
