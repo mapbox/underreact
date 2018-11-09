@@ -28,10 +28,6 @@
   "engines": {
     "node": ">=6"
   },
-  "peerDependencies": {
-    "react": "^15.0.0",
-    "react-dom": "^15.0.0"
-  },
   "dependencies": {
     "@babel/core": "^7.1.2",
     "@babel/runtime": "^7.1.2",
