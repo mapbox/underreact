@@ -76,6 +76,7 @@ Object {
                 "loader": "<PROJECT_ROOT>/node_modules/css-loader/index.js",
                 "options": Object {
                   "importLoaders": 1,
+                  "sourceMap": true,
                 },
               },
               Object {
