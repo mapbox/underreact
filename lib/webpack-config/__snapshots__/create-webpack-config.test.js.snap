@@ -123,19 +123,21 @@ Object {
   },
   "optimization": Object {
     "minimizer": Array [
-      UglifyJsPlugin {
+      TerserPlugin {
         "options": Object {
           "cache": true,
+          "cacheKeys": [Function],
           "exclude": undefined,
           "extractComments": false,
           "include": undefined,
+          "minify": undefined,
           "parallel": true,
           "sourceMap": true,
-          "test": /\\\\\\.js\\(\\\\\\?\\.\\*\\)\\?\\$/i,
-          "uglifyOptions": Object {
+          "terserOptions": Object {
             "compress": Object {
               "comparisons": false,
               "ecma": 5,
+              "inline": 2,
               "warnings": false,
             },
             "mangle": Object {
@@ -150,6 +152,7 @@ Object {
               "ecma": 8,
             },
           },
+          "test": /\\\\\\.js\\(\\\\\\?\\.\\*\\)\\?\\$/i,
           "warningsFilter": [Function],
         },
       },
