@@ -1,4 +1,4 @@
 node_modules
 examples/**/package-lock.json
-_underreact*
+_site*
 examples/**/vendor

@@ -34,9 +34,7 @@ test("Doesn't transpile arrow function for newer browser values", () => {
       return commandBuild({ cwd: dirPath }).then(() => dirPath);
     })
     .then(dirPath => {
-      const tree = dirTree(
-        path.join(dirPath, '_underreact-site', 'underreact-assets')
-      );
+      const tree = dirTree(path.join(dirPath, '_site', 'underreact-assets'));
       const mainFileContent = getFileContent(tree, 'main');
       expect(mainFileContent).toMatch(/=>"UNDERREACT_TEST_RETURN_VALUE"/);
     });
@@ -55,9 +53,7 @@ test('Transpiles arrow function for older browsers by default', () => {
       return commandBuild({ cwd: dirPath }).then(() => dirPath);
     })
     .then(dirPath => {
-      const tree = dirTree(
-        path.join(dirPath, '_underreact-site', 'underreact-assets')
-      );
+      const tree = dirTree(path.join(dirPath, '_site', 'underreact-assets'));
       const mainFileContent = getFileContent(tree, 'main');
       expect(mainFileContent).toMatch(/return"UNDERREACT_TEST_RETURN_VALUE"/);
     });
@@ -86,9 +82,7 @@ test('Browserslist takes development env value', () => {
       );
     })
     .then(dirPath => {
-      const tree = dirTree(
-        path.join(dirPath, '_underreact-site', 'underreact-assets')
-      );
+      const tree = dirTree(path.join(dirPath, '_site', 'underreact-assets'));
       const mainFileContent = getFileContent(tree, 'main');
       expect(mainFileContent).toMatch(/=> 'UNDERREACT_TEST_RETURN_VALUE'/);
     });
@@ -112,9 +106,7 @@ test('Reads browserslist from package.json', () => {
       return commandBuild({ cwd: dirPath }).then(() => dirPath);
     })
     .then(dirPath => {
-      const tree = dirTree(
-        path.join(dirPath, '_underreact-site', 'underreact-assets')
-      );
+      const tree = dirTree(path.join(dirPath, '_site', 'underreact-assets'));
       const mainFileContent = getFileContent(tree, 'main');
       expect(mainFileContent).toMatch(/=>"UNDERREACT_TEST_RETURN_VALUE"/);
     });
@@ -185,9 +177,7 @@ test('Converts es6 in node_modules by default', () => {
   }).then(dirPath => commandBuild({ cwd: dirPath }).then(() => dirPath));
 
   return build.then(dirPath => {
-    const tree = dirTree(
-      path.join(dirPath, '_underreact-site', 'underreact-assets')
-    );
+    const tree = dirTree(path.join(dirPath, '_site', 'underreact-assets'));
     const vendorContent = getFileContent(tree, 'vendor');
     expect(vendorContent).toMatch(/return"UNDERREACT_TEST_RETURN_VALUE"/);
   });
@@ -216,9 +206,7 @@ test("Doesn't convert es6 in node_modules when disabled", () => {
   }).then(dirPath => commandBuild({ cwd: dirPath }).then(() => dirPath));
 
   return build.then(dirPath => {
-    const tree = dirTree(
-      path.join(dirPath, '_underreact-site', 'underreact-assets')
-    );
+    const tree = dirTree(path.join(dirPath, '_site', 'underreact-assets'));
     const vendorContent = getFileContent(tree, 'vendor');
     expect(vendorContent).toMatch(/=>"UNDERREACT_TEST_RETURN_VALUE"/);
   });
@@ -260,9 +248,7 @@ test('Selectively converts es6 in node_modules when using compileNodeModules', (
   }).then(dirPath => commandBuild({ cwd: dirPath }).then(() => dirPath));
 
   return build.then(dirPath => {
-    const tree = dirTree(
-      path.join(dirPath, '_underreact-site', 'underreact-assets')
-    );
+    const tree = dirTree(path.join(dirPath, '_site', 'underreact-assets'));
     // `react` would go into vendor chunk, since we manually inject in `urc.vendorModules`
     // This would make it easier test stringing and asserting the correct behaviour.
     const vendorContent = getFileContent(tree, 'vendor');

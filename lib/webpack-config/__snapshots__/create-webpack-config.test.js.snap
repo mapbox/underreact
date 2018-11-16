@@ -173,7 +173,7 @@ Object {
   "output": Object {
     "chunkFilename": "cacheable-things/js/[name].chunk.js",
     "filename": "cacheable-things/js/[name].js",
-    "path": "<PROJECT_ROOT>/_underreact-site",
+    "path": "<PROJECT_ROOT>/_site",
     "publicPath": "/fancy/",
   },
   "performance": false,
@@ -183,7 +183,7 @@ Object {
         "filename": "assets.json",
         "fullPath": true,
         "manifestFirst": true,
-        "path": "<PROJECT_ROOT>/_underreact-site",
+        "path": "<PROJECT_ROOT>/_site",
         "prettyPrint": false,
         "processOutput": [Function],
         "update": false,

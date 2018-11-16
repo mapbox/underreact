@@ -53,7 +53,7 @@ describe.skip('No Config Test', () => {
   test('builds the correct output without any configuration', () => {
     return commandBuild({ cwd: dirPath }).then(result => {
       const tree = removePath({
-        object: dirTree(path.join(dirPath, '_underreact-site')),
+        object: dirTree(path.join(dirPath, '_site')),
         path: dirPath,
         replaceWith: '<TEMP_DIR>'
       });
@@ -70,7 +70,7 @@ describe.skip('No Config Test', () => {
       args: ['--mode=development']
     }).then(result => {
       const tree = removePath({
-        object: dirTree(path.join(dirPath, '_underreact-site')),
+        object: dirTree(path.join(dirPath, '_site')),
         path: dirPath,
         replaceWith: '<TEMP_DIR>'
       });
