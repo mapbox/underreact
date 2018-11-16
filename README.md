@@ -480,7 +480,7 @@ Set it to `false` to prevent automatic reloading of your app on code changes. **
 
 ### outputDirectory
 
-Type `string`. Absolute path, please. Default: `${project-root}/_underreact-site/`.
+Type `string`. Absolute path, please. Default: `${project-root}/_site/`.
 
 The directory where webesite files should be written.
 

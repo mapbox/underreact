@@ -32,9 +32,7 @@ describe('Env vars set in production mode', () => {
     fixture
       .then(dirPath => commandBuild({ cwd: dirPath }).then(() => dirPath))
       .then(dirPath => {
-        const tree = dirTree(
-          path.join(dirPath, '_underreact-site', 'underreact-assets')
-        );
+        const tree = dirTree(path.join(dirPath, '_site', 'underreact-assets'));
 
         const mainFilename = tree.children
           .find(t => t.name === 'js')
@@ -77,9 +75,7 @@ describe('Env vars set in development mode', () => {
         )
       )
       .then(dirPath => {
-        const tree = dirTree(
-          path.join(dirPath, '_underreact-site', 'underreact-assets')
-        );
+        const tree = dirTree(path.join(dirPath, '_site', 'underreact-assets'));
 
         const mainFilename = tree.children
           .find(t => t.name === 'js')
