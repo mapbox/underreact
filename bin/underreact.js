@@ -18,7 +18,7 @@ const middlewares = [
       process.env.NODE_ENV = argv.mode || 'production';
     }
     if (!process.env.DEPLOY_ENV) {
-      process.env.DEPLOY_ENV = argv.mode || 'production';
+      process.env.DEPLOY_ENV = 'development';
     }
 
     // if the user specified a nonexistent path, tell them if it doesn't exist
