@@ -381,7 +381,7 @@ module.exports = {
 
 - `NODE_ENV` will default to `'development'` in [development mode](#modes) and `'production'` in [production mode](#modes).
 - It's recommended that you *not* set `NODE_ENV` manually: use Underreact modes instead. But if you do set `NODE_ENV`, it must be `'development'`, `'production'`, or `'test'`.
-- By default, `DEPLOY_ENV` is set to `'development'` in both development and production mode, but you can set it to any value you wish to better align with your target environments (e.g. `DEPLOY_ENV=something npx underreact build`). For example, you may want to set it to `'staging'` when building for a staging environment, or `'test'` when testing.
+- By default, `DEPLOY_ENV` is set to `'development'`. You can it to any value you wish to better align with your target environments (e.g. `DEPLOY_ENV=something npx underreact build`) and this value will be made available in your client-side code on `process.env.DEPLOY_ENV`. For example, you may want to set it to `'staging'` when building for a staging environment, `'production'` when building for production, or `'test'` when testing.
 - `DEPLOY_ENV` is not the same as `NODE_ENV`: see [below](#why-set-deploy_env-instead-of-node_env).
 
 A recommend way to use `DEPLOY_ENV` is set it in your npm scripts:
