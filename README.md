@@ -520,7 +520,7 @@ By default, for example, the main JS chunk will be written to `underreact-assets
 
 ### publicDirectory
 
-Type `string`. Absolute path, please. Default: `${project-root}/src/public/`.
+Type `string`. Absolute path, please. Default: `${project-root}/public/`.
 
 Any files you put into this directory will be copied, without processing, into the [`outputDirectory`](#outputdirectory).
 You can put images, favicons, data files, and anything else you want in here.
