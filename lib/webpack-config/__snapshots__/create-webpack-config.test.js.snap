@@ -91,6 +91,7 @@ Object {
             ],
           },
           Object {
+            "issuer": /\\\\\\.\\(js\\|jsx\\)\\$/,
             "test": /\\\\\\.svg\\$/,
             "use": Object {
               "loader": "@mapbox/svg-react-transformer-loader",
