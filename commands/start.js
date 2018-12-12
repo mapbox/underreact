@@ -39,13 +39,17 @@ function watchWebpack(urc) {
     return Promise.reject(error);
   }
 
-  const normalizedBasePath = urlJoin('/', urc.siteBasePath, '/');
+  const normalizedBasePath = urlJoin(urc.siteBasePath, '/');
+
   return new Promise(resolve => {
     const server = new WebpackDevServer(compiler, {
       publicPath: urc.siteBasePath,
       before(app) {
         app.use((req, res, next) => {
-          if (req.url === '/' || req.url === urlJoin('/', urc.siteBasePath)) {
+          if (
+            req.url !== normalizedBasePath &&
+            (req.url === '/' || req.url === urlJoin('/', urc.siteBasePath))
+          ) {
             res.redirect(normalizedBasePath);
           } else {
             next();
@@ -65,7 +69,6 @@ function watchWebpack(urc) {
           })
         );
       },
-      // contentBase: urc.publicDirectory,
       // We have our own custom logging interface,
       // hence, we can quieten down `WebpackDevServer`.
       clientLogLevel: 'none',
