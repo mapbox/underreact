@@ -35,12 +35,8 @@ class App extends React.Component {
         </p>
         <p>Less-loading worked if this text is light blue.</p>
         <p>
-          Value of the env variable passed through cli ENV_VAR:{' '}
-          {process.env.UNDERREACT_APP_ENV_VAR}
-        </p>
-        <p>
-          Value of the env variable from file UNDERREACT_APP_CLIENT_TOKEN:{' '}
-          {process.env.UNDERREACT_APP_CLIENT_TOKEN}
+          Value of the env variable CLIENT_TOKEN:{' '}
+          {process.env.CLIENT_TOKEN}
         </p>
         <p>
           Does it leak SECRET_TOKEN:{' '}

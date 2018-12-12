@@ -28,7 +28,9 @@ module.exports = ({ webpack }) => {
     siteBasePath: 'fancy',
     publicAssetsPath: 'cacheable-things',
     htmlSource,
-    clientEnvPrefix: 'UNDERREACT_APP_',
+    environmentVariables: {
+      CLIENT_TOKEN: 'a123'
+    },
     webpackLoaders: [
       {
         test: /\.less$/,
