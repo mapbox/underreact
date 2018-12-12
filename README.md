@@ -523,7 +523,7 @@ By default, for example, the main JS chunk will be written to `underreact-assets
 Type `string`. Absolute path, please. Default: `${project-root}/public/`.
 
 Any files you put into this directory will be copied, without processing, into the [`outputDirectory`](#outputdirectory).
-You can put images, favicons, data files, and anything else you want in here.
+You can put images, favicons, data files, and anything else you want in here. To reference these assets in your Javascript code, you use the `BASE_PATH` environment variable, Read [How do I include SVGs, images, and videos?](#how-do-i-include-svgs-images-and-videos).
 
 In the default value, `project-root` refers to the directory of your `underreact.config.js` file.
 
@@ -531,7 +531,7 @@ In the default value, `project-root` refers to the directory of your `underreact
 
 Type: `string`. Default: `'/'`.
 
-Path to the base directory on the domain where the site will be deployed. The default value is the domain's root.
+Path to the base directory on the domain where the site will be deployed. The default value is the domain's root. To help create valid links, Underreact exposes this value to your source with an environment variable `BASE_PATH`. Read [How do I include SVGs, images, and videos?](#how-do-i-include-svgs-images-and-videos).
 
 **Tip**: There's a good chance your app isn't at the root of your domain. So this option represents the path of your site *within* that domain. For example, if your app is at `https://www.special.com/ketchup/*`, you should set `siteBasePath: '/ketchup'`.
 
@@ -638,6 +638,21 @@ function Header() {
   return <img src={logo} alt="Logo" />;
 }
 ```
+
+It is generally a good idea to use the above method for importing assets, because:
+
+- throws a compilation error when an asset is missing.
+- filenames include hashing for browser caching.
+
+If you cannot use this method and want to place some of your assets in the [publicDirectory](#publicdirectory), you can create links with the help of the in built environment variable `BASE_PATH`:
+
+```js
+function Header() {
+  return <img src={process.env.BASE_PATH + '/logo.png'} alt="Logo" />;
+}
+```
+
+The environment variable `BASE_PATH` is automatically set for you and is equivalent to the value of [`siteBasePath`](#sitebasepath).
 
 ### How do I enable hot module reloading ?
 

@@ -193,12 +193,14 @@ Object {
     },
     EnvironmentPlugin {
       "defaultValues": Object {
+        "BASE_PATH": "/fancy",
         "DEPLOY_ENV": "development",
         "NODE_ENV": "test",
       },
       "keys": Array [
         "NODE_ENV",
         "DEPLOY_ENV",
+        "BASE_PATH",
       ],
     },
     MiniCssExtractPlugin {

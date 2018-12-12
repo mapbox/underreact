@@ -259,6 +259,7 @@ exports[`not setting polyfill fallbacks to default path 1`] = `"<PROJECT_ROOT>/p
 
 exports[`reads environment variables 1`] = `
 Object {
+  "BASE_PATH": "",
   "DEPLOY_ENV": "development",
   "MY_ENV_1": 1,
   "MY_ENV_2": 2,

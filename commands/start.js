@@ -3,6 +3,8 @@
 const del = require('del');
 const chalk = require('chalk');
 const WebpackDevServer = require('webpack-dev-server');
+const urlJoin = require('url-join');
+const serveStatic = require('serve-static');
 
 const getReadyMessage = require('../lib/utils/get-ready-message');
 const logger = require('../lib/logger');
@@ -37,14 +39,37 @@ function watchWebpack(urc) {
     return Promise.reject(error);
   }
 
+  const normalizedBasePath = urlJoin('/', urc.siteBasePath, '/');
   return new Promise(resolve => {
     const server = new WebpackDevServer(compiler, {
       publicPath: urc.siteBasePath,
+      before(app) {
+        app.use((req, res, next) => {
+          if (req.url === '/' || req.url === urlJoin('/', urc.siteBasePath)) {
+            res.redirect(normalizedBasePath);
+          } else {
+            next();
+          }
+        });
+
+        // We are using this middleware instead of the `contentBase` property
+        // as webpack-dev-server doesn't allow for accessing public directory
+        // contents prefixed with site base path. For example, if we have
+        // `basePath=foo` and an image in public directory with file path `<root>/public/img/xyz.jpg`,
+        // the correct url for this image would be `localhost:[port]/foo/img/xyz.jpg`
+        // and not `localhost:[port]/img/xyz.jpg`.
+        app.use(
+          normalizedBasePath,
+          serveStatic(urc.publicDirectory, {
+            index: false
+          })
+        );
+      },
+      // contentBase: urc.publicDirectory,
       // We have our own custom logging interface,
       // hence, we can quieten down `WebpackDevServer`.
       clientLogLevel: 'none',
       quiet: true,
-      contentBase: urc.publicDirectory,
       historyApiFallback: urc.devServerHistoryFallback && {
         index: urc.siteBasePath
       },

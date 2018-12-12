@@ -77,6 +77,18 @@ function startServer(urc) {
 
 function stripSiteBasePath({ requestedPath, urc }) {
   const normalizedSiteBasePath = urc.siteBasePath.replace(/\//g, path.sep);
+  // Prevent accessing incorrect absolute paths. For example,
+  // if the `base_path=fancy` and there is an image with
+  // path `<root>/public/img/xyz.jpg` in the publicDirectory,
+  // we would want to prevent ths user from loading `<img src='/img/xyz.jpg'>`
+  // and instead allow loading of <img src='/fancy/img/xyz.jpg'>.
+  if (
+    !requestedPath.startsWith(
+      path.join(urc.outputDirectory, normalizedSiteBasePath)
+    )
+  ) {
+    return '';
+  }
   const pathToReplace = path.join(
     urc.outputDirectory,
     normalizedSiteBasePath,
