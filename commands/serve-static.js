@@ -12,6 +12,8 @@ const getReadyMessage = require('../lib/utils/get-ready-message');
 
 module.exports = startServer;
 
+const normalizePath = p => p.replace(/\//g, path.sep);
+
 function startServer(urc) {
   const serverOpts = {
     public: urc.outputDirectory,
@@ -56,17 +58,30 @@ function startServer(urc) {
   }
   const server = http.createServer((request, response) => {
     return handler(request, response, serverOpts, {
-      stat(path) {
-        path = stripSiteBasePath({ requestedPath: path, urc });
-        return promisify(fs.stat)(path);
+      stat(requestedPath) {
+        // Prevent accessing incorrect absolute paths. For example,
+        // if the `base_path=fancy` and there is an image with
+        // path `<root>/public/img/xyz.jpg` in the publicDirectory,
+        // we would want to prevent ths user from loading `<img src='/img/xyz.jpg'>`
+        // and instead allow loading of <img src='/fancy/img/xyz.jpg'>.
+        if (
+          !requestedPath.startsWith(
+            path.join(urc.outputDirectory, normalizePath(urc.siteBasePath))
+          )
+        ) {
+          return promisify(fs.stat)('');
+        }
+
+        requestedPath = stripSiteBasePath({ requestedPath, urc });
+        return promisify(fs.stat)(requestedPath);
       },
-      createReadStream(path) {
-        path = stripSiteBasePath({ requestedPath: path, urc });
-        return fs.createReadStream(path);
+      createReadStream(requestedPath) {
+        requestedPath = stripSiteBasePath({ requestedPath, urc });
+        return fs.createReadStream(requestedPath);
       },
-      readdir(path) {
-        path = stripSiteBasePath({ requestedPath: path, urc });
-        return promisify(fs.readdir)(path);
+      readdir(requestedPath) {
+        requestedPath = stripSiteBasePath({ requestedPath, urc });
+        return promisify(fs.readdir)(requestedPath);
       }
     });
   });
@@ -76,19 +91,7 @@ function startServer(urc) {
 }
 
 function stripSiteBasePath({ requestedPath, urc }) {
-  const normalizedSiteBasePath = urc.siteBasePath.replace(/\//g, path.sep);
-  // Prevent accessing incorrect absolute paths. For example,
-  // if the `base_path=fancy` and there is an image with
-  // path `<root>/public/img/xyz.jpg` in the publicDirectory,
-  // we would want to prevent ths user from loading `<img src='/img/xyz.jpg'>`
-  // and instead allow loading of <img src='/fancy/img/xyz.jpg'>.
-  if (
-    !requestedPath.startsWith(
-      path.join(urc.outputDirectory, normalizedSiteBasePath)
-    )
-  ) {
-    return '';
-  }
+  const normalizedSiteBasePath = normalizePath(urc.siteBasePath);
   const pathToReplace = path.join(
     urc.outputDirectory,
     normalizedSiteBasePath,

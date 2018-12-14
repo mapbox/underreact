@@ -523,7 +523,7 @@ By default, for example, the main JS chunk will be written to `underreact-assets
 Type `string`. Absolute path, please. Default: `${project-root}/public/`.
 
 Any files you put into this directory will be copied, without processing, into the [`outputDirectory`](#outputdirectory).
-You can put images, favicons, data files, and anything else you want in here. To reference these assets in your Javascript code, you use the `BASE_PATH` environment variable, Read [How do I include SVGs, images, and videos?](#how-do-i-include-svgs-images-and-videos).
+You can put images, favicons, data files, and anything else you want in here. To reference these assets in your Javascript code, you can use the `BASE_PATH` environment variable. Read [How do I include SVGs, images, and videos?](#how-do-i-include-svgs-images-and-videos).
 
 In the default value, `project-root` refers to the directory of your `underreact.config.js` file.
 
@@ -639,12 +639,12 @@ function Header() {
 }
 ```
 
-It is generally a good idea to use the above method for importing assets, because:
+It is generally a good idea to use the above method for importing assets because:
 
-- throws a compilation error when an asset is missing.
-- filenames include hashing for browser caching.
+- It would throw a compilation error when an asset is missing.
+- The assets would be processed by Underreact and would get hash added to their filenames for a better caching.
 
-If you cannot use this method and want to place some of your assets in the [publicDirectory](#publicdirectory), you can create links with the help of the in built environment variable `BASE_PATH`:
+If you cannot use this method, you can place assets in the [`publicDirectory`](#publicdirectory) and create a link using the `BASE_PATH` environment variable as shown below:
 
 ```js
 function Header() {
@@ -652,7 +652,7 @@ function Header() {
 }
 ```
 
-The environment variable `BASE_PATH` is automatically set for you and is equivalent to the value of [`siteBasePath`](#sitebasepath).
+The `BASE_PATH` environment variable is automatically set by Underreact and is equivalent to the value of [`siteBasePath`](#sitebasepath). The `BASE_PATH`'s value would never end with a `/`, even if your `siteBasePath` does.
 
 ### How do I enable hot module reloading ?
 
