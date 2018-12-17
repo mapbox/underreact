@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.0
+
+- **Bug:**: Fixes the way Underreact handles root relative urls.
+
 ## 0.3.1
 
 - **Bug:**: Fixes SVG imports inside CSS files.
