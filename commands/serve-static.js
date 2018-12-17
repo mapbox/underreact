@@ -59,10 +59,10 @@ function startServer(urc) {
   const server = http.createServer((request, response) => {
     return handler(request, response, serverOpts, {
       stat(requestedPath) {
-        // Prevent accessing incorrect absolute paths. For example,
+        // Prevent accessing incorrect root relative paths. For example,
         // if the `base_path=fancy` and there is an image with
         // path `<root>/public/img/xyz.jpg` in the publicDirectory,
-        // we would want to prevent ths user from loading `<img src='/img/xyz.jpg'>`
+        // we will want to prevent ths user from loading `<img src='/img/xyz.jpg'>`
         // and instead allow loading of <img src='/fancy/img/xyz.jpg'>.
         if (
           !requestedPath.startsWith(

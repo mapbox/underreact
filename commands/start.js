@@ -59,8 +59,8 @@ function watchWebpack(urc) {
         // We are using this middleware instead of the `contentBase` property
         // as webpack-dev-server doesn't allow for accessing public directory
         // contents prefixed with site base path. For example, if we have
-        // `basePath=foo` and an image in public directory with file path `<root>/public/img/xyz.jpg`,
-        // the correct url for this image would be `localhost:[port]/foo/img/xyz.jpg`
+        // `basePath=foo` and an image in the public directory with file path `<root>/public/img/xyz.jpg`,
+        // the correct url for this image is `localhost:[port]/foo/img/xyz.jpg`
         // and not `localhost:[port]/img/xyz.jpg`.
         app.use(
           normalizedBasePath,
