@@ -45,7 +45,7 @@ class App extends React.Component {
         <p>Background image snowflake:</p>
         <div className="snowflake" style={{ height: 300, width: 300 }} />
         <p>Real image snowflake:</p>
-        <img src="images/snowflake.jpg" />
+        <img src={`${process.env.BASE_PATH}/images/snowflake.jpg`} />
         <p>
           The library <code>p-finally</code> is not ES5, so this page should
           throw an error in older browsers like IE11.
