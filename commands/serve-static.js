@@ -43,7 +43,10 @@ function startServer(urc) {
     serverOpts.rewrites = [
       {
         source: `${urlJoin(urc.siteBasePath, '/')}/**`,
-        destination: '/index.html'
+        destination:
+          urc.siteBasePath === '/'
+            ? '/index.html'
+            : urlJoin('/', urc.siteBasePath, 'index.html')
       }
     ];
   }
