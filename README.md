@@ -531,7 +531,17 @@ In the default value, `project-root` refers to the directory of your `underreact
 
 Type: `string`. Default: `'/'`.
 
-Path to the base directory on the domain where the site will be deployed. The default value is the domain's root. To help create valid links, Underreact exposes this value to your source with an environment variable `BASE_PATH`. Read ["How do I include SVGs, images, and videos?"](#how-do-i-include-svgs-images-and-videos).
+Path to the base directory on the domain where the site will be deployed. The default value is the domain's root. To help create valid links, Underreact exposes this value to your source code with an environment variable `BASE_PATH`. The table below gives an example of how Underreact sets `BASE_PATH` environment variable for a given `siteBasePath` value: 
+
+| siteBasePath | process.env.BASE_PATH |
+| ------------ | --------------------- |
+| (not set)    | ""                    |
+| "/"          | ""                    |
+| "ketchup"    | "/ketchup"            |
+| "/ketchup"   | "/ketchup"            |
+| "/ketchup/"  | "/ketchup"            |
+
+This normalization behaviour comes in handy when writing statements like `process.env.BASE_PATH + '/my-path'`. Read ["How do I include SVGs, images, and videos?"](#how-do-i-include-svgs-images-and-videos).
 
 **Tip**: There's a good chance your app isn't at the root of your domain. So this option represents the path of your site *within* that domain. For example, if your app is at `https://www.special.com/ketchup/*`, you should set `siteBasePath: '/ketchup'`.
 
