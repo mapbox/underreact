@@ -1,6 +1,6 @@
 # Changelog
 
-## HEAD
+## 0.5.0
 
 - Allow for base path injection in `htmlSource`.
 
