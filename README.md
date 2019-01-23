@@ -200,10 +200,39 @@ Underreact is intended for single-page apps, so you only need one HTML page. If 
 
 You have 2 choices:
 
-1. **Preferred:** Provide the [`htmlSource`] configuration option, which is an HTML string or a Promise that resolves to an HTML string.
+1. **Preferred:** Provide the [`htmlSource`] configuration option, which is an HTML string, a Promise or a Function returning HTML string or promise, that resolves to an HTML string.
 2. Provide no HTML-rendering function and let Underreact use the default, development-only HTML document. *You should only do this for prototyping and early development*: for production projects, you'll definitely want to define your own HTML, if only for the `<title>`.
 
 If you provide a Promise for [`htmlSource`], you can use any async I/O you need to put together the page. For example, you could read JS files and inject their code directly into `<script>` tags, or inject CSS into `<style>` tags. Or you could make an HTTP call to fetch dynamic data and inject it into the page with a `<script>` tag, so it's available to your React app.
+
+If you provide a Function for [`htmlSource`], Underreact would call it with the named parameter `basePath`. This gives you the flexibility to load assets with a root relative URL. The example below shows how to load a favicon from your `public` directory:
+
+```js
+// underreact.config.js
+module.exports = {
+  /**
+   * @param {Object} opts
+   * @param {Webpack} opts.basePath - the normalized value of your site's base path
+   * @returns {Promise<string> | string} 
+   */
+  htmlSource: ({ basePath }) => `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="utf-8">
+      <title>Words that rhyme with fish</title>
+      <meta name="description" content="A website about words that rhyme with fish, like plish">
+      <link rel="shortcut icon" href="${basePath}/img/favicon.ico" type="image/x-icon" />
+    </head>
+    <body>
+      <div id="app">
+        <!-- React app will be rendered into this div -->
+      </div>
+    </body>
+    </html>
+  `
+};
+```
 
 **Note: Underreact would automatically inject the relevant `script` and `link` tags to your HTML template.**
 
@@ -211,15 +240,15 @@ In the example below, we are defining our HTML in a separate file and requiring 
 
 ```js
 // underreact.config.js
-const htmlSource = require('./html-source');
+const html = require('./html');
 
 module.exports = function underreactConfig({ webpack, command, mode }) {
   return {
-    htmlSource: htmlSource(mode)
+    htmlSource: html(mode)
   };
 };
 
-// html-source.js
+// html.js
 const fs = require('fs');
 const { promisify } = require('util');
 const minimizeJs = require('./minimize-js');
@@ -460,7 +489,7 @@ Enable hot module reloading of Underreact. Read ["How do I enable hot module rel
 
 ### htmlSource
 
-Type: `string`\|`Promise<string>`. Default:[see the default HTML](https://github.com/mapbox/underreact/blob/next/lib/default-html.js).
+Type: `string`\|`Promise<string>`\|`Function<string | Promise<string>>`. Default:[see the default HTML](https://github.com/mapbox/underreact/blob/next/lib/default-html.js).
 
 The HTML template for your app, or a Promise that resolves to it. Read ["Defining your HTML"](#defining-your-html) for more details.
 
@@ -542,6 +571,8 @@ Path to the base directory on the domain where the site will be deployed. The de
 | "/ketchup/"  | "/ketchup"            |
 
 This normalization behaviour comes in handy when writing statements like `process.env.BASE_PATH + '/my-path'`. Read ["How do I include SVGs, images, and videos?"](#how-do-i-include-svgs-images-and-videos).
+
+Underreact also passes this as a named parameter to the [`htmlSource`] function.  Read ["Defining your HTML"](#defining-your-html) for more details.
 
 **Tip**: There's a good chance your app isn't at the root of your domain. So this option represents the path of your site *within* that domain. For example, if your app is at `https://www.special.com/ketchup/*`, you should set `siteBasePath: '/ketchup'`.
 

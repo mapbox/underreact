@@ -3,7 +3,7 @@
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const path = require('path');
 
-const htmlSource = `
+const htmlSource = ({basePath}) => `
     <!DOCTYPE html>
     <html lang="en">
     <head>
@@ -11,6 +11,7 @@ const htmlSource = `
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>Fancy examples</title>
       <link href="https://api.mapbox.com/mapbox-assembly/v0.21.2/assembly.min.css" rel="stylesheet">
+      <link href="${basePath}/blink.css" rel="stylesheet">
       <script async defer src="https://api.mapbox.com/mapbox-assembly/v0.21.2/assembly.js"></script>
     </head>
     <body>

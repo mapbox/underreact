@@ -34,6 +34,9 @@ class App extends React.Component {
           {typeof DEFINE_WORKED === 'undefined' ? 'No' : DEFINE_WORKED}
         </p>
         <p>Less-loading worked if this text is light blue.</p>
+        <p className="blink">
+         HTML base path injection works if this text blinks.
+        </p>
         <p>
           Value of the env variable CLIENT_TOKEN:{' '}
           {process.env.CLIENT_TOKEN}

@@ -1,5 +1,9 @@
 # Changelog
 
+## HEAD
+
+- Allow for base path injection in `htmlSource`.
+
 ## 0.4.0
 
 - **Bug:**: Fixes the way Underreact handles root relative urls.
