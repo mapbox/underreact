@@ -67,7 +67,7 @@ test('Browserslist takes development env value', () => {
       `
     },
     'underreact.config.js': `
-      module.exports = { 
+      module.exports = {
         browserslist: {
           production: ['ie 11'],
           development: ['chrome 67']
@@ -113,7 +113,7 @@ test('Reads browserslist from package.json', () => {
 });
 
 test('Throws an error when using flow without flow plugin', () => {
-  const build = generateFixture({
+  return generateFixture({
     src: {
       'index.js': `
         // @flow
@@ -125,11 +125,16 @@ test('Throws an error when using flow without flow plugin', () => {
         presets: []
       }
     `
-  }).then(dirPath => commandBuild({ cwd: dirPath }));
-
-  return Promise.resolve()
-    .then(() => expect(build).rejects.toMatch(/SyntaxError:/))
-    .then(() => expect(build).rejects.toMatch(/ERROR: Compilation error./));
+  })
+    .then(dirPath => commandBuild({ cwd: dirPath }))
+    .then(
+      () => {},
+      error => {
+        expect(error).toMatch(/SyntaxError:/);
+        // simple match not possible due to bash color escape sequences
+        expect(error).toMatch(/ERROR:.*Compilation error\.\n/);
+      }
+    );
 });
 
 test('Parses flow when using correct plugin', () => {
@@ -199,7 +204,7 @@ test("Doesn't convert es6 in node_modules when disabled", () => {
       `
     },
     'underreact.config.js': `
-      module.exports = { 
+      module.exports = {
         compileNodeModules: false
       }
     `
@@ -230,7 +235,7 @@ test('Selectively converts es6 in node_modules when using compileNodeModules', (
       })
     },
     'underreact.config.js': `
-      module.exports = { 
+      module.exports = {
         compileNodeModules: ['redux']
       }
     `,
