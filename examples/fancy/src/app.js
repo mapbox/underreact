@@ -22,6 +22,12 @@ class App extends React.Component {
     pFinally(Promise.reject().catch(() => {}), () => {
       console.log('rejected!');
     });
+
+    import(
+      /* webpackChunkName: "code-splitting-bundle" */ './dynamic.js'
+    ).then(({ dynamic }) => {
+      dynamic()
+    });
   }
   render() {
     return (
