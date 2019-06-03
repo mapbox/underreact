@@ -1,5 +1,9 @@
-function dynamic() {
-  console.log('hi i am a dynamic import');
+import React from 'react';
+
+function Dynamic() {
+  return (
+    <div className="dynamic">I was loaded dynamically</div>
+  )
 }
 
-export { dynamic }
+export default Dynamic;
