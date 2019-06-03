@@ -47,6 +47,9 @@ class App extends React.Component {
           Does it leak SECRET_TOKEN:{' '}
           {process.env.SECRET_TOKEN === undefined ? 'No' : 'Yes'}
         </p>
+        <React.Suspense fallback={<div>Loading dynamic component...</div>}>
+          <DynamicComponent />
+        </React.Suspense>
         <p>Background image snowflake:</p>
         <div className="snowflake" style={{ height: 300, width: 300 }} />
         <p>Real image snowflake:</p>
@@ -55,9 +58,7 @@ class App extends React.Component {
           The library <code>p-finally</code> is not ES5, so this page should
           throw an error in older browsers like IE11.
         </p>
-        <React.Suspense fallback={<div>Loading dynamic component...</div>}>
-          <DynamicComponent />
-        </React.Suspense>
+     
       </div>
     );
   }
