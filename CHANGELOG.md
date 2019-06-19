@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.1
+
+- Upgrading to webpack v4.28.2 to support dynamic imports.
+
 ## 0.5.0
 
 - Allow for base path injection in `htmlSource`.
