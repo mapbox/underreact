@@ -14,7 +14,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mapbox/babel-preset-mapbox.git"
+    "url": "git+https://github.com/mapbox/underreact.git"
   },
   "author": "Mapbox",
   "contributors": [
