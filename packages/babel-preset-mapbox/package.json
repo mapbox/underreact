@@ -36,6 +36,6 @@
     "@babel/core": "^7.1.2",
     "@babel/polyfill": "^7.0.0",
     "@babel/runtime": "^7.1.2",
-    "jest": "^23.6.0"
+    "jest": "^25.0.0"
   }
 }
