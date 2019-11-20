@@ -76,12 +76,13 @@ function watchWebpack(urc) {
       historyApiFallback: urc.devServerHistoryFallback && {
         index: urc.siteBasePath
       },
+      host: urc.host,
       port: urc.port,
       compress: urc.isProductionMode,
       hot: urc.hot
     });
 
-    server.listen(urc.port, '127.0.0.1', () => {
+    server.listen(urc.port, urc.host, () => {
       resolve();
       return;
     });

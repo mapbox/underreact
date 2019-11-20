@@ -48,6 +48,15 @@ const configOption = [
   }
 ];
 
+const hostOption = [
+  'host',
+  {
+    description: 'Host',
+    type: 'string',
+    default: '127.0.0.1'
+  }
+];
+
 const portOption = [
   'port',
   {
@@ -104,6 +113,7 @@ yargs
 function defineStart(y) {
   y.version(false)
     .option(...configOption)
+    .option(...hostOption)
     .option(...portOption)
     .option(...modeOption('development'))
     .option(...statsOption)
