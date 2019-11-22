@@ -13,6 +13,7 @@ Urc {
   "compileNodeModules": true,
   "devServerHistoryFallback": false,
   "environmentVariables": Object {},
+  "host": "127.0.0.1",
   "hot": false,
   "htmlSource": "
     <!DOCTYPE html>
@@ -62,6 +63,7 @@ Urc {
   "compileNodeModules": true,
   "devServerHistoryFallback": false,
   "environmentVariables": Object {},
+  "host": "127.0.0.1",
   "hot": false,
   "htmlSource": "
     <!DOCTYPE html>
@@ -111,6 +113,7 @@ Urc {
   "compileNodeModules": true,
   "devServerHistoryFallback": false,
   "environmentVariables": Object {},
+  "host": "127.0.0.1",
   "hot": true,
   "htmlSource": "
     <!DOCTYPE html>
@@ -160,6 +163,7 @@ Urc {
   "compileNodeModules": true,
   "devServerHistoryFallback": false,
   "environmentVariables": Object {},
+  "host": "127.0.0.1",
   "hot": false,
   "htmlSource": "
     <!DOCTYPE html>
@@ -209,6 +213,7 @@ Urc {
   "compileNodeModules": true,
   "devServerHistoryFallback": false,
   "environmentVariables": Object {},
+  "host": "127.0.0.1",
   "hot": false,
   "htmlSource": "
     <!DOCTYPE html>
