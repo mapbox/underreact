@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.5.3
+
+- Enable setting the host to other than 127.0.0.1
+
+## 0.5.2
+
+- Update dependencies to resolve security vulnerability warnings
+- Update repository url
+
 ## 0.5.1
 
 - Upgrading to webpack v4.28.2 to support dynamic imports.
