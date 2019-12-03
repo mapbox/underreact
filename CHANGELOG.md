@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.4
+
+- Update svg-react-transformer to fix SVGs missing viewBox
+
 ## 0.5.3
 
 - Enable setting the host to other than 127.0.0.1
