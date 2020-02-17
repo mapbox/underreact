@@ -31,7 +31,7 @@
   "dependencies": {
     "@babel/core": "^7.1.2",
     "@babel/runtime": "^7.1.2",
-    "@mapbox/babel-preset-mapbox": "^7.0.2",
+    "@mapbox/babel-preset-mapbox": "^7.0.3-0",
     "@mapbox/fusspot": "^0.4.0",
     "@mapbox/svg-react-transformer-loader": "^2.0.1",
     "assets-webpack-plugin": "^3.8.4",
