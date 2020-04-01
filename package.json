@@ -88,6 +88,10 @@
     "react-dom": "^16.4.1",
     "tempy": "^0.2.1"
   },
+  "resolutions": {
+    "minimist": "^1.2.5",
+    "acorn": "^6.4.1"
+  },
   "bin": {
     "underreact": "bin/underreact.js"
   },
