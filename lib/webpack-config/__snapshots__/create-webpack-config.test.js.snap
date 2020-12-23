@@ -29,7 +29,7 @@ Object {
           },
           Object {
             "exclude": Array [
-              /\\[\\\\/\\\\\\\\\\\\\\\\\\]node_modules\\[\\\\/\\\\\\\\\\\\\\\\\\]/,
+              /\\[/\\\\\\\\\\\\\\\\\\]node_modules\\[/\\\\\\\\\\\\\\\\\\]/,
             ],
             "loader": "<PROJECT_ROOT>/node_modules/babel-loader/lib/index.js",
             "options": Object {
@@ -46,7 +46,9 @@ Object {
             "test": /\\\\\\.jsx\\?\\$/,
           },
           Object {
-            "exclude": /@babel\\(\\?:\\\\/\\|\\\\\\\\\\{1,2\\}\\)runtime/,
+            "exclude": Array [
+              /@babel\\(\\?:\\\\/\\|\\\\\\\\\\{1,2\\}\\)runtime/,
+            ],
             "loader": "<PROJECT_ROOT>/node_modules/babel-loader/lib/index.js",
             "options": Object {
               "babelrc": false,
