@@ -1,6 +1,6 @@
 {
   "name": "@mapbox/underreact",
-  "version": "0.6.0-dev.7",
+  "version": "0.6.0-dev.8",
   "description": "Minimal, extensible React app build system that you won't need to eject",
   "main": "index.js",
   "scripts": {
