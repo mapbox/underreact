@@ -1,3 +1,11 @@
+# DEPRECATED!
+
+As of April 2022, we are deprecating Underreact and do not recommend usage on new projects. Development will only occur on an exemption basis for existing, internal Mapbox use-cases.
+
+New projects should use an alternative such as [Create React App](https://create-react-app.dev/) or [Vite](https://vitejs.dev/).
+
+---
+
 # @mapbox/underreact
 
 Minimal, extensible React app build system that you won't need to eject.
